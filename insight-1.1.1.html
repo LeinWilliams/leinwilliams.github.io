@@ -1,0 +1,2979 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="Leon Williams">
+	<meta name="description" content="View controller inputs">
+	<title>Insight</title>
+	<link
+		rel="icon"
+		href="data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20473.516%20362.193%22%3E%3Cpolygon%20fill=%22black%22%20points=%22469.829%20153.084%20413.859%2064.124%20406.7%2052.743%20393.458%2055.078%20291.68%2073.024%20252.896%2011.38%20245.737%200%20232.495%202.334%2092.372%2027.042%2077.534%2029.659%2075.955%2044.643%2069.802%20103.06%2069.077%20109.945%2070.397%20112.042%2023.295%20120.348%208.457%20122.964%206.878%20137.949%200.725%20196.365%200%20203.25%203.687%20209.11%2059.656%20298.07%2066.816%20309.451%2080.057%20307.116%20181.836%20289.17%20220.619%20350.813%20227.779%20362.193%20241.021%20359.859%20381.143%20335.151%20395.981%20332.535%20397.56%20317.55%20403.713%20259.134%20404.438%20252.249%20403.119%20250.152%20450.221%20241.847%20465.059%20239.23%20466.638%20224.245%20472.791%20165.83%20473.516%20158.944%20469.829%20153.084%22/%3E%3Cpath%20fill=%22white%22%20d=%22M258.772,261.39l-38.856-61.761,27-36.477,62.92,20.621L348.7,245.534ZM130.964,58.246,169.818,120l62.928,20.62,27-36.476L220.89,42.39ZM417.78,152.222,381.861,95.131l-97.28,17.153-27,36.477L320.5,169.375ZM195.086,191.489l27-36.47L159.167,134.4l-97.28,17.153,35.919,57.092Z%22/%3E%3C/svg%3E"
+		sizes="any"
+		type="image/svg+xml"
+	>
+	<style>
+
+		/******************************\
+		 * RESET                      *
+		\******************************/
+
+			:root {
+				--chroma: #000d20;   /* main background color */
+				--stroke: white;     /* color of strokes */
+				--filler: black;     /* unpressed button background color */
+				--hover-color: #444; /* color used to highlight against --chroma */
+			}
+
+			* {
+				box-sizing: border-box;
+				scrollbar-color: white transparent;
+				scrollbar-width: thin;
+			}
+
+			body {
+				margin: 0;
+				background: var(--chroma);
+				color: white;
+				font-family: system-ui;
+			}
+
+			h1 {
+				text-align: center;
+			}
+
+			kbd {
+				background: #222;
+				padding: 0.1em 0.4em;
+				border-radius: 2pt;
+				border: solid 1px #888;
+			}
+
+			time {
+				font-family: monospace;
+				background: #222;
+				padding: 2pt 4pt;
+				border: solid 1pt #444;
+				border-radius: 3pt;
+			}
+
+			button,
+			select,
+			label,
+			[type=button],
+			[type=color] {
+				cursor: pointer;
+			}
+
+			:disabled {
+				cursor: auto;
+			}
+
+		/******************************\
+		 * ASSETS                     *
+		\******************************/
+
+			.checkered {
+				--checker-color-1: hsl(0deg 0% 10%);
+				--checker-color-2: hsl(0deg 0% 20%);
+				--checker-size: 8pt;
+				background-color: var(--checker-color-2);
+				background-image:
+					linear-gradient(
+						45deg,
+						var(--checker-color-1) 25%,
+						transparent 25%,
+						transparent 75%,
+						var(--checker-color-1) 75%,
+						var(--checker-color-1) 0
+					),
+					linear-gradient(
+						45deg,
+						var(--checker-color-1) 25%,
+						transparent 25%,
+						transparent 75%,
+						var(--checker-color-1) 75%,
+						var(--checker-color-1) 0
+					);
+				background-repeat: repeat, repeat;
+				background-position: 0px 0, calc(var(--checker-size) / 2) calc(var(--checker-size) / 2);
+				transform-origin: 0 0 0;
+				background-origin: padding-box, padding-box;
+				background-clip: border-box, border-box;
+				background-size:
+					var(--checker-size) var(--checker-size),
+					var(--checker-size) var(--checker-size);
+			}
+
+			.faux-heading {
+				font-size: 1.2em;
+				font-weight: bold;
+			}
+
+			.plain-list {
+				list-style: none;
+				padding: 0;
+			}
+
+		/******************************\
+		 * LAYOUT                     *
+		\******************************/
+
+			.launch-area {
+				margin: 0 auto;
+				min-width: 650px;
+				max-width: 1000px;
+				--color: #0075ff;
+			}
+
+				.launch-area:before {
+					content: '';
+					display: block;
+					border-top: 1px var(--color) solid;
+					background: linear-gradient(0deg, transparent, rgb(0 117 255 / 25%));
+					height: 40pt;
+					width: 100%;
+					position: absolute;
+					z-index: -1;
+					top: 0;
+					left: 0;
+				}
+
+				.launch-area:after {
+					content: attr(data-ver);
+					position: absolute;
+					top: 4pt;
+					right: 4pt;
+					font-family: system-ui;
+					color: var(--color);
+					font-size: 8px;
+					display: inline-block;
+				}
+
+			.map-area {
+				height: 100vh;
+				width: 100%;
+				max-width: 600pt;
+				margin: auto;
+				display: grid;
+				grid-template-columns: 50%;
+				grid-template-rows: auto 60vh auto;
+				grid-gap: 10pt;
+				padding: 10pt;
+				grid-template-areas:
+					'id id'
+					'diagram diagram'
+					'inputs hotkeys';
+			}
+
+			.map-gamepad {
+				grid-area: id;
+				text-align: center;
+				margin: 10pt;
+			}
+
+			.map-display {
+				grid-area: diagram;
+				margin: 0;
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+			}
+
+				.map-display .shapes [data-name]:hover {
+					cursor: pointer;
+					fill: var(--hover-color);
+				}
+
+			.map-input-list {
+				grid-area: inputs;
+				overflow: auto;
+				margin: 0;
+				padding: 0;
+			}
+
+			.map-hotkeys {
+				grid-area: hotkeys;
+				overflow: auto;
+				display: flex;
+				width: 100%;
+				justify-content: center;
+				text-align: center;
+			}
+
+				.map-hotkeys td {
+					vertical-align: top;
+					padding: 0 10pt;
+				}
+
+			.input-area {
+				display: flex;
+				min-height: 100vh;
+				width: 100%;
+			}
+
+			.launch-grid {
+				display: grid;
+				justify-content: center;
+				grid-template-areas:
+					'options preview';
+				grid-template-columns: 50%;
+				grid-gap: 20pt;
+				margin: 0 auto;
+			}
+
+			.preview-cell {
+				grid-area: preview;
+				max-width: 400px;
+			}
+
+			.profile-loading-dock {
+				display: flex;
+				gap: 5pt;
+			}
+
+			.options-cell {
+				grid-area: options;
+			}
+
+			.profile-loading-dock {
+				display: grid;
+				gap: 5pt;
+				width: 150pt;
+				grid-template-areas:
+					'load save'
+					'file file';
+			}
+
+			.profile-button-load { grid-area: load; }
+			.profile-button-save { grid-area: save; }
+
+			.switch-container {
+				display: flex;
+				align-items: center;
+				width: 150pt;
+				gap: 10pt;
+			}
+
+		/******************************\
+		 * GENERAL                    *
+		\******************************/
+
+			.ls-item {
+				margin: 10pt auto;
+			}
+
+			.aspect-ratio-input {
+				background: none;
+				color: white;
+				border: none;
+				border-bottom: white solid 1px;
+				width: 5em;
+				padding: 0;
+				text-align: center;
+			}
+
+			.attention-frame {
+				padding: 5pt;
+				background: rgb(255 255 255 / 50%);
+				border-radius: 5pt;
+				backdrop-filter: blur(1px);
+			}
+
+			.preview-area {
+				position: sticky;
+				top: 0;
+			}
+
+				.preview-area:before {
+					position: absolute;
+					top: 5pt;
+					left: 5pt;
+					content: 'Preview';
+					display: block;
+					background: rgb(0 0 0 / 50%);
+					border-bottom-right-radius: 5pt;
+					border-top-left-radius: 2.5pt;
+					font-size: 10pt;
+					padding: 5pt;
+				}
+
+			.profile-options,
+			.player-area {
+				padding: 0;
+				margin: 0;
+			}
+
+			.player-area {
+				list-style: none;
+			}
+
+			.profile-options li {
+				display: flex;
+				justify-content: space-between;
+				padding: 10pt;
+				align-items: center;
+				flex-wrap: wrap;
+				border-bottom: solid 1px #333;
+			}
+
+				.profile-options li:last-child {
+					border-bottom: none;
+				}
+
+			.access-wrapper {
+				--spacing: 20pt;
+				position: sticky;
+				bottom: 0;
+				margin-top: var(--spacing);
+			}
+
+				.access-wrapper:before {
+					content: '';
+					display: block;
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					height: calc(100% + var(--spacing));
+					width: 100%;
+					background: linear-gradient(transparent, var(--chroma) 40%);
+				}
+
+			.access-bar {
+				display: flex;
+				width: 90%;
+				max-width: 400pt;
+				margin: auto;
+				height: 4em;
+				gap: 3pt;
+			}
+
+			.explanation,
+			.signature {
+				color: #9a9a9a;
+			}
+
+			.explanation {
+				display: block;
+				font-style: italic;
+				font-size: 10pt;
+				width: 100%;
+				margin: 0.5em 0;
+			}
+
+			.signature {
+				text-align: center;
+				font-size: 10pt;
+				margin: 1em;
+				cursor: pointer;
+				border-radius: 2pt;
+			}
+
+				.signature::-webkit-details-marker,
+				.signature::marker {
+					display: none;
+					content: '';
+				}
+
+			.preview-iframe {
+				border: none;
+				width: 100%;
+				height: 150pt;
+				vertical-align: bottom;
+				border-radius: 2.5pt;
+			}
+
+			.option-title {
+				font-weight: bold;
+				padding: 2pt;
+			}
+
+			.map-confirm {
+				color: var(--stroke);
+				margin: auto;
+				font-size: 2em;
+				padding: 0.5em 1em;
+				background: none;
+				border-radius: 0.2em;
+				border: solid 0.1em;
+				cursor: pointer;
+				display: none;
+			}
+
+				.map-confirm:hover,
+				.map-input-list li:hover {
+					background-color: var(--hover-color);
+				}
+
+				.map-input-list li:after {
+					content: attr(data-input);
+					display: block;
+					color: #ccc;
+					font-size: 10pt;
+				}
+
+			.map-selected-item {
+				animation-name: highlight-glow;
+				animation-duration: 1s;
+				animation-iteration-count: infinite;
+				animation-direction: alternate;
+				animation-timing-function: ease-in-out;
+			}
+
+				.map-selected-item:before {
+					content: '';
+					position: absolute;
+					left: 0;
+					top: 0;
+					display: flex;
+					height: 0;
+					width: 0;
+					transform: translate(8pt, 50%);
+					border: solid transparent 10pt;
+					border-left-color: white;
+				}
+
+			.map-input-current {
+				text-align: center;
+				font-size: 2em;
+				margin: 10pt;
+				line-height: 1em;
+				min-height: 2em;
+			}
+
+			.map-gamepad:before,
+			.map-input-current:before {
+				display: block;
+				font-size: small;
+				font-style: italic;
+			}
+
+				.map-gamepad:before       { content: 'Player: ' attr(data-player); }
+				.map-input-current:before { content: 'Layout: ' attr(data-layout); }
+
+			.map-input-list li {
+				padding: 5pt;
+				cursor: pointer;
+				text-align: center;
+				position: relative;
+			}
+
+			.ls-label {
+				display: flex;
+				align-items: center;
+			}
+
+			.checkbox-title {
+				display: flex;
+				align-items: center;
+				color: inherit;
+			}
+
+			.profile-filename {
+				--height: 8pt;
+				font-size: var(--height);
+				font-family: monospace;
+				display: flex;
+				justify-content: flex-end;
+				overflow: hidden;
+				align-items: center;
+				grid-area: file;
+				position: relative;
+				color: lightgray;
+				height: var(--height);
+			}
+
+				.profile-filename:before {
+					content: '';
+					display: block;
+					background: linear-gradient(90deg, var(--chroma), transparent);
+					width: 10pt;
+					height: 100%;
+					position: absolute;
+					top: 0;
+					left: 0;
+				}
+
+		/******************************\
+		 * ICONS, SVG                 *
+		\******************************/
+
+			#logo {
+				max-height: 80pt;
+				max-width: 500pt;
+				margin: 20pt auto;
+				display: block;
+			}
+
+			.shapes *,
+			.bg-shapes * {
+				stroke: var(--stroke);
+				fill: var(--filler);
+				stroke-miterlimit: 10;
+				stroke-width: 12pt;
+				transform-box: fill-box;
+				transform-origin: center;
+			}
+
+			.text-icon {
+				height: 1em;
+				width: 1em;
+				display: inline-block;
+				vertical-align: text-bottom;
+				fill: currentColor;
+			}
+
+			.input-layout {
+				max-height: 100vh;
+				max-width: 100%;
+				margin: auto;
+				display: block;
+			}
+
+			.input-error-msg {
+				color: var(--chroma);
+				font-weight: bold;
+				text-align: center;
+				display: flex;
+				font-size: 8vw;
+				width: 100vw;
+				height: 50vh;
+				margin: auto;
+				text-transform: uppercase;
+				align-items: center;
+				filter: invert(1);
+			}
+
+			.checkbox-title:before {
+				display: inline-block;
+				content: url('data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2086.603%20100%22%3E%3Cpath%20fill=%22skyblue%22%20d=%22M10,30.774,43.3,11.547,76.6,30.774V69.226L43.3,88.453,10,69.226V30.774M0,25V75l43.3,25L86.6,75V25L43.3,0,0,25Z%22/%3E%3C/svg%3E');
+				width: 1em;
+				height: 1em;
+				margin-right: 0.5em;
+			}
+
+			.local-setting:checked + .checkbox-title:before {
+				content: url('data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2086.603%20100%22%3E%3Cpath%20fill=%22skyblue%22%20d=%22M10,30.774,43.3,11.547,76.6,30.774V69.226L43.3,88.453,10,69.226V30.774M0,25V75l43.3,25L86.6,75V25L43.3,0,0,25Z%22/%3E%3Cpolygon%20fill=%22white%22%20points=%2221.651%2037.5%2021.651%2062.5%2043.301%2075%2064.952%2062.5%2064.952%2037.5%2043.301%2025%2021.651%2037.5%22/%3E%3C/svg%3E');
+			}
+
+		/******************************\
+		 * BUTTONS & FIELDS           *
+		\******************************/
+
+			.profile-field[type=button]:hover,
+			button.profile-field:hover {
+				background-color: var(--hover-color);
+			}
+
+			.map-hotkey-button {
+				background: none;
+				color: currentColor;
+				border: none;
+				cursor: pointer;
+				width: 100%;
+				border-radius: 2pt;
+			}
+
+				.map-hotkey-button:hover {
+					background: var(--hover-color);
+				}
+
+			.profile-field {
+				background: #333;
+				color: white;
+				border: 3pt solid transparent;
+				padding: 3pt;
+				border-radius: 4pt;
+				font-family: inherit;
+				vertical-align: middle;
+				resize: vertical;
+				width: 150pt;
+			}
+
+			.profile-button-load,
+			.profile-button-save {
+				width: 100%;
+			}
+
+			.profile-color {
+				height: 30pt;
+				padding: 2pt;
+			}
+
+				.profile-color:disabled {
+					opacity: 0.5;
+				}
+
+			.access-button,
+			.access-info,
+			.player {
+				width: 100%;
+				height: 100%;
+				border-radius: 2pt;
+			}
+
+			.access-button,
+			.player {
+				cursor: pointer;
+				align-self: center;
+				background: #f0f0f0;
+				border: 1px solid gray;
+				box-shadow:
+					1px 1px 0 0 #666,
+					inset 1pt 1pt 0 0 white,
+					inset 0 0 0 1pt white;
+				background-image: linear-gradient(0deg,
+					hsl(0deg 0% 100%) 0%,
+					hsl(0deg 0% 90%) 50%,
+					hsl(0deg 0% 95%) 50%,
+					hsl(0deg 0% 100%) 100%
+				);
+				text-shadow: 1px 1px 0 white;
+				margin: 1pt;
+			}
+
+			.access-button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+				.access-button:disabled {
+					cursor: default;
+					color: #bbb;
+					opacity: 0.75;
+				}
+
+				.access-button:active,
+				.player:active {
+					box-shadow:
+						inset 1pt 1pt 2pt 0 rgb(0 0 0 / 0.75),
+						1px 1px 0 0 rgb(255 255 255 / 0.25),
+						inset 0 0 0 1pt white;
+				}
+
+				.access-icon {
+					font-size: 2em;
+				}
+
+			.access-info {
+				cursor: help;
+				text-align: center;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: hsl(0deg 100% 25%);
+				background-color: hsl(0 100% 90% / 1);
+			}
+
+				.access-info.connected {
+					color: hsl(120deg 100% 25%);
+					background-color: hsl(120 100% 90% / 1);
+				}
+
+			.player {
+				min-width: 75pt;
+				text-align: center;
+			}
+
+			.switch + label {
+				--border-size: 0.1em;
+				cursor: pointer;
+				font-size: 1.25em;
+				height: 1em;
+				width: 2em;
+				min-width: 2em;
+				min-height: 1em;
+				border-radius: 1em;
+				position: relative;
+				box-shadow: inset 1pt 1pt 0pt 0 rgb(0 0 0 / 25%);
+				margin: var(--border-size);
+				display: flex;
+				align-items: center;
+				background: #333333;
+				transition: background 0.5s;
+				border-top: none;
+				border-left: none;
+			}
+
+				.switch + label:before {
+					content: '';
+					display: block;
+					height: 1em;
+					width: 1em;
+					left: 0;
+					box-shadow: 1pt 1pt 1pt 0 rgb(0 0 0 / 25%), inset 0 0 0 0.05em #ddd;
+					background: white;
+					border-radius: 1em;
+					transform: scale(0.6);
+					transition: left 0.5s;
+					position: absolute;
+				}
+
+			.switch:checked + label {
+				background: green;
+			}
+
+			.switch:checked + label:before {
+				left: 50%;
+			}
+
+			.profile-field:focus,
+			.aspect-ratio-input:focus,
+			.switch:focus + label,
+			.access-button:focus,
+			.player:focus,
+			.signature:focus,
+			.map-confirm:focus,
+			.map-hotkey-button:focus {
+				outline: solid 2pt skyblue;
+			}
+
+			:focus + .checkbox-title {
+				color: skyblue;
+			}
+
+		/******************************\
+		 * CONTEXTUAL                 *
+		\******************************/
+
+			.map-display.done .input-layout {
+				display: none;
+			}
+
+			.map-display.done .map-confirm {
+				display: block;
+			}
+
+		/******************************\
+		 * FORCED                     *
+		\******************************/
+
+			.hidden {
+				display: none;
+			}
+
+			.hide-visually,
+			.local-setting,
+			.switch {
+				clip-path: inset(50%);
+				position: absolute;
+			}
+
+		/******************************\
+		 * ANIMATION                  *
+		\******************************/
+
+			@keyframes highlight-glow {
+				from {
+					background-color: #e91e63;
+					fill: #e91e63;
+				}
+				to {
+					background-color: #039be5;
+					fill: #039be5;
+				}
+			}
+
+		/******************************\
+		 * PAINT                      *
+		\******************************/
+
+				.input-layout {
+					--red: #ff7777;
+					--yellow: #ffff89;
+					--green: #81ff92;
+					--blue: #4eccff;
+					--gray: #b3b3b3;
+					--pink: #ff84c1;
+					--purple: #a77dff;
+					--lightpurple: #cac2ff;
+				}
+
+			/* arcade */
+
+				[data-paint='arcade'] [data-name='SPECIAL 1'],
+				[data-paint='arcade'] [data-name='SPECIAL 2'] { --stroke: var(--gray); }
+
+			/* leverless */
+
+				[data-paint='leverless'] [data-name='DOWN'],
+				[data-paint='leverless'] [data-name='LEFT'],
+				[data-paint='leverless'] [data-name='RIGHT'],
+				[data-paint='leverless'] [data-name='UP'] { --stroke: var(--red); }
+				[data-paint='leverless'] [data-name='SPECIAL 1'],
+				[data-paint='leverless'] [data-name='SPECIAL 2'] { --stroke: var(--gray); }
+
+			/* standard */
+
+				[data-paint='standard'] [data-name='A'] { --stroke: var(--green); }
+				[data-paint='standard'] [data-name='B'] { --stroke: var(--red); }
+				[data-paint='standard'] [data-name='X'] { --stroke: var(--blue); }
+				[data-paint='standard'] [data-name='Y'] { --stroke: var(--yellow); }
+
+			/* spin-dasher */
+
+				[data-paint='spin-dasher'] [data-name='START'] { --stroke: var(--purple); }
+
+			/* super */
+
+				[data-paint='super'] [data-name='A'] { --stroke: var(--purple); }
+				[data-paint='super'] [data-name='B'] { --stroke: var(--purple); }
+				[data-paint='super'] [data-name='X'] { --stroke: var(--lightpurple); }
+				[data-paint='super'] [data-name='Y'] { --stroke: var(--lightpurple); }
+
+			/* star-collector */
+
+				[data-paint='star-collector'] [data-name='A'] { --stroke: var(--blue); }
+				[data-paint='star-collector'] [data-name='B'] { --stroke: var(--green); }
+				[data-paint='star-collector'] [data-name='START'] { --stroke: var(--red); }
+				[data-paint='star-collector'] [data-name='C-DOWN'],
+				[data-paint='star-collector'] [data-name='C-LEFT'],
+				[data-paint='star-collector'] [data-name='C-RIGHT'],
+				[data-paint='star-collector'] [data-name='C-UP'],
+				[data-paint='star-collector'] [data-name='C-STICK'],
+				[data-paint='star-collector'] [data-name='RIGHT STICK'],
+				[data-paint='star-collector'] .stick-frame-r { --stroke: var(--yellow); }
+
+			/* simple */
+
+				[data-paint='simple'] [data-name='A'],
+				[data-paint='simple'] [data-name='B'] { --stroke: var(--red); }
+
+			/* dualx */
+
+				[data-paint='dualx'] [data-name='A'] {--stroke: var(--blue); }
+				[data-paint='dualx'] [data-name='B'] {--stroke: var(--red); }
+				[data-paint='dualx'] [data-name='X'] {--stroke: var(--pink); }
+				[data-paint='dualx'] [data-name='Y'] {--stroke: var(--green); }
+
+			/* dolphin */
+
+				[data-paint='dolphin'] [data-name='A'] { --stroke: var(--green); }
+				[data-paint='dolphin'] [data-name='B'] { --stroke: var(--red); }
+				[data-paint='dolphin'] [data-name='X'],
+				[data-paint='dolphin'] [data-name='Y'] { --stroke: var(--gray); }
+				[data-paint='dolphin'] [data-name='Z'],
+				[data-paint='dolphin'] [data-name='LEFT SHOULDER'],
+				[data-paint='dolphin'] [data-name='RIGHT SHOULDER'] { --stroke: var(--purple); }
+				[data-paint='dolphin'] [data-name='C-DOWN'],
+				[data-paint='dolphin'] [data-name='C-LEFT'],
+				[data-paint='dolphin'] [data-name='C-RIGHT'],
+				[data-paint='dolphin'] [data-name='C-UP'],
+				[data-paint='dolphin'] [data-name='C-STICK'],
+				[data-paint='dolphin'] [data-name='RIGHT STICK'],
+				[data-paint='dolphin'] .stick-frame-r { --stroke: var(--yellow); }
+	</style>
+</head>
+<body>
+<noscript>JavaScript is required.</noscript>
+<div id="launch-area" class="launch-area hidden">
+	<form id="config">
+		<!-- For some reason, when `enter` is pressed within a text field, it triggers a 'click' event on the first button in the form. This button only exists to intercept that nonsense and do nothing. -->
+		<button class="hidden" disabled>Do nothing</button>
+		<svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2377.87 570.71"><polygon fill="black" points="2377.87 0 2271.77 106.07 2271.77 175 2196.77 175 2196.77 370.71 1996.77 570.71 1996.77 475 621.78 475 621.78 570.71 421.78 370.71 421.78 315.77 403.12 319.06 404.44 321.15 395.98 401.44 227.78 431.1 181.84 358.08 66.82 378.36 0 272.16 8.46 191.87 70.4 180.95 69.08 178.85 77.54 98.56 245.74 68.91 291.68 141.93 406.7 121.65 421.78 145.61 421.78 106.06 315.72 0 746.78 0 771.78 33.32 771.78 0 2377.87 0"/><path fill="white" d="M309.843,252.679,348.7,314.44,258.774,330.3l-38.857-61.76,27.006-36.478ZM1971.774,50v75h75V450l100-100V125h75V85.354L2257.135,50Zm-650,300V50h-100V350Zm350-300V350h100V237.5h50V350h100V50s-100,0-100,0V162.5h-50V50Zm-1050,0V350H721.784V216.676L821.779,350h100V50H821.779V183.308L721.784,50Zm750,300h250V162.5h-112.5v75h37.5V275h-75V125h150V50h-250Zm-400-112.5h125V275h-125v75h200V162.5h-125V125h125V50h-200ZM471.775,350l100,100V50H436.426l35.349,35.35Zm848.832,32h-22.666v68h22.666Zm266.332,17h17v-17h-56.666v17h17v51h22.667Zm-153,51h-22.667v-68h48.652l8.015,8.012V416.49l-8.015,8.014H1433.94Zm0-42.5h11.333V399H1433.94Zm93.984,42.5,8.015-8.015V382.005h-22.666v51h-11.334v-51h-22.666v59.984l8.015,8.015Zm-150.649-37.783L1354.609,382h-22.668v68h22.668V419.784L1377.275,450h22.665V382h-22.665ZM1985.441,424.5l11.333,25.5h-22.666l-11.333-25.5V450h-22.667V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.666-17h11.333V399h-11.333ZM1872.109,382h-22.667l-2.833,34-8.5-14.577-8.5,14.57-2.833-34h-22.667l5.667,68,22.664,0,5.667-9.715,5.666,9.715,22.669,0Zm-187,68,17-68h-22.666l-5.667,22.667L1668.11,382h-22.666l17,68Zm28.333,0h22.667V382h-22.667Zm34,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333Zm136,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333ZM939.105,424.5,950.438,450H927.772l-11.334-25.5V450H893.772V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399H916.438Zm328.665,17,11.333,25.5H1233.77l-11.334-25.5V450H1199.77V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399h-11.334ZM1075.1,433h-22.666V382h-22.667v68H1075.1Zm-408,17V433H644.441V399h22.666V382H621.774v68Zm351.331,0H961.771V382h56.667Zm-22.667-51H984.438v34h11.333Zm136,34H1109.1V382h-22.667v68h45.333ZM865.439,399h17V382H825.773v17h17v51h22.667ZM735.107,450H678.44V382h56.667Zm-34-17H712.44V399H701.107Zm90.667-20.783L769.108,382H746.44v68h22.668V419.784L791.774,450h22.665V382H791.774ZM1188.437,382H1143.1v68h45.333V433H1165.77v-8.5h22.667v-17H1165.77V399h22.667ZM232.748,209.527l27-36.476L220.892,111.3l-89.926,15.856,38.854,61.756Zm149.115-45.49-97.28,17.153-27.005,36.477L320.5,238.282l97.28-17.154ZM195.088,260.4l27-36.471L159.169,203.3l-97.28,17.153,35.919,57.092Z"/></svg>
+		<div class="launch-grid">
+			<div class="options-cell">
+				<ul id="profile-options" class="profile-options">
+					<li>
+						<div class="option-title">Profile</div>
+						<div class="option-input profile-loading-dock">
+							<button id="load-profile" class="profile-field profile-button-load"><svg class="text-icon"><use href="#icon-upload"></use></svg> Load</button>
+							<button id="save-profile" class="profile-field profile-button-save"><svg class="text-icon"><use href="#icon-download"></use></svg> Save</button>
+							<div id="profile-filename" class="profile-filename"></div>
+						</div>
+						<small class="explanation">Load or save settings and mappings</small>
+					</li>
+					<li>
+						<div class="option-title">Name</div>
+						<div class="option-input">
+							<input type="text" autocomplete="off" id="profile-name" name="name" class="profile-field" placeholder="e.g. Main controller">
+						</div>
+						<small class="explanation">Profile name</small>
+					</li>
+					<li>
+						<div class="option-title">Notes</div>
+						<div class="option-input">
+							<textarea id="profile-notes" name="notes" class="profile-field" placeholder="e.g. Generic profile for most games"></textarea>
+						</div>
+						<small class="explanation">Profile notes</small>
+					</li>
+					<li>
+						<div class="option-title">Layout</div>
+						<div class="option-input">
+							<select id="profile-layout" class="profile-field" name="layout"></select>
+						</div>
+						<small class="explanation">Button arrangement</small>
+					</li>
+					<li>
+						<div class="option-title">Paint</div>
+						<div class="option-input">
+							<select id="profile-paint" class="profile-field" name="paint">
+								<option value="arcade">Arcade</option>
+								<option value="auto" selected>Auto</option>
+								<option value="dolphin">Dolphin</option>
+								<option value="dualx">DualX</option>
+								<option value="leverless">Leverless</option>
+								<option value="none">None</option>
+								<option value="simple">Simple</option>
+								<option value="spin-dasher">Spin Dasher</option>
+								<option value="standard">Standard</option>
+								<option value="star-collector">Star Collector</option>
+								<option value="super">Super</option>
+							</select>
+						</div>
+						<small class="explanation">Coloring and styling</small>
+					</li>
+					<li>
+						<div class="option-title">Background</div>
+						<div class="option-input">
+							<input type="color" id="profile-background" class="profile-field profile-color" name="background" value="#222222">
+						</div>
+						<small class="explanation">Background color</small>
+					</li>
+					<li>
+						<div class="option-title">Stroke</div>
+						<div class="option-input">
+							<input type="color" id="profile-stroke-color" class="profile-field profile-color" name="stroke-color" value="#ffffff">
+						</div>
+						<small class="explanation">Default stroke color</small>
+					</li>
+					<li>
+						<div class="option-title">Fill</div>
+						<div class="option-input switch-container">
+							<input type="checkbox" id="profile-fill-use" class="switch" name="fill-use" checked><label for="profile-fill-use"></label>
+							<input type="color" id="profile-fill-color" class="profile-field profile-color" name="fill-color" value="#000000">
+						</div>
+						<small class="explanation">Fill color of unpressed buttons</small>
+					</li>
+					<li>
+						<div class="option-title">Dimensions</div>
+						<div class="option-input">
+							<input type="number" id="profile-width" class="aspect-ratio-input dont-update" name="width" title="Width" value="512" min="1" max="9999"> &#215;
+							<input type="number" id="profile-height" class="aspect-ratio-input dont-update" name="height" title="Height" value="256" min="1" max="9999"> <abbr title="pixels">px</abbr>
+						</div>
+						<small class="explanation">Size of the player window when launched</small>
+					</li>
+				</ul>
+			</div>
+			<div class="preview-cell">
+				<div id="preview-area" class="preview-area attention-frame">
+					<iframe
+						id="preview-iframe"
+						class="preview-iframe checkered"
+						title="Profile preview"
+						tabindex="-1"
+					></iframe>
+				</div>
+				<ul class="plain-list">
+					<li class="ls-item">
+						<label class="ls-label"><input type="checkbox" id="ls-show-preview" class="local-setting" checked><span class="checkbox-title">Show preview</span></label>
+						<small class="explanation">Whether to preview the current configurations. This setting may automatically change depending on other settings.</small>
+					</li>
+					<li class="ls-item">
+						<label class="ls-label"><input type="checkbox" id="ls-auto-preview" class="local-setting" checked><span class="checkbox-title">Automatically enable preview</span></label>
+						<small class="explanation">Whether to automatically enable the preview when deemed appropriate, such as when the current configurations are changed.</small>
+					</li>
+					<li class="ls-item">
+						<label class="ls-label"><input type="checkbox" id="ls-kill-preview" class="local-setting" checked><span class="checkbox-title">Automatically disable preview</span></label>
+						<small class="explanation">Whether to automatically disable the preview (saving memory) when deemed appropriate, such as when a player window is launched.</small>
+					</li>
+					<li class="ls-item">
+						<label class="ls-label"><input type="checkbox" id="ls-auto-close-exit" class="local-setting" checked><span class="checkbox-title">Automatically close player windows on exit</span></label>
+						<small class="explanation">Whether to automatically close all windows that were launched from this one when this window is closed.</small>
+					</li>
+					<li class="ls-item">
+						<label class="ls-label"><input type="checkbox" id="ls-auto-close-disconnect" class="local-setting"><span class="checkbox-title">Automatically close player windows on disconnect</span></label>
+						<small class="explanation">Whether to automatically close a player's window when the associated controller is disconnected.</small>
+					</li>
+					<li class="ls-item">
+						<label class="ls-label"><input type="checkbox" id="ls-map-paint" class="local-setting"><span class="checkbox-title">Apply paint when mapping</span></label>
+						<small class="explanation">Whether to apply the paint setting to the layout when in mapping mode.</small>
+					</li>
+					<li class="ls-item">
+						<label class="ls-label"><input type="checkbox" id="ls-map-auto-confirm" class="local-setting"><span class="checkbox-title">Automatically exit map area</span></label>
+						<small class="explanation">Whether to automatically confirm and exit the mapping area when the final input is given. Otherwise, you will be prompted for manual confirmation.</small>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="access-wrapper">
+			<div class="access-bar attention-frame">
+				<select id="player" class="player" name="player" title="Player port">
+					<option value="1" selected>Player 1</option>
+					<option value="2">Player 2</option>
+					<option value="3">Player 3</option>
+					<option value="4">Player 4</option>
+				</select>
+				<div id="access-gamepad" class="access-info">
+					<svg class="access-icon text-icon"><use id="access-gamepad-ref"></use></svg>
+				</div>
+				<button id="access-button-map" class="access-button" title="Map inputs for this layout" disabled>
+					<svg class="access-icon text-icon"><use href="#icon-map"></use></svg>
+				</button>
+				<button id="access-button-open" class="access-button" title="Launch/replace the player window" disabled>
+					<svg class="access-icon text-icon"><use href="#icon-launch"></use></svg>
+				</button>
+				<button id="access-button-focus" class="access-button" title="Focus the player window" disabled>
+					<svg class="access-icon text-icon"><use href="#icon-focus"></use></svg>
+				</button>
+				<button id="access-button-close" class="access-button" title="Close the player window (hold SHIFT to close all players)" disabled>
+					<svg class="access-icon text-icon"><use href="#icon-close"></use></svg>
+				</button>
+			</div>
+		</div>
+		<input type="hidden" id="profile-saved" name="saved" value="y">
+	</form>
+	<aside class="hidden">
+		<svg id="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="92.426 21.716 78.284 7.574 50 35.858 21.716 7.574 7.574 21.716 35.858 50 7.574 78.284 21.716 92.426 50 64.142 78.284 92.426 92.426 78.284 64.142 50 92.426 21.716"/></svg>
+		<svg id="icon-controller" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M99.03,57.992,90.784,35.337C86.438,23.4,76.894,18.979,68.248,22.125a19.921,19.921,0,0,1-6.814,1.2H38.566a19.921,19.921,0,0,1-6.814-1.2c-8.646-3.146-18.19,1.27-22.536,13.212L.97,57.992C-4.095,71.907,11.735,84.586,23.9,76.135a33.246,33.246,0,0,0,9.754-10.648,7.585,7.585,0,0,1,6.6-3.65h19.51a7.585,7.585,0,0,1,6.6,3.65,33.246,33.246,0,0,0,9.754,10.648C88.265,84.586,104.1,71.907,99.03,57.992Zm-55.8-13.661a2,2,0,0,1-2,2H34.487v6.747a2,2,0,0,1-2,2h-3.5a2,2,0,0,1-2-2V46.331H20.242a2,2,0,0,1-2-2v-3.5a2,2,0,0,1,2-2H26.99V32.086a2,2,0,0,1,2-2h3.5a2,2,0,0,1,2,2v6.747h6.747a2,2,0,0,1,2,2ZM69.262,28.7a4.628,4.628,0,1,1-4.628,4.628A4.628,4.628,0,0,1,69.262,28.7ZM60.005,47.21a4.628,4.628,0,1,1,4.629-4.628A4.628,4.628,0,0,1,60.005,47.21Zm9.257,9.256a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,69.262,56.466Zm9.256-9.256a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,78.518,47.21Z"/></svg>
+		<svg id="icon-controller-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M68.248,22.125a19.921,19.921,0,0,1-6.814,1.2H38.566a19.921,19.921,0,0,1-6.814-1.2c-8.646-3.146-18.19,1.27-22.536,13.212L.97,57.992C-2.784,68.306,4.942,77.931,14.143,78.786l57.5-57.5A16.337,16.337,0,0,0,68.248,22.125ZM43.234,44.331a2,2,0,0,1-2,2H34.487v6.747a2,2,0,0,1-2,2h-3.5a2,2,0,0,1-2-2V46.331H20.242a2,2,0,0,1-2-2v-3.5a2,2,0,0,1,2-2H26.99V32.086a2,2,0,0,1,2-2h3.5a2,2,0,0,1,2,2v6.747h6.747a2,2,0,0,1,2,2Zm55.8,13.661L90.784,35.337A23.161,23.161,0,0,0,82.876,24.2l-9,9c0,.044.013.086.013.131a4.628,4.628,0,0,1-4.628,4.628c-.045,0-.087-.012-.132-.013l-4.51,4.51c0,.044.014.086.014.131a4.629,4.629,0,0,1-4.629,4.628c-.045,0-.086-.012-.131-.013l-14.64,14.64H59.755a7.585,7.585,0,0,1,6.6,3.65,33.246,33.246,0,0,0,9.754,10.648C88.265,84.586,104.1,71.907,99.03,57.992ZM69.262,56.466a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,69.262,56.466Zm9.256-9.256a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,78.518,47.21ZM9.341,94.194,5.806,90.659h0L90.659,5.806h0l3.535,3.535h0Z"/></svg>
+		<svg id="icon-download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M71.915,7.7H28.085V0h43.83ZM6.178,56.17H27.972V15.394H71.8V56.17h22.02L50.009,100Z"/></svg>
+		<svg id="icon-focus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50.027,21.157A57.708,57.708,0,0,0,0,50.054a57.814,57.814,0,0,0,100,0A57.686,57.686,0,0,0,50.027,21.157ZM12.009,50.033a48.092,48.092,0,0,1,24.49-16.9,21.6,21.6,0,0,0,0,33.734A48.265,48.265,0,0,1,12.009,50.033Zm51.54,16.838a21.6,21.6,0,0,0,.021-33.726A48.072,48.072,0,0,1,88,50.044,48.053,48.053,0,0,1,63.549,66.871Z"/></svg>
+		<svg id="icon-launch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M27.543,58.227l2.1,2.1L17.262,79.579l-5.681,8.84,8.84-5.682L39.678,70.362l2.086,2.086A39.962,39.962,0,0,1,27.977,84.369c-4.31,2.113-8.239,2.686-12.384,4.063A29.971,29.971,0,0,0,7.361,92.64a30.162,30.162,0,0,0,4.206-8.233c1.379-4.144,1.952-8.073,4.065-12.383A40.126,40.126,0,0,1,27.543,58.227Zm-1.225-9.72A104.27,104.27,0,0,1,42.31,27.722l.619-3.5a3.22,3.22,0,0,0-4.269-3.689L21.017,25.982a4.24,4.24,0,0,0-2.39,1.918L0,60.037l25.305-6.275A8.02,8.02,0,0,1,26.318,48.507ZM51.493,73.681a7.876,7.876,0,0,1-5.255,1.012L39.963,100,72.1,81.373a4.243,4.243,0,0,0,1.918-2.39L79.462,61.34a3.22,3.22,0,0,0-3.689-4.269l-3.495.618A104.2,104.2,0,0,1,51.493,73.681ZM100,0C93.676,31.622,75.992,56.651,50.336,71.71a5.735,5.735,0,0,1-6.956-.878L41.646,69.1l5.68-3.651a18.737,18.737,0,0,0,5.438-5.438L62.62,44.673c1.752-2.727,2.182-5.21,1.209-6.991a3.982,3.982,0,0,0-3.64-2.024,9.26,9.26,0,0,0-4.862,1.722L39.992,47.236a18.753,18.753,0,0,0-5.439,5.438l-3.65,5.68L29.168,56.62a5.729,5.729,0,0,1-.878-6.956C43.349,24.008,68.378,6.324,100,0ZM68.137,31.863a7.143,7.143,0,1,0,0-10.1A7.144,7.144,0,0,0,68.137,31.863ZM46.09,63.524a16.533,16.533,0,0,0,4.751-4.752L60.7,43.437c2.127-3.31,1.606-5.494-.508-5.494a7.175,7.175,0,0,0-3.626,1.36L41.227,49.158a16.546,16.546,0,0,0-4.751,4.752L19.185,80.815Z"/></svg>
+		<svg id="icon-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M41.667,50A20.834,20.834,0,1,0,20.833,70.833,20.834,20.834,0,0,0,41.667,50ZM27.291,61.447l-2-5.2H16.14l-1.889,5.2h-4.9l8.917-22.894h4.889L32.32,61.447ZM20.652,43.894l3.157,8.5H17.561ZM79.167,29.167A20.833,20.833,0,1,0,100,50,20.834,20.834,0,0,0,79.167,29.167Zm10.112,28.68a6.1,6.1,0,0,1-1.985,2.358,6.536,6.536,0,0,1-3.1,1.086q-1.153.125-5.574.156H70.829V38.553h9.152a26.271,26.271,0,0,1,4.05.227,5.945,5.945,0,0,1,2.392.945,5.853,5.853,0,0,1,1.754,1.912,5.189,5.189,0,0,1,.7,2.678,5.415,5.415,0,0,1-3.216,4.966,6.018,6.018,0,0,1,3.216,2.077A5.5,5.5,0,0,1,90,54.809,6.815,6.815,0,0,1,89.279,57.847Zm-10.8-10.19H75.451V42.364h2.655q3.263,0,3.951.078a2.644,2.644,0,0,1,1.74.8,2.505,2.505,0,0,1,.586,1.725,2.427,2.427,0,0,1-.678,1.789,3.074,3.074,0,0,1-1.867.82Q81.184,47.658,78.479,47.657Zm6.248,5.186a2.984,2.984,0,0,1,.5,1.748,2.816,2.816,0,0,1-.648,1.945,2.875,2.875,0,0,1-1.677.914,21.116,21.116,0,0,1-3.172.139H75.451V51.468h3.732a15.725,15.725,0,0,1,4.1.327A2.834,2.834,0,0,1,84.727,52.843ZM77.289,13.835a3.786,3.786,0,1,1-4.962,5.72,34.21,34.21,0,0,0-32.409-6.8l4.06,5.862L21.406,20.478,31.081,0l4.35,6.281A41.781,41.781,0,0,1,77.289,13.835ZM22.711,86.165a3.786,3.786,0,0,1,4.962-5.72,34.21,34.21,0,0,0,32.409,6.8l-4.06-5.862,22.572-1.857L68.919,100l-4.35-6.281A41.781,41.781,0,0,1,22.711,86.165Z"/></svg>
+		<svg id="icon-upload" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M28.085,92.3h43.83V100H28.085ZM93.822,43.83H72.028V84.606H28.2V43.83H6.178L49.991,0Z"/></svg>
+	</aside>
+	<footer>
+		<details>
+			<summary class="signature">Created by Leon Williams &bull; 2024</summary>
+			<div class="faux-heading">Log</div>
+			<ul>
+				<li><time datetime="2024-08-06 16:32:10.779-0400">2024-08-06</time> Version 1.1
+					<ul>
+						<li>Added support for custom stroke color</li>
+						<li>Added support for custom fill color</li>
+						<li>Minor UI changes</li>
+					</ul>
+				</li>
+				<li><time datetime="2024-08-02 18:39:49.810-0400">2024-08-02</time> Version 1.0</li>
+				<li><time datetime="2024-03-27">2024-03-27</time> Project inception</li>
+			</ul>
+		</details>
+	</footer>
+</div>
+<div class="input-area hidden">
+	<p id="input-error-msg" class="input-error-msg hidden">Controller disconnected</p>
+	<svg
+		id="layout-advanced"
+		data-display="Advanced"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 724.873 549.873"
+	>
+		<g class="shapes">
+			<path data-name="START" data-type="button" d="M869.436,528.936a25,25,0,0,0,0-50H828.309a25,25,0,1,0,0,50Z" transform="translate(-377.564 -192.064)"/>
+			<path data-name="SELECT" data-type="button" d="M740.563,528.936a25,25,0,0,0,0-50H699.436a25,25,0,1,0,0,50Z" transform="translate(-377.564 -192.064)"/>
+			<circle data-name="A" data-type="button" cx="471.309" cy="172.436" r="45.563"/>
+			<circle data-name="B" data-type="button" cx="342.436" cy="172.436" r="45.563"/>
+			<polygon data-name="D-PAD UP" data-type="button" points="154.667 121.873 154.667 195.206 118 231.873 81.333 195.206 81.333 121.873 154.667 121.873"/>
+			<polygon data-name="D-PAD RIGHT" data-type="button" points="228 195.206 228 268.54 154.667 268.54 118 231.873 154.667 195.206 228 195.206"/>
+			<polygon data-name="D-PAD DOWN" data-type="button" points="154.667 268.54 154.667 341.873 81.333 341.873 81.333 268.54 118 231.873 154.667 268.54"/>
+			<polygon data-name="D-PAD LEFT" data-type="button" points="118 231.873 81.333 268.54 8 268.54 8 195.206 81.333 195.206 118 231.873"/>
+			<path data-name="LEFT SHOULDER" data-type="button" d="M580.564,250.064a25,25,0,0,0,0-50h-170a25,25,0,0,0,0,50Z" transform="translate(-377.564 -192.064)"/>
+			<path data-name="RIGHT SHOULDER" data-type="button" d="M869.436,200.064h-170a25,25,0,1,0,0,50h170a25,25,0,0,0,0-50Z" transform="translate(-377.564 -192.064)"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-arcade"
+		data-display="Arcade"
+		data-autopaint="arcade"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 1230.847 644.517"
+	>
+		<g class="bg-shapes">
+			<circle class="stick-frame-l" cx="136" cy="266.667" r="128"/>
+		</g>
+		<g class="shapes">
+			<circle data-name="START" data-type="button" cx="530.64" cy="40" r="32"/>
+			<circle data-name="SELECT" data-type="button" cx="379.791" cy="40" r="32"/>
+			<circle data-name="STICK" data-type="stick"  cx="136" cy="266.667" r="90"/>
+			<circle data-name="ACTION 1" data-type="button" cx="516.965" cy="232.334" r="53.333"/>
+			<circle data-name="ACTION 2" data-type="button" cx="667.815" cy="192.334" r="53.333"/>
+			<circle data-name="ACTION 3" data-type="button" cx="818.664" cy="192.334" r="53.333"/>
+			<circle data-name="ACTION 4" data-type="button" cx="476.965" cy="383.184" r="53.333"/>
+			<circle data-name="ACTION 5" data-type="button" cx="627.815" cy="343.183" r="53.333"/>
+			<circle data-name="ACTION 6" data-type="button" cx="778.664" cy="343.183" r="53.333"/>
+			<circle data-name="SPECIAL 1" data-type="button" cx="969.514" cy="192.334" r="53.333"/>
+			<circle data-name="SPECIAL 2" data-type="button" cx="929.513" cy="343.183" r="53.333"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-dolphin"
+		data-display="Dolphin"
+		data-autopaint="dolphin"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 1355.51 678.409"
+	>
+		<g class="bg-shapes">
+			<polygon class="stick-frame-l" points="136.659 435.501 227.169 398.01 264.659 307.501 227.169 216.991 136.659 179.501 46.149 216.991 8.659 307.501 46.149 398.01 136.659 435.501"/>
+			<polygon class="stick-frame-r" points="708.151 435.501 798.661 398.01 836.151 307.501 798.661 216.991 708.151 179.501 617.641 216.991 580.151 307.501 617.641 398.01 708.151 435.501"/>
+		</g>
+		<g class="shapes">
+			<circle data-name="START" data-type="button" cx="422.405" cy="61.333" r="32"/>
+			<circle data-name="LEFT STICK" data-type="stick"  cx="136.659" cy="307.501" r="90"/>
+			<circle data-name="C-STICK" data-type="stick"  cx="708.151" cy="307.501" r="70"/>
+			<polygon data-name="D-PAD UP" data-type="button" points="449.905 225.001 449.905 280.001 422.405 307.501 394.905 280.001 394.905 225.001 449.905 225.001"/>
+			<polygon data-name="D-PAD RIGHT" data-type="button" points="504.905 280.001 504.905 335.001 449.905 335.001 422.405 307.501 449.905 280.001 504.905 280.001"/>
+			<polygon data-name="D-PAD DOWN" data-type="button" points="449.905 335.001 449.905 390.001 394.905 390.001 394.905 335.001 422.405 307.501 449.905 335.001"/>
+			<polygon data-name="D-PAD LEFT" data-type="button" points="422.405 307.501 394.905 335.001 339.905 335.001 339.905 280.001 394.905 280.001 422.405 307.501"/>
+			<circle data-name="A" data-type="button" cx="950.791" cy="307.501" r="53.333"/>
+			<path data-name="B" data-type="button" d="M1044.706,564.2a32,32,0,1,1-32-32,32,32,0,0,1,32,32" transform="translate(-61.915 -125.796)"/>
+			<path data-name="X" data-type="button" d="M1166.815,472.691a32,32,0,0,1-61.98-15.909,88.051,88.051,0,0,0,0-46.97,32,32,0,0,1,61.98-15.91A151.136,151.136,0,0,1,1166.815,472.691Z" transform="translate(-61.915 -125.796)"/>
+			<path data-name="Y" data-type="button" d="M1052.1,279.188a32,32,0,0,1-15.91,61.98,88.051,88.051,0,0,0-46.97,0,32,32,0,0,1-15.91-61.98A151.119,151.119,0,0,1,1052.1,279.188Z" transform="translate(-61.915 -125.796)"/>
+			<path data-name="Z" data-type="button" d="M1167.186,268.587a406.793,406.793,0,0,0-238.286-76.5,26.694,26.694,0,1,1,0-53.387,462.473,462.473,0,0,1,269.371,86.485,26.694,26.694,0,1,1-31.081,43.407Z" transform="translate(-61.915 -125.796)"/>
+			<path data-name="LEFT TRIGGER" data-type="button" d="M345.655,133.8H212.319a53.333,53.333,0,0,0-53.333,53.333h0a53.334,53.334,0,0,0,53.333,53.334H345.655A26.666,26.666,0,0,0,372.32,213.8V160.461A26.665,26.665,0,0,0,345.655,133.8Z" transform="translate(-61.915 -125.796)"/>
+			<path data-name="RIGHT TRIGGER" data-type="button" d="M756.322,133.8H622.986a26.665,26.665,0,0,0-26.665,26.665V213.8a26.665,26.665,0,0,0,26.665,26.665H756.322a53.334,53.334,0,0,0,53.333-53.334h0A53.333,53.333,0,0,0,756.322,133.8Z" transform="translate(-61.915 -125.796)"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-dual"
+		data-display="DualX"
+		data-autopaint="dualx"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 1407.141 865.918"
+	>
+		<g class="bg-shapes">
+			<circle class="stick-frame-l" cx="415.33" cy="529.918" r="128"/>
+			<circle class="stick-frame-r" cx="791.754" cy="529.918" r="128"/>
+		</g>
+		<g class="shapes">
+			<circle data-name="START" data-type="button" cx="901.02" cy="163.389" r="32"/>
+			<circle data-name="SELECT" data-type="button" cx="306.121" cy="163.389" r="32"/>
+			<polygon data-name="D-PAD UP" data-type="button" points="204.667 191.51 204.667 264.843 168 301.51 131.333 264.843 131.333 191.51 204.667 191.51"/>
+			<polygon data-name="D-PAD RIGHT" data-type="button" points="278 264.843 278 338.176 204.667 338.176 168 301.51 204.667 264.843 278 264.843"/>
+			<polygon data-name="D-PAD DOWN" data-type="button" points="204.667 338.176 204.667 411.51 131.333 411.51 131.333 338.176 168 301.51 204.667 338.176"/>
+			<polygon data-name="D-PAD LEFT" data-type="button" points="168 301.51 131.333 338.176 58 338.176 58 264.843 131.333 264.843 168 301.51"/>
+			<circle data-name="A" data-type="button" cx="1039.141" cy="409.268" r="53.333"/>
+			<circle data-name="B" data-type="button" cx="1145.808" cy="302.602" r="53.333"/>
+			<circle data-name="X" data-type="button" cx="932.474" cy="302.602" r="53.333"/>
+			<circle data-name="Y" data-type="button" cx="1039.141" cy="195.935" r="53.333"/>
+			<circle data-name="LEFT STICK" data-type="click-stick" cx="415.33" cy="529.918" r="90"/>
+			<circle data-name="RIGHT STICK" data-type="click-stick" cx="791.754" cy="529.918" r="90"/>
+			<path data-name="LEFT SHOULDER" data-type="button" d="M86.669,164.933a406.809,406.809,0,0,1,238.286-76.5,26.694,26.694,0,1,0,0-53.387A462.469,462.469,0,0,0,55.588,121.527a26.693,26.693,0,1,0,31.081,43.406Z" transform="translate(-36.43 -27.041)"/>
+			<path data-name="LEFT TRIGGER" data-type="button" d="M592.991,35.041H421.576a15,15,0,0,0-15,15V73.428a15,15,0,0,0,15,15H592.991a26.694,26.694,0,0,0,0-53.387Z" transform="translate(-36.43 -27.041)"/>
+			<path data-name="RIGHT SHOULDER" data-type="button" d="M1193.331,164.933a406.809,406.809,0,0,0-238.286-76.5,26.694,26.694,0,1,1,0-53.387,462.469,462.469,0,0,1,269.371,86.486,26.693,26.693,0,1,1-31.081,43.406Z" transform="translate(-36.43 -27.041)"/>
+			<path data-name="RIGHT TRIGGER" data-type="button" d="M858.424,35.041H687.009a26.694,26.694,0,0,0,0,53.387H858.424a15,15,0,0,0,15-15V50.041A15,15,0,0,0,858.424,35.041Z" transform="translate(-36.43 -27.041)"/>
+			<path data-name="TOUCH" data-type="button" d="M771.786,365.217H508.214a50,50,0,0,1-47.434-34.188L407.618,171.542a20,20,0,0,1,18.973-26.325H853.409a20,20,0,0,1,18.973,26.325L819.22,331.029A50,50,0,0,1,771.786,365.217Z" transform="translate(-36.43 -27.041)"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-fight-pad"
+		data-display="Fight Pad"
+		data-autopaint="spin-dasher"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 1043.786 710.595"
+	>
+		<g class="shapes">
+			<path data-name="START" data-type="button" d="M611.667,223.124a25,25,0,1,0,0,50h56.666a25,25,0,0,0,0-50Z" transform="translate(-218.107 -104.703)"/>
+			<polygon data-name="D-PAD UP" data-type="button" points="240.926 192.734 240.926 266.067 204.259 302.734 167.592 266.067 167.592 192.734 240.926 192.734"/>
+			<polygon data-name="D-PAD RIGHT" data-type="button" points="314.259 266.067 314.259 339.401 240.926 339.401 204.259 302.734 240.926 266.067 314.259 266.067"/>
+			<polygon data-name="D-PAD DOWN" data-type="button" points="240.926 339.401 240.926 412.734 167.592 412.734 167.592 339.401 204.259 302.734 240.926 339.401"/>
+			<polygon data-name="D-PAD LEFT" data-type="button" points="204.259 302.734 167.592 339.401 94.259 339.401 94.259 266.067 167.592 266.067 204.259 302.734"/>
+			<circle data-name="A" data-type="button" cx="498.934" cy="449.247" r="53.333"/>
+			<circle data-name="B" data-type="button" cx="633.845" cy="378.86" r="53.333"/>
+			<circle data-name="C" data-type="button" cx="782.438" cy="346.06" r="53.333"/>
+			<circle data-name="X" data-type="button" cx="461.66" cy="302.734" r="43.2"/>
+			<circle data-name="Y" data-type="button" cx="583.081" cy="239.385" r="43.2"/>
+			<circle data-name="Z" data-type="button" cx="716.814" cy="209.866" r="43.2"/>
+			<path data-name="LEFT SHOULDER" data-type="button" d="M268.347,242.6a406.8,406.8,0,0,1,238.286-76.506,26.693,26.693,0,1,0,0-53.386,462.465,462.465,0,0,0-269.371,86.485A26.694,26.694,0,1,0,268.347,242.6Z" transform="translate(-218.107 -104.703)"/>
+			<path data-name="RIGHT SHOULDER" data-type="button" d="M1011.653,243.819a406.8,406.8,0,0,0-238.286-76.5,26.694,26.694,0,1,1,0-53.387,462.473,462.473,0,0,1,269.371,86.485,26.694,26.694,0,1,1-31.081,43.407Z" transform="translate(-218.107 -104.703)"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-leverless"
+		data-display="Leverless"
+		data-autopaint="leverless"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 1227.554 795.367"
+	>
+		<g class="shapes">
+			<circle data-name="START" data-type="button" cx="527.346" cy="40" r="32"/>
+			<circle data-name="SELECT" data-type="button" cx="376.497" cy="40" r="32"/>
+			<circle data-name="LEFT" data-type="button" cx="61.333" cy="233.117" r="53.333"/>
+			<circle data-name="DOWN" data-type="button" cx="212.183" cy="233.117" r="53.333"/>
+			<circle data-name="RIGHT" data-type="button" cx="363.032" cy="273.118" r="53.333"/>
+			<circle data-name="UP" data-type="button" cx="433.671" cy="534.033" r="53.333"/>
+			<circle data-name="ACTION 1" data-type="button" cx="513.672" cy="232.334" r="53.333"/>
+			<circle data-name="ACTION 2" data-type="button" cx="664.521" cy="192.334" r="53.333"/>
+			<circle data-name="ACTION 3" data-type="button" cx="815.371" cy="192.334" r="53.333"/>
+			<circle data-name="ACTION 4" data-type="button" cx="473.672" cy="383.184" r="53.333"/>
+			<circle data-name="ACTION 5" data-type="button" cx="624.521" cy="343.183" r="53.333"/>
+			<circle data-name="ACTION 6" data-type="button" cx="775.37" cy="343.183" r="53.333"/>
+			<circle data-name="SPECIAL 1" data-type="button" cx="966.22" cy="192.334" r="53.333"/>
+			<circle data-name="SPECIAL 2" data-type="button" cx="926.22" cy="343.183" r="53.333"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-simple"
+		data-display="Simple"
+		data-autopaint="simple"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 803.516 436"
+	>
+		<g class="shapes">
+			<path data-name="START" data-type="button" d="M852.091,259.575a25,25,0,0,0,0,50h56.667a25,25,0,0,0,0-50Z" transform="translate(-338.242 -242)"/>
+			<path data-name="SELECT" data-type="button" d="M701.242,259.575a25,25,0,0,0,0,50h56.667a25,25,0,0,0,0-50Z" transform="translate(-338.242 -242)"/>
+			<polygon data-name="D-PAD UP" data-type="button" points="154.667 8 154.667 81.333 118 118 81.333 81.333 81.333 8 154.667 8"/>
+			<polygon data-name="D-PAD RIGHT" data-type="button" points="228 81.333 228 154.667 154.667 154.667 118 118 154.667 81.333 228 81.333"/>
+			<polygon data-name="D-PAD DOWN" data-type="button" points="154.667 154.667 154.667 228 81.333 228 81.333 154.667 118 118 154.667 154.667"/>
+			<polygon data-name="D-PAD LEFT" data-type="button" points="118 118 81.333 154.667 8 154.667 8 81.333 81.333 81.333 118 118"/>
+			<circle data-name="A" data-type="button" cx="542.183" cy="165.091" r="53.333"/>
+			<circle data-name="B" data-type="button" cx="391.333" cy="165.091" r="53.333"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-spin-dasher"
+		data-display="Spin Dasher"
+		data-autopaint="spin-dasher"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 936.2 522.047"
+	>
+		<g class="shapes">
+			<path data-name="START" data-type="button" d="M691.419,246.113a25,25,0,0,0,17.1,46.985l103.366-37.622a25,25,0,1,0-17.1-46.985Z" transform="translate(-271.9 -198.977)"/>
+			<polygon data-name="D-PAD UP" data-type="button" points="154.667 51.023 154.667 124.357 118 161.023 81.333 124.357 81.333 51.023 154.667 51.023"/>
+			<polygon data-name="D-PAD RIGHT" data-type="button" points="228 124.357 228 197.69 154.667 197.69 118 161.023 154.667 124.357 228 124.357"/>
+			<polygon data-name="D-PAD DOWN" data-type="button" points="154.667 197.69 154.667 271.023 81.333 271.023 81.333 197.69 118 161.023 154.667 197.69"/>
+			<polygon data-name="D-PAD LEFT" data-type="button" points="118 161.023 81.333 197.69 8 197.69 8 124.357 81.333 124.357 118 161.023"/>
+			<circle data-name="A" data-type="button" cx="391.348" cy="260.699" r="53.333"/>
+			<circle data-name="B" data-type="button" cx="533.1" cy="209.105" r="53.333"/>
+			<circle data-name="C" data-type="button" cx="674.852" cy="157.512" r="53.333"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-standard"
+		data-display="Standard"
+		data-autopaint="standard"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 1407.141 865.918"
+	>
+		<g class="bg-shapes">
+			<circle class="stick-frame-l" cx="204.259" cy="301.51" r="128"/>
+			<circle class="stick-frame-r" cx="774.474" cy="529.918" r="128"/>
+		</g>
+		<g class="shapes">
+			<circle data-name="START" data-type="button" cx="696.904" cy="302.602" r="32"/>
+			<circle data-name="SELECT" data-type="button" cx="510.237" cy="302.602" r="32"/>
+			<circle data-name="LEFT STICK" data-type="click-stick" cx="204.259" cy="301.51" r="90"/>
+			<circle data-name="RIGHT STICK" data-type="click-stick" cx="774.474" cy="529.918" r="90"/>
+			<polygon data-name="D-PAD UP" data-type="button" points="469.334 419.918 469.334 493.251 432.667 529.918 396.001 493.251 396.001 419.918 469.334 419.918"/>
+			<polygon data-name="D-PAD RIGHT" data-type="button" points="542.667 493.251 542.667 566.585 469.334 566.585 432.667 529.918 469.334 493.251 542.667 493.251"/>
+			<polygon data-name="D-PAD DOWN" data-type="button" points="469.334 566.585 469.334 639.918 396.001 639.918 396.001 566.585 432.667 529.918 469.334 566.585"/>
+			<polygon data-name="D-PAD LEFT" data-type="button" points="432.667 529.918 396.001 566.585 322.667 566.585 322.667 493.251 396.001 493.251 432.667 529.918"/>
+			<circle data-name="A" data-type="button" cx="1001.79" cy="409.268" r="53.333"/>
+			<circle data-name="B" data-type="button" cx="1108.457" cy="302.602" r="53.333"/>
+			<circle data-name="X" data-type="button" cx="895.124" cy="302.602" r="53.333"/>
+			<circle data-name="Y" data-type="button" cx="1001.79" cy="195.935" r="53.333"/>
+			<path data-name="LEFT SHOULDER" data-type="button" d="M86.669,164.933a406.809,406.809,0,0,1,238.286-76.5,26.694,26.694,0,1,0,0-53.387A462.469,462.469,0,0,0,55.588,121.527a26.693,26.693,0,1,0,31.081,43.406Z" transform="translate(-36.43 -27.041)"/>
+			<path data-name="LEFT TRIGGER" data-type="button" d="M510.237,8h0A53.333,53.333,0,0,1,563.57,61.333V194.669a26.665,26.665,0,0,1-26.665,26.665H483.568A26.665,26.665,0,0,1,456.9,194.669V61.333A53.333,53.333,0,0,1,510.237,8Z"/>
+			<path data-name="RIGHT SHOULDER" data-type="button" d="M1193.331,164.933a406.809,406.809,0,0,0-238.286-76.5,26.694,26.694,0,1,1,0-53.387,462.469,462.469,0,0,1,269.371,86.486,26.693,26.693,0,1,1-31.081,43.406Z" transform="translate(-36.43 -27.041)"/>
+			<path data-name="RIGHT TRIGGER" data-type="button" d="M696.9,8h0a53.333,53.333,0,0,1,53.333,53.333V194.669a26.665,26.665,0,0,1-26.665,26.665H670.236a26.665,26.665,0,0,1-26.665-26.665V61.333A53.333,53.333,0,0,1,696.9,8Z"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-star-collector"
+		data-display="Star Collector"
+		data-autopaint="star-collector"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 1407.141 799.261"
+	>
+		<g class="bg-shapes">
+			<polygon class="stick-frame" points="510.237 590.602 600.746 553.111 638.237 462.602 600.746 372.092 510.237 334.602 419.727 372.092 382.237 462.602 419.727 553.111 510.237 590.602"/>
+		</g>
+		<g class="shapes">
+			<circle data-name="START" data-type="button" cx="696.904" cy="189.334" r="32"/>
+			<circle data-name="STICK" data-type="stick" cx="510.237" cy="462.602" r="90"/>
+			<polygon data-name="D-PAD UP" data-type="button" points="240.926 191.51 240.926 264.843 204.259 301.51 167.592 264.843 167.592 191.51 240.926 191.51"/>
+			<polygon data-name="D-PAD RIGHT" data-type="button" points="314.259 264.843 314.259 338.176 240.926 338.176 204.259 301.51 240.926 264.843 314.259 264.843"/>
+			<polygon data-name="D-PAD DOWN" data-type="button" points="240.926 338.176 240.926 411.51 167.592 411.51 167.592 338.176 204.259 301.51 240.926 338.176"/>
+			<polygon data-name="D-PAD LEFT" data-type="button" points="204.259 301.51 167.592 338.176 94.259 338.176 94.259 264.843 167.592 264.843 204.259 301.51"/>
+			<circle data-name="A" data-type="button" cx="895.124" cy="515.935" r="53.333"/>
+			<circle data-name="B" data-type="button" cx="788.457" cy="409.268" r="53.333"/>
+			<circle data-name="C-UP" data-type="button" cx="1001.79" cy="205.935" r="32"/>
+			<circle data-name="C-RIGHT" data-type="button" cx="1098.457" cy="302.602" r="32"/>
+			<circle data-name="C-DOWN" data-type="button" cx="1001.79" cy="399.268" r="32"/>
+			<circle data-name="C-LEFT" data-type="button" cx="905.124" cy="302.602" r="32"/>
+			<rect data-name="Z" data-type="button" x="456.903" y="8" width="106.667" height="213.334" rx="26.665" ry="26.665"/>
+			<path data-name="LEFT SHOULDER" data-type="button" d="M86.669,198.591a406.809,406.809,0,0,1,238.286-76.505,26.694,26.694,0,1,0,0-53.387A462.469,462.469,0,0,0,55.588,155.185a26.693,26.693,0,1,0,31.081,43.406Z" transform="translate(-36.43 -60.699)"/>
+			<path data-name="RIGHT SHOULDER" data-type="button" d="M1193.331,198.591a406.809,406.809,0,0,0-238.286-76.505,26.694,26.694,0,1,1,0-53.387,462.469,462.469,0,0,1,269.371,86.486,26.693,26.693,0,1,1-31.081,43.406Z" transform="translate(-36.43 -60.699)"/>
+		</g>
+	</svg>
+	<svg
+		id="layout-super"
+		data-display="Super"
+		data-autopaint="super"
+		class="input-layout hidden"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="-100 -100 1407.141 670.602"
+	>
+		<g class="shapes">
+			<path data-name="START" data-type="button" d="M676.765,438.615a32,32,0,1,0,45.255,45.254L789.9,415.987a32,32,0,1,0-45.254-45.255Z" transform="translate(-36.43 -124.699)"/>
+			<path data-name="SELECT" data-type="button" d="M490.1,438.615a32,32,0,0,0,45.254,45.254l67.883-67.882a32,32,0,1,0-45.255-45.255Z" transform="translate(-36.43 -124.699)"/>
+			<polygon data-name="D-PAD UP" data-type="button" points="240.926 191.51 240.926 264.843 204.259 301.51 167.592 264.843 167.592 191.51 240.926 191.51"/>
+			<polygon data-name="D-PAD RIGHT" data-type="button" points="314.259 264.843 314.259 338.176 240.926 338.176 204.259 301.51 240.926 264.843 314.259 264.843"/>
+			<polygon data-name="D-PAD DOWN" data-type="button" points="240.926 338.176 240.926 411.51 167.592 411.51 167.592 338.176 204.259 301.51 240.926 338.176"/>
+			<polygon data-name="D-PAD LEFT" data-type="button" points="204.259 301.51 167.592 338.176 94.259 338.176 94.259 264.843 167.592 264.843 204.259 301.51"/>
+			<circle data-name="A" data-type="button" cx="1108.457" cy="302.602" r="53.333"/>
+			<circle data-name="B" data-type="button" cx="1001.79" cy="409.268" r="53.333"/>
+			<circle data-name="X" data-type="button" cx="1001.79" cy="195.935" r="53.333"/>
+			<circle data-name="Y" data-type="button" cx="895.124" cy="302.602" r="53.333"/>
+			<path data-name="LEFT SHOULDER" data-type="button" d="M86.669,262.591a406.809,406.809,0,0,1,238.286-76.5,26.694,26.694,0,1,0,0-53.387A462.469,462.469,0,0,0,55.588,219.185a26.693,26.693,0,1,0,31.081,43.406Z" transform="translate(-36.43 -124.699)"/>
+			<path data-name="RIGHT SHOULDER" data-type="button" d="M1193.331,262.591a406.809,406.809,0,0,0-238.286-76.5,26.694,26.694,0,1,1,0-53.387,462.469,462.469,0,0,1,269.371,86.486,26.693,26.693,0,1,1-31.081,43.406Z" transform="translate(-36.43 -124.699)"/>
+		</g>
+	</svg>
+</div>
+<div id="map-area" class="map-area hidden">
+	<div id="map-gamepad" class="map-gamepad" title="Gamepad ID" data-player=""></div>
+	<div id="map-display" class="map-display">
+		<input id="map-button-confirm" type="button" class="map-confirm" value="Confirm">
+		<div id="map-input-current" class="map-input-current" data-layout=""></div>
+	</div>
+	<ul id="map-input-list" class="plain-list map-input-list"></ul>
+	<table id="map-hotkeys" class="map-hotkeys">
+		<tbody>
+			<tr>
+				<td><kbd>enter</kbd></td>
+				<td><input type="button" class="map-hotkey-button" data-action="confirm" value="Exit (confirm)"></td>
+			</tr>
+			<tr>
+				<td><kbd>esc</kbd></td>
+				<td><input type="button" class="map-hotkey-button" data-action="cancel" value="Exit (cancel)"></td>
+			<tr>
+				<td><kbd>&uarr;</kbd>, <kbd>&larr;</kbd></td>
+				<td><input type="button" class="map-hotkey-button" data-action="prev" value="Previous input"></td>
+			</tr>
+			<tr>
+				<td><kbd>&darr;</kbd>, <kbd>&rarr;</kbd></td>
+				<td><input type="button" class="map-hotkey-button" data-action="next" value="Next input"></td>
+			</tr>
+			<tr>
+				<td><kbd>delete</kbd></td>
+				<td><input type="button" class="map-hotkey-button" data-action="remove" value="Clear input"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<script>
+
+/**
+ * Creates an interface that couples reusable elements for prompting downloads and uploads
+ * respectively
+ */
+class FileLoadInterface {
+
+	/**
+	 * Anchor (`a`) element used as the vessel for offering downloads
+	 * @type {Element}
+	 */
+	downloader = document.createElement('a')
+
+	/**
+	 * Input element used as the vessel for receiving uploads
+	 * @type {Element}
+	 */
+	uploader = document.createElement('input')
+
+	/**
+	 * Preps the vessel elements
+	 */
+	constructor() {
+		this.downloader.setAttribute('download', '')
+		this.uploader.setAttribute('type', 'file')
+	}
+
+	/**
+	 * Prompts the user to download
+	 * @param {string}  href     - The value of `href` to offer as a download
+	 * @param {?string} basename - Default name of the file
+	 */
+	promptDownload( href, basename = null ) {
+		this.downloader.setAttribute('href', href)
+		this.downloader.setAttribute('download', basename || '')
+		this.downloader.click()
+	}
+
+	/**
+	 * Prompts the user to upload. To listen for the upload, add a 'change' event listener to
+	 * `this.uploader` before calling this function.
+	 * @param {?string} accept - Acceptable files to upload
+	 * @param {bool}    multi  - Whether multiple files are allowed to be uploaded
+	 */
+	promptUpload( accept = null, multi = false ) {
+		// Empty the value to allow "change" detection if uploading the same file twice in a row
+		this.uploader.value = ''
+		if ( accept ) {
+			this.uploader.setAttribute('accept', accept)
+		} else {
+			this.uploader.removeAttribute('accept')
+		}
+		if ( multi ) {
+			this.uploader.setAttribute('multiple', '')
+		} else {
+			this.uploader.removeAttribute('multiple')
+		}
+		this.uploader.click()
+	}
+}
+
+/**
+ * Contains lists of inputs for various situations
+ */
+class InputLists {
+
+	/**
+	 * The input list to use when no other is provided
+	 * @type {?Object}
+	 */
+	#default = null
+
+	/**
+	 * The input list that was passed through the query string
+	 * @type {?Object}
+	 */
+	query = null
+
+	/**
+	 * Specific gamepad input lists
+	 * @type {Object}
+	 */
+	gamepads = {/*
+		[gamepadId]: {
+			[layoutName]: {
+				[inputName]: [input],
+			},
+		},
+	*/}
+
+	/**
+	 * Defines the inputs for a particular gamepad when using a particular layout
+	 * @param {string} id     - Gamepad ID
+	 * @param {string} layout - Name of the layout to define inputs for
+	 * @param {Object} inputs - List of input keys and data
+	 */
+	assignGamepad( id, layout, inputs ) {
+		if ( inputs && Object.keys(inputs).length ) {
+			this.gamepads[id] ??= {}
+			this.gamepads[id][layout] = inputs
+		} else {
+			delete this.gamepads[id][layout]
+			if ( !Object.keys(this.gamepads[id]).length ) {
+				delete this.gamepads[id]
+			}
+		}
+	}
+
+	/**
+	 * Gets the current inputs for a given arrangement
+	 * @param {?string} id     - Gamepad ID the inputs are for
+	 * @param {?string} layout - Name of the layout the inputs are for
+	 * @return {Object} Input list
+	 */
+	getCurrent( id, layout ) {
+		return this.gamepads?.[id]?.[layout] ?? this.query ?? this.default
+	}
+
+	/**
+	 * Gets the default input list
+	 * @return {Object}
+	 */
+	get default() {
+		return this.#default ??= {
+			'A':                   [ 'b', 0 ],
+			'ACTION 1':            [ 'b', 2 ],
+			'ACTION 2':            [ 'b', 3 ],
+			'ACTION 3':            [ 'b', 5 ],
+			'ACTION 4':            [ 'b', 0 ],
+			'ACTION 5':            [ 'b', 1 ],
+			'ACTION 6':            [ 'b', 7 ],
+			'B':                   [ 'b', 1 ],
+			'C':                   [ 'b', 7 ],
+			'C-DOWN':              [ 'a', 3, 1 ],
+			'C-LEFT':              [ 'a', 2, -1 ],
+			'C-RIGHT':             [ 'a', 2, 1 ],
+			'C-UP':                [ 'a', 3, -1 ],
+			'C-STICK (DOWN)':      [ 'a', 3, 1 ],
+			'C-STICK (LEFT)':      [ 'a', 2, -1 ],
+			'C-STICK (RIGHT)':     [ 'a', 2, 1 ],
+			'C-STICK (UP)':        [ 'a', 3, -1 ],
+			'D-PAD DOWN':          [ 'b', 13 ],
+			'D-PAD LEFT':          [ 'b', 14 ],
+			'D-PAD RIGHT':         [ 'b', 15 ],
+			'D-PAD UP':            [ 'b', 12 ],
+			'DOWN':                [ 'b', 13 ],
+			'LEFT':                [ 'b', 14 ],
+			'RIGHT':               [ 'b', 15 ],
+			'UP':                  [ 'b', 12 ],
+			'HOME':                [ 'b', 16 ],
+			'LEFT SHOULDER':       [ 'b', 4 ],
+			'LEFT STICK (CLICK)':  [ 'b', 10 ],
+			'LEFT STICK (DOWN)':   [ 'a', 1, 1 ],
+			'LEFT STICK (LEFT)':   [ 'a', 0, -1 ],
+			'LEFT STICK (RIGHT)':  [ 'a', 0, 1 ],
+			'LEFT STICK (UP)':     [ 'a', 1, -1 ],
+			'LEFT TRIGGER':        [ 'b', 6 ],
+			'RIGHT SHOULDER':      [ 'b', 5 ],
+			'RIGHT STICK (CLICK)': [ 'b', 11 ],
+			'RIGHT STICK (DOWN)':  [ 'a', 3, 1 ],
+			'RIGHT STICK (LEFT)':  [ 'a', 2, -1 ],
+			'RIGHT STICK (RIGHT)': [ 'a', 2, 1 ],
+			'RIGHT STICK (UP)':    [ 'a', 3, -1 ],
+			'RIGHT TRIGGER':       [ 'b', 7 ],
+			'SELECT':              [ 'b', 8 ],
+			'SPECIAL 1':           [ 'b', 4 ],
+			'SPECIAL 2':           [ 'b', 6 ],
+			'START':               [ 'b', 9 ],
+			'STICK (DOWN)':        [ 'a', 1, 1 ],
+			'STICK (LEFT)':        [ 'a', 0, -1 ],
+			'STICK (RIGHT)':       [ 'a', 0, 1 ],
+			'STICK (UP)':          [ 'a', 1, -1 ],
+			'X':                   [ 'b', 2 ],
+			'Y':                   [ 'b', 3 ],
+			'Z':                   null,
+		}
+	}
+}
+
+/**
+ * Groups multiple items for the mapping process
+ */
+class MapItemGroup {
+
+	/**
+	 * HTMLLIElement instances ready to be reused
+	 * @type {Array}
+	 */
+	static #discardedLi = []
+
+	/**
+	 * Class to apply to elements the represent the currently-selected input
+	 * @type {String}
+	 */
+	static #selectClass = 'map-selected-item'
+
+	/**
+	 * Discards an HTMLLIElement instance to be reused later
+	 * @param {HTMLLIElement} li
+	 * @return {bool} TRUE if successfully discarded, otherwise FALSE
+	 */
+	static #discardLi( li ) {
+		if ( !(li instanceof HTMLLIElement) ) {
+			return false
+		}
+		if ( !MapItemGroup.#discardedLi.includes(li) ) {
+			li.remove()
+			MapItemGroup.#discardedLi.push(li)
+		}
+		return true
+	}
+
+	/**
+	 * Takes an HTMLLIElement from the discard pile
+	 * @return {HTMLLIElement}
+	 */
+	static #takeLi() {
+		return MapItemGroup.#discardedLi.shift() ?? document.createElement('li')
+	}
+
+	/**
+	 * Items associated by their list item elements
+	 * @type {WeakMap}
+	 */
+	#byLi = new WeakMap()
+
+	/**
+	 * Items associated by their SVG shape elements
+	 * @type {WeakMap}
+	 */
+	#byShape = new WeakMap()
+
+	/**
+	 * Items keyed by JSON strings of their inputs. This is used to check if an element is already
+	 * using a particular input
+	 * @type {Map}
+	 */
+	#inputLedger = new Map()
+
+	/**
+	 * ID of the gamepad inputs refer to
+	 * @type {string}
+	 */
+	id = ''
+
+	/**
+	 * Inducted items
+	 * @type {Array}
+	 */
+	items = []
+
+	/**
+	 * Name of the layout the group's items are based on
+	 * @type {string}
+	 */
+	layout = ''
+
+	/**
+	 * Item currently selected
+	 * @type {?Object}
+	 */
+	selected = null
+
+	/**
+	 * Creates a group of items based on a layout
+	 * @param {string}  id     - Gamepad ID
+	 * @param {string}  layout - Name of the layout to build items from
+	 * @param {?Object} inputs - Current inputs
+	 */
+	constructor( id, layout, inputs ) {
+		this.layout = layout
+		this.id = id
+		for ( const item of itemsFromLayout(layout) ) {
+			item.li = MapItemGroup.#takeLi()
+			item.li.innerText = item.name
+			this.#assignInputToItem(inputs?.[item.name], item)
+			this.items.push(item)
+			this.#byLi.set(item.li, item)
+			// Some shape elements are used for more than one item (i.e. control sticks)
+			if ( !this.#byShape.has(item.shape) ) {
+				this.#byShape.set(item.shape, item)
+			}
+		}
+	}
+
+	/**
+	 * Assigns an input to an item
+	 * @param {Array}  input - Input to assign
+	 * @param {Object} item  - Item to assign the input to
+	 */
+	#assignInputToItem( input, item ) {
+		if ( !input ) {
+			if ( item.input ) {
+				this.#inputLedger.delete(JSON.stringify(item.input))
+			}
+			item.input = null
+			item.li.dataset.input = 'Unassigned'
+		} else {
+			const inputJSON = JSON.stringify(input)
+			if ( this.#inputLedger.has(inputJSON) ) {
+				this.#assignInputToItem(null, this.#inputLedger.get(inputJSON))
+			}
+			this.#inputLedger.set(inputJSON, item)
+			item.input = input
+			item.li.dataset.input = readableInput(input)
+		}
+	}
+
+	/**
+	 * Deselects the currently-selected item
+	 */
+	#deselect() {
+		if ( this.selected ) {
+			this.selected.li.classList.remove(MapItemGroup.#selectClass)
+			this.selected.shape.classList.remove(MapItemGroup.#selectClass)
+			switch ( this.selected.shape.dataset.type ) {
+
+				case 'stick':
+				case 'click-stick':
+					this.selected.shape.style.transform = null
+					break
+			}
+			document.getElementById('map-input-current').innerText = ''
+			this.selected = null
+		}
+	}
+
+	/**
+	 * Assigns a mapping input to the selected item
+	 * @param {?Array} input - Input data detailing the input source. Pass NULL to delete the
+	 *                         current input.
+	 * @param {MapInputGroup} This instance
+	 */
+	assignInput( input ) {
+		if ( this.selected ) {
+			this.#assignInputToItem(input, this.selected)
+		}
+		return this
+	}
+
+	/**
+	 * Gets and item by the list item associated with it
+	 * @param {HTMLLIElement} li
+	 * @return {?Object} Item object if found
+	 */
+	itemByLi( li ) {
+		return this.#byLi.get(li)
+	}
+
+	/**
+	 * Gets and item by the SVG shape associated with it
+	 * @param {SVGElement} shape
+	 * @return {?Object} Item object if found
+	 */
+	itemByShape( shape ) {
+		return this.#byShape.get(shape)
+	}
+
+	/**
+	 * Selects a specific item
+	 * @param {?Object} item - Item to select (or NULL to deselect the currently-selected item)
+	 * @return {bool} TRUE if successfully selected, otherwise FALSE
+	 */
+	select( item ) {
+		if ( this.selected && this.selected === item ) {
+			return true
+		}
+		this.#deselect()
+		const success = this.items.includes(item)
+		if ( success ) {
+			document.getElementById('map-display').classList.remove('done')
+			this.selected = item
+			item.li.classList.add(MapItemGroup.#selectClass)
+			item.li.scrollIntoView({
+				block: 'start',
+				behavior: 'smooth',
+			})
+			item.shape.classList.add(MapItemGroup.#selectClass)
+			switch ( item.shape.dataset.type ) {
+
+				case 'stick':
+				case 'click-stick':
+					const betweenEndParenthesis = /(?<=\()\w+(?=\)$)/
+					switch ( item.name.match(betweenEndParenthesis)?.[0] ) {
+
+						case DIRECTIONS[0]:
+							item.shape.style.transform = `translate(0, ${-FULLSTICK}pt)`
+							break
+
+						case DIRECTIONS[1]:
+							item.shape.style.transform = `translate(${FULLSTICK}pt, 0)`
+							break
+
+						case DIRECTIONS[2]:
+							item.shape.style.transform = `translate(0, ${FULLSTICK}pt)`
+							break
+
+						case DIRECTIONS[3]:
+							item.shape.style.transform = `translate(${-FULLSTICK}pt, 0)`
+							break
+					}
+					break
+			}
+			document.getElementById('map-input-current').innerText = item.name
+		} else {
+			document.getElementById('map-display').classList.add('done')
+		}
+		return success
+	}
+
+	/**
+	 * Selects the item that follows the currently-selected item
+	 * @return {bool} TRUE if successfully selected, otherwise FALSE
+	 */
+	selectNext() {
+		if ( !this.selected ) {
+			return this.items.length
+				? this.select(this.items[0])
+				: false
+		}
+		const index = this.items.indexOf(this.selected)
+		if ( index === -1 ) {
+			return false
+		} else {
+			return this.select(this.items[index + 1])
+		}
+	}
+
+	/**
+	 * Selects the item that precedes the currently-selected item
+	 * @return {bool} TRUE if successfully selected, otherwise FALSE
+	 */
+	selectPrev() {
+		if ( !this.selected ) {
+			return this.items.length
+				? this.select(this.items[this.items.length - 1])
+				: false
+		}
+		const index = this.items.indexOf(this.selected)
+		if ( index === -1 ) {
+			return false
+		} else {
+			return this.select(this.items[index - 1])
+		}
+	}
+
+	/**
+	 * Renders this instance defunct
+	 */
+	selfDestruct() {
+		this.#deselect()
+		while ( this.items.length ) {
+			const item = this.items.pop()
+			MapItemGroup.#discardLi(item.li)
+		}
+	}
+
+	/**
+	 * Gets a value from each item
+	 * @param {string} prop - Property name of the value to get from items
+	 * @return {Generator}
+	 */
+	*subValues( prop ) {
+		for ( var i = 0; i < this.items.length; i++ ) {
+			yield this.items[i][prop]
+		}
+	}
+}
+
+/**
+ * Names of types of inputs a directional stick can have. This also defines which indexes will be
+ * associated with which input types in other directional arrays. For example, if an array contains
+ * values, and that array is meant to be a collection of directions, those values should correspond
+ * with the indexes here.
+ * @type {Array}
+ */
+const DIRECTIONS = [ 'UP', 'RIGHT', 'DOWN', 'LEFT', 'CLICK' ]
+
+/**
+ * Number of points (pt) sticks are moved at full tilt
+ * @type {Number}
+ */
+const FULLSTICK = 50
+
+/**
+ * Memory for the game loop
+ * @type {Object}
+ */
+const GAME = {
+
+	/**
+	 * Structure denoting which inputs control which elements
+	 * @type {?Object}
+	 */
+	inputMap: null,
+
+	/**
+	 * The SVG element the game is currently using for the layout
+	 * @type {?SVGElement}
+	 */
+	graphic: null,
+
+	/**
+	 * Which controller layout to use to display inputs
+	 * @type {String}
+	 */
+	layout: '',
+
+	/**
+	 * Index of the gamepad to associate with the player
+	 * @type {int}
+	 */
+	port: 0,
+
+	/**
+	 * Whether the game is being ran as a preview (i.e. whether it will be displayed to the user
+	 * from the config page through the preview frame)
+	 * @type {bool}
+	 */
+	preview: false,
+}
+
+/**
+ * Input mapping data for various layouts per gamepads
+ * @type {InputLists}
+ */
+const INPUTS = new InputLists()
+
+/**
+ * Names of URL query fields
+ * @type {Object}
+ */
+const QFIELDS = {
+	background: 'bg',        // Background color
+	fillColor:  'fillcolor', // Fill color
+	fillUse:    'filluse',   // Whether to use fill color on controller buttons
+	inputs:     'inputs',    // Input map data
+	layout:     'layout',    // Which layout to use
+	paint:      'paint',     // Coloring to apply to the layout
+	player:     'player',    // Player number
+	preview:    'pre',       // Whether this window is meant to be used as a config preview
+	stroke:     'stroke',    // Stroke color
+}
+
+/**
+ * Application version
+ *
+ * Version structure: X.Y.Z
+ * X - Major update - Significant changes, such as rebranding, refactoring general code
+ *                    architecture, or providing a potentially unfamiliar user experience relative
+ *                    to the previous major update. Likely affects users' save data compatibility.
+ * Y - Minor update - Introduces new intent, as it changes features (adds, removes, or relocates
+ *                    them, etc.). May affect users' save data compatibility.
+ * Z - Patch        - Small fixes, such as correcting glitches and typos in accordance with the
+ *                    intended experience of the latest minor update. Should not affect users' save
+ *                    data compatibility.
+ *
+ * When a version category's value is incremented, all lower categories must be set to 0. For
+ * example, if Y is changed, Z should be set to 0. If X is changed, both Y and Z should be set to
+ * 0.
+ *
+ * @type {string}
+ */
+const VERSION = '1.1.1'
+
+/**
+ * Applies a paint value to a targeted element
+ * @param {HTMLElement}  target - Element to associate
+ * @param {?string}      paint  - Name of the paint to apply
+ * @param {?HTMLElement} source - Element to examine to determine a paint value in the event that
+ *                                the value of `paint` is 'auto'
+ */
+function applyPaint( target, paint, source ) {
+	if ( paint === 'auto' ) {
+		paint = source?.dataset.autopaint
+	}
+	const attr = 'data-paint'
+	if ( !paint || paint === 'none' ) {
+		target.removeAttribute(attr)
+	} else {
+		target.setAttribute(attr, paint)
+	}
+}
+
+/**
+ * Calculates the value of an input from a gamepad
+ * @param {Gamepad} gamepad - Gamepad to retrieve data from
+ * @param {Array}   input   - Details regarding what data to retrieve from the gamepad
+ * @return {number} Number in the range [0, 1]
+ */
+function calcInputValue( gamepad, input ) {
+	switch ( input?.[0] ) {
+
+		case 'a':
+			return Math.max(0, gamepad.axes[input[1]] * input[2])
+
+		case 'b':
+			return gamepad.buttons[input[1]].value
+	}
+	return 0
+}
+
+/**
+ * Handles final tasks when the application exits
+ * @param {BeforeUnloadEvent}
+ */
+function closeApp( event ) {
+	if ( document.getElementById('profile-saved').value !== 'y' ) {
+		event.preventDefault();
+	}
+	if ( document.getElementById('ls-auto-close-exit').checked ) {
+		closeChildWindows()
+	}
+	for ( const element of document.querySelectorAll('.local-setting[type=checkbox]') ) {
+		localStorage.setItem(element.id, element.checked)
+	}
+}
+
+/**
+ * Closes an open child window
+ * @param {string} name - Name of the child
+ */
+function closeChildWindow( name ) {
+	CHILDREN.windows.get(name)?.close()
+}
+
+/**
+ * Closes all open child windows
+ */
+function closeChildWindows() {
+	CHILDREN.windows.keys().forEach(closeChildWindow)
+}
+
+/**
+ * Establishes which controller inputs are intended to control which layout elements
+ * @param {SVGElement} graphic - SVG to get elements from
+ * @param {Object}     inputs  - List of inputs keyed by input names
+ * @return {Object} Element input mapping structure
+ */
+function createInputMap( graphic, inputs ) {
+	const map = {
+		sticks: new Map(),
+		buttons: new Map(),
+	}
+	let directionCount = null
+	for ( const element of graphic.querySelectorAll('[data-name]') ) {
+		switch ( element.dataset.type ?? 'button' ) {
+
+			case 'button':
+				if ( inputs[element.dataset.name] ) {
+					map.buttons.set(element, inputs[element.dataset.name])
+				}
+				break
+
+			case 'click-stick':
+				directionCount = 5
+
+			case 'stick':
+				directionCount ??= 4
+				const set = []
+				for ( var i = 0; i < directionCount; i++ ) {
+					let name = `${element.dataset.name} (${DIRECTIONS[i]})`
+					if ( !inputs[name] );
+					else if ( DIRECTIONS[i] === 'UP' && inputAxesAreTheSame(set[DIRECTIONS.indexOf('DOWN')], inputs[name]) ) {
+						set[i] = false
+					}
+					else if ( DIRECTIONS[i] === 'LEFT' && inputAxesAreTheSame(set[DIRECTIONS.indexOf('RIGHT')], inputs[name]) ) {
+						set[i] = false
+					}
+					else if ( DIRECTIONS[i] === 'CLICK' ) {
+						map.buttons.set(element, inputs[name])
+					}
+					else set[i] = inputs[name]
+				}
+				if ( set.length ) {
+				 	map.sticks.set(element, set)
+				}
+			 	break
+		}
+	}
+	return map
+}
+
+/**
+ * Defines an immutable global variable, like a "pseudo constant"
+ * @param {string} name  - Name of the variable
+ * @param {*}      value - Value to assign
+ */
+function define( name, value ) {
+	Object.defineProperty(window, name, {
+		configurable: false,
+		writable: false,
+		value,
+	})
+}
+
+/**
+ * Performs an action for the mapping process
+ * @param {string} action - Name of the action to perform
+ */
+function doMapAction( action ) {
+	if ( MAPPER.running ) switch ( action ) {
+
+		case 'cancel':
+			exitMapping()
+			break
+
+		case 'confirm':
+			finishMapping()
+			break
+
+		case 'next':
+			MAPPER.group.selectNext()
+			break
+
+		case 'prev':
+			MAPPER.group.selectPrev()
+			break
+
+		case 'remove':
+			if ( MAPPER.group.selected ) {
+				MAPPER.group.assignInput(null)
+				MAPPER.group.selectNext()
+			}
+			break
+	}
+}
+
+/**
+ * Stops the mapping process, regardless of reason (i.e. whether finished or interrupted)
+ * @param {bool} preview - Whether to update the preview. By default, this is TRUE, however,
+ *                         it may be useful to pass FALSE if you intend to make other changes
+ *                         and would like to update the preview yourself later.
+ */
+function exitMapping( preview = true ) {
+	MAPPER.group.select(null)
+	MAPPER.running = false
+	MAPPER.held = null
+	window.removeEventListener('keydown', onMapperKeydown)
+	window.removeEventListener('keyup', onMapperKeyup)
+	document.getElementById('launch-area').classList.remove('hidden')
+	document.getElementById('map-area').classList.add('hidden')
+	document.getElementById('map-button-confirm').removeEventListener('click', onMapButtonConfirm)
+	document.getElementById('map-input-list').removeEventListener('click', onMapListClick)
+	document.getElementById('map-display').removeEventListener('click', onMapDisplayClick)
+	if ( preview ) {
+		updatePreview()
+	}
+}
+
+/**
+ * Completes the mapping process, signifying success
+ */
+function finishMapping() {
+	exitMapping(false)
+	const inputs = {}
+	for ( const item of MAPPER.group.items ) {
+		if ( item.input ) {
+			inputs[item.name] = item.input
+		}
+	}
+	INPUTS.assignGamepad(MAPPER.group.id, MAPPER.group.layout, inputs)
+	document.getElementById('profile-saved').value = 'n'
+	updatePreview()
+}
+
+/**
+ * Focuses a specific child window
+ * @param {string} name - Name of the child
+ */
+function focusChildWindow( name ) {
+	CHILDREN.windows.get(name)?.focus()
+}
+
+/**
+ * Builds a URL query string fragment from the current data
+ * @param {FormData} form      - Values to build the string from
+ * @param {?Object}  overrides - QFIELDS values to use, prioritized above those in the form
+ * @return {string} Query string
+ */
+function formQuery( form, overrides ) {
+	const gamepad = navigator.getGamepads()[GAME.port]
+	const layoutName = document.getElementById('profile-layout').value
+	const values = {
+		background: form.get('background').substr(1),
+		fillColor:  form.get('fill-color')?.substr(1) ?? '',
+		fillUse:    form.get('fill-use') === 'on' ? 'y' : 'n',
+		inputs:     encodeURIComponent(JSON.stringify(INPUTS.getCurrent(gamepad?.id, layoutName))),
+		layout:     form.get('layout'),
+		paint:      form.get('paint'),
+		player:     form.get('player'),
+		stroke:     form.get('stroke-color').substr(1),
+	}
+	if ( overrides ) {
+		Object.assign(values, overrides)
+	}
+	return queryString(values)
+}
+
+/**
+ * Creates the game loop responsible for updating animation frames
+ */
+function gameLoop() {
+	const gamepad = navigator.getGamepads()[GAME.port]
+	if ( gamepad ) {
+		let value
+		for ( const [ element, input ] of GAME.inputMap.buttons ) {
+			element.style.fill = `color-mix(in lch, var(--filler), var(--stroke) ${calcInputValue(gamepad, input) * 100}%)`
+		}
+		let x = 0, y = 0
+		for ( const [ element, [ up, right, down, left ] ] of GAME.inputMap.sticks ) {
+			if ( left === false ) {
+				x = gamepad.axes[right[1]] * right[2]
+			}
+			else {
+				x = -calcInputValue(gamepad, left) + calcInputValue(gamepad, right)
+			}
+			if ( up === false ) {
+				y = gamepad.axes[down[1]] * down[2]
+			} else {
+				y = calcInputValue(gamepad, down) + -calcInputValue(gamepad, up)
+			}
+			element.style.transform = `translate(${x * FULLSTICK}pt, ${y * FULLSTICK}pt)`
+		}
+		requestAnimationFrame(gameLoop)
+	}
+}
+
+/**
+ * Checks whether two sets of input data sources use the same axis
+ * @param {?Array} input1 - First input to check against the second
+ * @param {?Array} input2 - Second input to check against the first
+ * @return {bool} If both input sources are axes and are the same axis
+ */
+function inputAxesAreTheSame( input1, input2 ) {
+	return input1?.[0] === 'a'
+		&& input2?.[0] === 'a'
+		&& input1[1] === input2[1]
+}
+
+/**
+ * Creates a list of items that utilize inputs in a controller layout
+ * @param {string} name - Name of the controller layout
+ * @return {Generator} Yields objects
+ */
+function* itemsFromLayout( name ) {
+	const items = []
+	for ( const shape of document.getElementById(`layout-${name}`).querySelectorAll('[data-name]') ) {
+		const name = shape.dataset.name ?? 'untitled'
+		let directionCount = null
+		switch ( shape.dataset.type ) {
+
+			case 'click-stick':
+				directionCount = 5
+
+			case 'stick':
+				directionCount ??= 4
+				for ( var i = 0; i < directionCount; i++ ) {
+					yield {
+						shape,
+						name: `${name} (${DIRECTIONS[i]})`,
+					}
+				}
+				break
+
+			default:
+				yield { shape, name }
+				break
+		}
+	}
+}
+
+/**
+ * This is a "replacer" callback to be used as the second argument in a `JSON.stringify()` call
+ * when encoding profile data
+ * @this {Object} The object in which the key was found
+ * @param {string} key   - Key of the value being encoded
+ * @param {*}      value - The value being encoded
+ * @return {*} Encoded or given value
+ */
+function jsonProfileReplacer( key, value ) {
+	if ( value === '' || value === null || (value instanceof Object && !Object.keys(value).length) ) {
+		return undefined
+	} else {
+		return value
+	}
+}
+
+/**
+ * Creates markup options for each layout SVG
+ * @param {string} selected - Name of the layout to select by default
+ */
+function loadLayoutOptions( selected ) {
+	const prefix = 'layout-'
+	const container = document.getElementById('profile-layout')
+	for ( const element of document.querySelectorAll(`svg[id^=${prefix}]`) ) {
+		const option = document.createElement('option')
+		option.value = element.id.slice(prefix.length)
+		option.innerText = element.dataset.display || option.value
+		container.appendChild(option)
+		option.selected = selected === option.value
+	}
+}
+
+/**
+ * Updates the page based on values in local storage
+ */
+function loadLocalSettings() {
+	for ( const element of document.querySelectorAll('.local-setting[type=checkbox]') ) {
+		const item = localStorage.getItem(element.id)
+		if ( item != null ) {
+			element.checked = item === 'true'
+		}
+	}
+	if ( document.getElementById('ls-auto-preview').checked ) {
+		document.getElementById('ls-show-preview').checked = true
+	}
+}
+
+/**
+ * Updates the page in response to a file being read
+ * @param {ProgressEvent} event - Event such as one that would be passed by FileReader.prototype.onload
+ */
+function loadProfile( event ) {
+	const profile = JSON.parse(event.target.result)
+	const prefix = 'profile-'
+	for ( const prop in profile ) {
+		const element = document.getElementById(prefix + prop)
+		if ( element ) {
+			element.value = profile[prop]
+		}
+	}
+	if ( profile.inputs instanceof Object ) {
+		INPUTS.gamepads = profile.inputs
+	}
+	document.getElementById('profile-saved').value = 'y'
+	updatePreview()
+}
+
+/**
+ * Loops to detect gamepad inputs for mapping
+ */
+function mapperLoop() {
+	if ( !MAPPER.running ) {
+		return
+	}
+	const gamepad = navigator.getGamepads()[GAME.port]
+	if ( !gamepad ) {
+		requestAnimationFrame(mapperLoop)
+		return
+	}
+	if ( MAPPER.held ) {
+		const [ type, index, direction ] = MAPPER.held
+		switch ( type ) {
+
+			case 'a':
+				if ( gamepad.axes[index] * direction > MAPPER.threshold ) {
+					requestAnimationFrame(mapperLoop)
+					return
+				}
+				break
+
+			case 'b':
+				if ( gamepad.buttons[index].pressed ) {
+					requestAnimationFrame(mapperLoop)
+					return
+				}
+				break
+		}
+	}
+	MAPPER.held = null
+	const { buttons } = gamepad
+	// Check for a button press
+	for ( var i = 0; i < buttons.length; i++ ) {
+		if ( buttons[i].pressed ) {
+			MAPPER.held = [ 'b', i ]
+			break
+		}
+	}
+	if ( !MAPPER.held ) {
+		const { axes } = gamepad
+		// Check for an axis tilt
+		for ( var i = 0; i < axes.length; i++ ) {
+			if ( 1 >= axes[i] && axes[i] > MAPPER.threshold ) {
+				MAPPER.held = [ 'a', i, 1 ]
+				break
+			}
+			else if ( 1 >= -axes[i] && -axes[i] > MAPPER.threshold ) {
+				MAPPER.held = [ 'a', i, -1 ]
+				break
+			}
+		}
+	}
+	if ( MAPPER.held ) {
+		const somethingIsSelected = MAPPER.group.assignInput(MAPPER.held).selectNext()
+		if ( !somethingIsSelected && document.getElementById('ls-map-auto-confirm').checked ) {
+			finishMapping()
+			return
+		}
+	}
+	requestAnimationFrame(mapperLoop)
+	return
+}
+
+/**
+ * Offers a download to save the current profile configurations
+ */
+function offerProfileDownload() {
+	const data = Object.fromEntries(new FormData(document.getElementById('config')))
+	delete data.player
+	delete data.saved
+	data.inputs = INPUTS.gamepads
+	data.version = VERSION
+	PROFILE_LOADER.promptDownload(
+		'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, jsonProfileReplacer)),
+		(document.getElementById('profile-filename').innerText || document.getElementById('profile-name').value || 'insight-profile') + '.json'
+	)
+	document.getElementById('profile-saved').value = 'y'
+}
+
+/**
+ * Prompts the user to upload profile configurations
+ */
+function offerProfileUpload() {
+	if ( document.getElementById('profile-saved').value === 'y' || confirm('Loading a profile will overwrite current unsaved settings. Continue?') ) {
+		PROFILE_LOADER.promptUpload('.json', false)
+	}
+}
+
+/**
+ * Closes a player window
+ * @param {PointerEvent} event - Event from when the "close" button is clicked
+ */
+function onAccessClose( event ) {
+	event.preventDefault()
+	if ( event.shiftKey ) {
+		closeChildWindows()
+	} else {
+		closeChildWindow(document.getElementById('player').value)
+	}
+}
+
+/**
+ * Focuses a player window
+ * @param {PointerEvent} event - Event from when the "focus" button is clicked
+ */
+function onAccessFocus( event ) {
+	event.preventDefault()
+	focusChildWindow(document.getElementById('player').value)
+}
+
+/**
+ * Enters controller mapping area
+ * @param {PointerEvent} event - Event from when the "map" button is clicked
+ */
+function onAccessMap( event ) {
+	event.preventDefault()
+	const gamepad = navigator.getGamepads()[GAME.port]
+	if ( !gamepad ) {
+		alert(`Player ${GAME.port + 1}: No controller connected`)
+		return
+	}
+	document.getElementById('preview-iframe').removeAttribute('src')
+	const layoutName = document.getElementById('profile-layout').value
+	const mapArea = document.getElementById('map-area')
+	document.getElementById('launch-area').classList.add('hidden')
+	mapArea.classList.remove('hidden')
+	document.getElementById('map-input-list').addEventListener('click', onMapListClick)
+	document.getElementById('map-display').addEventListener('click', onMapDisplayClick)
+	document.getElementById('map-button-confirm').addEventListener('click', onMapButtonConfirm)
+	MAPPER.downKeys.clear()
+	window.addEventListener('keydown', onMapperKeydown)
+	window.addEventListener('keyup', onMapperKeyup)
+	const container = document.getElementById('map-display')
+	let svg
+	for ( const element of document.querySelectorAll('svg[id^=layout-]') ) {
+		container.prepend(element)
+		if ( element.id === 'layout-' + layoutName) {
+			svg = element
+			element.classList.remove('hidden')
+		} else {
+			element.classList.add('hidden')
+		}
+	}
+	applyPaint(mapArea, document.getElementById('ls-map-paint').checked
+		? document.getElementById('profile-paint').value
+		: 'none',
+	svg)
+	document.getElementById('map-input-current').dataset.layout = svg.dataset.display || layoutName
+	MAPPER.group?.selfDestruct()
+	MAPPER.group = new MapItemGroup(gamepad.id, layoutName, INPUTS.getCurrent(gamepad.id, layoutName))
+	document.getElementById('map-gamepad').dataset.player = document.getElementById('player').value
+	document.getElementById('map-input-list').replaceChildren(...MAPPER.group.subValues('li'))
+	document.getElementById('map-gamepad').innerText = gamepad.id || 'Unknown gamepad'
+	MAPPER.group.select(MAPPER.group.items[0])
+	MAPPER.running = true
+	mapperLoop()
+}
+
+/**
+ * Creates a player window
+ * @param {PointerEvent} event - Event from when the "launch" button is clicked
+ */
+function onAccessOpen( event ) {
+	event.preventDefault()
+	openChildWindow()
+	updateAccessBar()
+}
+
+/**
+ * Reacts to a controller being plugged in
+ * @param {GamepadEvent} event
+ */
+function onGamepadConnect( event ) {
+	switch ( MODE ) {
+
+		case 'config':
+			updateAccessBar()
+			updatePreview()
+			break
+
+		case 'input':
+			if ( !GAME.preview ) {
+				GAME.graphic?.classList.remove('hidden')
+				document.getElementById('input-error-msg').classList.add('hidden')
+			}
+			break
+	}
+}
+
+/**
+ * Reacts to a controller being unplugged
+ * @param {GamepadEvent} event
+ */
+function onGamepadDisconnect( event ) {
+	switch ( MODE ) {
+
+		case 'config':
+			if ( document.getElementById('ls-auto-close-disconnect').checked ) {
+				const gamepads = navigator.getGamepads()
+				for ( var i = 0; i < gamepads.length; i++ ) {
+					if ( !gamepads[i] ) {
+						CHILDREN.windows.get(String(i + 1))?.close()
+					}
+				}
+			}
+			if ( MAPPER.running ) {
+				exitMapping()
+				alert('Mapping cancelled: gamepad disconnected')
+			}
+			updateAccessBar()
+			break
+
+		case 'input':
+			if ( !GAME.preview ) {
+				GAME.graphic?.classList.add('hidden')
+				document.getElementById('input-error-msg').classList.remove('hidden')
+			}
+			break
+	}
+}
+
+/**
+ * Reacts to clicks on the map 'confirm' button
+ * @param {PointerEvent} event
+ */
+function onMapButtonConfirm( event ) {
+	doMapAction('confirm')
+}
+
+/**
+ * Reacts to clicks on the map display area
+ * @param {PointerEvent} event
+ */
+function onMapDisplayClick( event ) {
+	const item = MAPPER.group.itemByShape(event.target)
+	if ( item ) {
+		MAPPER.group.select(item)
+	}
+}
+
+/**
+ * Reacts to clicks on the map input list
+ * @param {PointerEvent} event
+ */
+function onMapListClick( event ) {
+	if ( event.target instanceof HTMLLIElement ) {
+		MAPPER.group.select(MAPPER.group.itemByLi(event.target))
+	}
+}
+
+/**
+ * Handles `keydown` events for input mapping
+ * @param {Event} event
+ */
+function onMapperKeydown( event ) {
+	if ( MAPPER.downKeys.has(event.key) || event.altKey || event.ctrlKey || event.shiftKey ) {
+		return
+	}
+	switch ( event.code ) {
+
+		case 'ArrowUp':
+		case 'ArrowLeft':
+			event.preventDefault()
+			doMapAction('prev')
+			break
+
+		case 'Delete':
+			event.preventDefault()
+			doMapAction('remove')
+			break
+
+		case 'Enter':
+			event.preventDefault()
+			doMapAction('confirm')
+			break
+
+		case 'Escape':
+			event.preventDefault()
+			doMapAction('cancel')
+			break
+
+		case 'ArrowRight':
+		case 'ArrowDown':
+			event.preventDefault()
+			doMapAction('next')
+			break
+	}
+	MAPPER.downKeys.add(event.key)
+}
+
+/**
+ * Handles `keyup` events for input mapping
+ * @param {Event} event
+ */
+function onMapperKeyup( event ) {
+	MAPPER.downKeys.delete(event.key)
+}
+
+/**
+ * Handles an event from when the map hotkey area is clicked
+ * @param {PointerEvent} event
+ */
+function onMapperHotkeysClick( event ) {
+	if ( event.target.dataset.action ) {
+		event.preventDefault()
+		doMapAction(event.target.dataset.action)
+	}
+}
+
+/**
+ * Changes which player is active
+ * @param {Event} event
+ */
+function onPlayerChange( event ) {
+	GAME.port = Number.parseInt(event.target.value) - 1
+	updateAccessBar()
+	updatePreview()
+}
+
+/**
+ * Responds to a profile setting being changed
+ * @param {Event} event - 'change'-type event
+ */
+function onProfileChange( event ) {
+	document.getElementById('profile-fill-color').disabled = !document.getElementById('profile-fill-use').checked
+	document.getElementById('profile-saved').value = 'n'
+	reflectPreviewConfig(event)
+}
+
+/**
+ * Responds to the configuration form being submitted
+ * @param {SubmitEvent} event
+ */
+function onProfileSubmit( event ) {
+	event.preventDefault()
+}
+
+/**
+ * Opens a new popup window for displaying the input viewer
+ */
+function openChildWindow() {
+	const form = new FormData(document.getElementById('config'))
+	const target = form.get('player')
+	closeChildWindow(target)
+	const win = window.open(
+		window.location.pathname + `?` + formQuery(form),
+		target,
+		`popup, width=${form.get('width')}, height=${form.get('height')}}`,
+	)
+	// Window creation failed (perhaps due to a popup blocker) and can't be tracked
+	if ( win === null ) {
+		return
+	}
+	CHILDREN.windows.set(target, win)
+	CHILDREN.pollId ||= setInterval(pollForChildClose, 1000)
+	if ( document.getElementById('ls-kill-preview').checked && document.getElementById('ls-show-preview').checked ) {
+		document.getElementById('ls-show-preview').click()
+	}
+}
+
+/**
+ * Polls for the states of child windows and reacts accordingly
+ */
+function pollForChildClose() {
+	let changed = false
+	for ( const [ id, win ] of CHILDREN.windows ) {
+		if ( win.closed ) {
+			CHILDREN.windows.delete(id)
+			changed = true
+		}
+	}
+	if ( !changed ) {
+		return
+	}
+	if ( !CHILDREN.windows.size ) {
+		clearInterval(CHILDREN.pollId)
+		CHILDREN.pollId = 0
+		if ( document.getElementById('ls-auto-preview').checked && document.getElementById('ls-kill-preview').checked && !document.getElementById('ls-show-preview').checked ) {
+			document.getElementById('ls-show-preview').click()
+		}
+	}
+	updateAccessBar()
+}
+
+/**
+ * Builds a URL query string fragment
+ * @param {Object} values - Values keyed by properties from QFIELDS
+ * @return {string} Query string (without a leading '?')
+ */
+function queryString( values ) {
+	const pairs = []
+	for ( const field in values ) {
+		pairs.push(`${QFIELDS[field]}=${values[field]}`)
+	}
+	return pairs.join('&')
+}
+
+/**
+ * Creates a user-readable string denoting an input
+ * @param {Array} input - Input to denote
+ * @return {string}
+ */
+function readableInput( input ) {
+	switch ( input[0] ) {
+		case 'a': return 'Axis ' + (0 > input[2] ? '-' : '+') + input[1]
+		case 'b': return 'Button ' + input[1]
+		default:  return ''
+	}
+}
+
+/**
+ * Updates the preview based on the current configurations, if allowed to do so
+ * @param {Event} event - Change event
+ */
+function reflectPreviewConfig( event ) {
+	if ( event.target.classList.contains('dont-update') ) {
+		return
+	}
+	if ( document.getElementById('ls-auto-preview').checked && !document.getElementById('ls-show-preview').checked ) {
+		document.getElementById('ls-show-preview').click()
+	}
+	updatePreview()
+}
+
+/**
+ * Ensures the validity of an input list, fixing or deleting improperly formatted inputs
+ * @param {Object} inputs - List of inputs keyed by input names
+ * @return {Object} Sanitized inputs
+ */
+function sanitizeInputs( inputs ) {
+	const sanitized = {}
+	for ( const name in inputs ) {
+		if ( !Array.isArray(inputs[name]) ) {
+			continue
+		}
+		if ( !Number.isInteger(inputs[name][1]) ) {
+			continue
+		}
+		const input = Array.from(inputs[name])
+		switch ( inputs[name][0] ) {
+
+			case 'a':
+				input[2] = 0 > inputs[name][2] ? -1 : 1
+				break
+
+			case 'b': break
+			default:  continue
+		}
+		sanitized[name] = input
+	}
+	return sanitized
+}
+
+/**
+ * Prepares and begins the main game loop for displaying inputs
+ * @param {GamepadEvent} event
+ */
+function startGame( event ) {
+	const errorMsg = `Cannot display inputs for player ${GAME.port + 1}`
+	const gamepad = navigator.getGamepads()[GAME.port]
+	if ( !gamepad ) {
+		throw new Error(errorMsg + ': no gamepad connected')
+	}
+	GAME.graphic = document.getElementById('layout-' + GAME.layout)
+	if ( !GAME.graphic ) {
+		throw new Error(errorMsg + `: layout '${GAME.layout}' not found`)
+	}
+	GAME.inputMap = createInputMap(GAME.graphic, sanitizeInputs(INPUTS.getCurrent(gamepad.id, GAME.layout)))
+	gameLoop()
+}
+
+/**
+ * Updates the access bar based on the current state
+ */
+function updateAccessBar() {
+	const gamepad = navigator.getGamepads()[GAME.port]
+
+	document.getElementById('access-button-map').disabled =
+	document.getElementById('access-button-open').disabled =
+	!gamepad
+
+	const iconWrapper = document.getElementById('access-gamepad')
+	const iconUse = document.getElementById('access-gamepad-ref')
+	if ( gamepad ) {
+		iconWrapper.classList.add('connected')
+		iconWrapper.setAttribute('title', gamepad.id)
+		iconUse.setAttribute('href', '#icon-controller')
+	} else {
+		iconWrapper.classList.remove('connected')
+		iconWrapper.setAttribute('title', 'No controller detected. Press buttons to activate.')
+		iconUse.setAttribute('href', '#icon-controller-none')
+	}
+
+	document.getElementById('access-button-close').disabled =
+	document.getElementById('access-button-focus').disabled =
+	!CHILDREN.windows.has(document.getElementById('player').value)
+}
+
+/**
+ * Alters the page based on values found in query search parameters
+ * @param {URLSearchParams} search - Query values
+ * @param {Object}          config - Configuration object to update
+ */
+function updatePageFromQuery( search, config ) {
+	INPUTS.query = JSON.parse(search.get(QFIELDS.inputs))
+	config.port = Math.max(0, (Number.parseInt(search.get(QFIELDS.player)) || 0) - 1)
+	config.preview = search.get(QFIELDS.preview) === 'y'
+
+	/**
+	 * Name of the mode the page is currently operating in
+	 * @type {string}
+	 */
+	define('MODE', search.has(QFIELDS.player) ? 'input' : 'config')
+
+	/**
+	 * Prepares the page based on the mode
+	 */
+	switch ( MODE ) {
+
+		case 'config':
+
+			/**
+			 * Data relevant to child windows
+			 * @type {Object}
+			 */
+			define('CHILDREN', {
+
+				/**
+				 * Interval ID for polling child windows
+				 * @type {int}
+				 */
+				pollId: 0,
+
+				/**
+				 * Instances of Window for child tabs
+				 * @type {Map}
+				 */
+				windows: new Map(),
+			})
+
+			/**
+			 * Data relevant to input mapping
+			 * @type {Object}
+			 */
+			define('MAPPER', {
+
+				/**
+				 * Set of keys currently being held during input mapping. This can be used to detect only the
+				 * initial press of a key while ignoring subsequent presses when held down.
+				 * @type {Set}
+				 */
+				downKeys: new Set(),
+
+				/**
+				 * Current mapping item interface
+				 * @type {?MapItemGroup}
+				 */
+				group: null,
+
+				/**
+				 * Information used to determine whether a button is being continuously held down. This can
+				 * be used to prevent a single button hold from mapping all input slots sequentially.
+				 * @type {?Array}
+				 */
+				held: null,
+
+				/**
+				 * Whether the mapping process is waiting for gamepad inputs
+				 * @type {bool}
+				 */
+				running: false,
+
+				/**
+				 * The amount a stick must be tilted in order to be detected as an input
+				 * @type {number} Number in the range [0, 1]
+				 */
+				threshold: 0.5,
+			})
+
+			/**
+			 * Reusable elements for downloading and uploading profiles
+			 * @type {FileLoadInterface}
+			 */
+			define('PROFILE_LOADER', new FileLoadInterface())
+
+			const launchArea = document.querySelector('.launch-area')
+			launchArea.classList.remove('hidden')
+			launchArea.dataset.ver = VERSION
+			document.getElementById('config').addEventListener('submit', onProfileSubmit)
+			document.getElementById('access-button-close').addEventListener('click', onAccessClose)
+			document.getElementById('access-button-focus').addEventListener('click', onAccessFocus)
+			document.getElementById('access-button-map').addEventListener('click', onAccessMap)
+			document.getElementById('access-button-open').addEventListener('click', onAccessOpen)
+			document.getElementById('profile-options').addEventListener('change', onProfileChange)
+			document.getElementById('load-profile').addEventListener('click', offerProfileUpload)
+			document.getElementById('player').addEventListener('change', onPlayerChange)
+			document.getElementById('preview-area').addEventListener('change', updatePreview)
+			document.getElementById('save-profile').addEventListener('click', offerProfileDownload)
+			document.getElementById('ls-show-preview').addEventListener('click', updatePreview)
+			document.getElementById('map-hotkeys').addEventListener('click', onMapperHotkeysClick)
+			window.addEventListener('beforeunload', closeApp)
+			PROFILE_LOADER.uploader.addEventListener('change', uploadProfile)
+			loadLayoutOptions('standard')
+			loadLocalSettings()
+			updatePreview()
+			updateAccessBar()
+			break
+
+		case 'input':
+			const inputArea = document.querySelector('.input-area')
+			inputArea.classList.remove('hidden')
+			config.layout = search.get(QFIELDS.layout) || 'standard'
+			document.querySelector(':root').style.setProperty('--chroma', `#${search.get(QFIELDS.background) || '000000'}`)
+			document.querySelector(':root').style.setProperty('--stroke', `#${search.get(QFIELDS.stroke) || 'ffffff'}`)
+			if ( search.get(QFIELDS.fillUse) === 'n' ) {
+				document.querySelector(':root').style.setProperty('--filler', `var(--chroma)`)
+			} else {
+				document.querySelector(':root').style.setProperty('--filler', `#${search.get(QFIELDS.fillColor) || '000000'}`)
+			}
+			const metaTitle = document.querySelector('title')
+			metaTitle.innerText = `Player ${config.port + 1} - ${metaTitle.innerText}`
+			document.getElementById(`layout-${config.layout}`)?.classList.remove('hidden')
+			applyPaint(inputArea, search.get(QFIELDS.paint), document.getElementById(`layout-${config.layout}`))
+			window.addEventListener('gamepadconnected', startGame)
+			break
+	}
+	window.addEventListener('gamepadconnected', onGamepadConnect)
+	window.addEventListener('gamepaddisconnected', onGamepadDisconnect)
+}
+
+/**
+ * Refreshes the preview's iframe source based on the current configurations
+ */
+function updatePreview() {
+	if ( document.getElementById('ls-show-preview').checked ) {
+		document.getElementById('preview-iframe').setAttribute('src', '?' +
+			formQuery(new FormData(document.getElementById('config')), {
+				preview: 'y',
+			})
+		)
+	} else {
+		document.getElementById('preview-iframe').removeAttribute('src')
+	}
+}
+
+/**
+ * Responds to a profile being uploaded
+ * @param {ProgressEvent} event - An event from a changed `input[type=file]` element
+ */
+function uploadProfile( event ) {
+	const reader = new FileReader()
+	reader.onload = loadProfile
+	const file = event.target.files[0]
+	const marquee = document.getElementById('profile-filename')
+	if ( file == null ) {
+		marquee.innerText = ''
+		marquee.removeAttribute('title')
+	} else {
+		reader.readAsText(file)
+		const basename = event.target.value.match(/[^\\\/]+(?=\..+$)/)?.[0] || ''
+		marquee.innerText = basename
+		marquee.setAttribute('title', basename)
+	}
+}
+
+/**
+ * Makes changes to the document based on what's in the URL query
+ */
+updatePageFromQuery(new URLSearchParams(window.location.search), GAME)
+</script>
+</body>
+</html>
