@@ -25,6 +25,11 @@
 				--hover-color: #444; /* color used to highlight against --chroma */
 			}
 
+			::selection {
+				background: mediumorchid;
+				color: #000;
+			}
+
 			* {
 				box-sizing: border-box;
 				scrollbar-color: white transparent;
@@ -110,6 +115,14 @@
 				font-weight: bold;
 			}
 
+			.conclusion-heading {
+				text-align: center;
+				font-weight: bold;
+				text-transform: uppercase;
+				font-style: italic;
+				color: skyblue;
+			}
+
 			.plain-list {
 				list-style: none;
 				padding: 0;
@@ -120,9 +133,7 @@
 		\******************************/
 
 			.launch-area {
-				margin: 0 auto;
 				min-width: 650px;
-				max-width: 1000px;
 				--color: #0075ff;
 			}
 
@@ -149,6 +160,12 @@
 					font-size: 8px;
 					display: inline-block;
 				}
+
+			.launch-area-body {
+				margin: 0 auto;
+				max-width: 1000px;
+				--color: #0075ff;
+			}
 
 			.map-area {
 				height: 100vh;
@@ -255,9 +272,36 @@
 				gap: 10pt;
 			}
 
+			.info-pillars {
+				display: flex;
+				max-width: 920pt;
+				margin: auto;
+			}
+
+			.info-credit,
+			.info-social,
+			.info-contact {
+				flex-grow: 1;
+				flex-basis: 0;
+			}
+
+			.socials {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
 		/******************************\
 		 * GENERAL                    *
 		\******************************/
+
+			.log-entries {
+				line-height: 20pt;
+			}
+
+			.log-entries > li {
+				padding: 10pt 0;
+			}
 
 			.ls-item {
 				margin: 10pt auto;
@@ -349,7 +393,7 @@
 			}
 
 			.explanation,
-			.signature {
+			.log-summary {
 				color: #9a9a9a;
 			}
 
@@ -361,19 +405,13 @@
 				margin: 0.5em 0;
 			}
 
-			.signature {
+			.log-summary {
 				text-align: center;
 				font-size: 10pt;
-				margin: 1em;
+				margin: 2em;
 				cursor: pointer;
 				border-radius: 2pt;
 			}
-
-				.signature::-webkit-details-marker,
-				.signature::marker {
-					display: none;
-					content: '';
-				}
 
 			.preview-iframe {
 				border: none;
@@ -494,6 +532,43 @@
 					left: 0;
 				}
 
+			.conclusion {
+				margin-top: 50pt;
+				background: #000000;
+				border-top: 1px #0075ff solid;
+				padding: 20pt;
+				box-shadow: 0 0 10pt 10pt rgb(0 117 255 / 25%);
+				background-image: linear-gradient(45deg,
+					#001229 16.67%,
+					#000000 16.67%,
+					#000000 50%,
+					#001229 50%,
+					#001229 66.67%,
+					#000000 66.67%,
+					#000000 100%
+				);
+				background-size: 8px 8px;
+			}
+
+			.social-link {
+				text-decoration: none;
+				margin: 0 0.8em;
+				outline: none;
+			}
+
+			.contact-preface {
+				max-width: 25em;
+				margin: auto;
+				text-align: center;
+				font-style: italic;
+				color: #aaa;
+			}
+
+			.discord-id {
+				text-align: center;
+				font-family: monospace;
+			}
+
 		/******************************\
 		 * ICONS, SVG                 *
 		\******************************/
@@ -503,6 +578,13 @@
 				max-width: 500pt;
 				margin: 20pt auto;
 				display: block;
+			}
+
+			.lein-logo {
+				height: 1.5em;
+				fill: white;
+				display: block;
+				margin: auto;
 			}
 
 			.shapes *,
@@ -521,6 +603,12 @@
 				display: inline-block;
 				vertical-align: text-bottom;
 				fill: currentColor;
+			}
+
+			.discord-id-icon {
+				text-align: center;
+				font-family: monospace;
+				margin-right: 0.5em;
 			}
 
 			.input-layout {
@@ -555,6 +643,19 @@
 			.local-setting:checked + .checkbox-title:before {
 				content: url('data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2086.603%20100%22%3E%3Cpath%20fill=%22skyblue%22%20d=%22M10,30.774,43.3,11.547,76.6,30.774V69.226L43.3,88.453,10,69.226V30.774M0,25V75l43.3,25L86.6,75V25L43.3,0,0,25Z%22/%3E%3Cpolygon%20fill=%22white%22%20points=%2221.651%2037.5%2021.651%2062.5%2043.301%2075%2064.952%2062.5%2064.952%2037.5%2043.301%2025%2021.651%2037.5%22/%3E%3C/svg%3E');
 			}
+
+			.social-icon {
+				fill: white;
+				height: 25pt;
+				cursor: pointer;
+				transition: 0.2s;
+			}
+
+				a:hover .social-icon,
+				a:focus .social-icon {
+					outline: none;
+					filter: drop-shadow(0 0 10pt orange);
+				}
 
 		/******************************\
 		 * BUTTONS & FIELDS           *
@@ -723,7 +824,7 @@
 			.switch:focus + label,
 			.access-button:focus,
 			.player:focus,
-			.signature:focus,
+			.log-summary:focus,
 			.map-confirm:focus,
 			.map-hotkey-button:focus {
 				outline: solid 2pt skyblue;
@@ -868,177 +969,222 @@
 <body>
 <noscript>JavaScript is required.</noscript>
 <div id="launch-area" class="launch-area hidden">
-	<form id="config">
-		<!-- For some reason, when `enter` is pressed within a text field, it triggers a 'click' event on the first button in the form. This button only exists to intercept that nonsense and do nothing. -->
-		<button class="hidden" disabled>Do nothing</button>
-		<svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2377.87 570.71"><polygon fill="black" points="2377.87 0 2271.77 106.07 2271.77 175 2196.77 175 2196.77 370.71 1996.77 570.71 1996.77 475 621.78 475 621.78 570.71 421.78 370.71 421.78 315.77 403.12 319.06 404.44 321.15 395.98 401.44 227.78 431.1 181.84 358.08 66.82 378.36 0 272.16 8.46 191.87 70.4 180.95 69.08 178.85 77.54 98.56 245.74 68.91 291.68 141.93 406.7 121.65 421.78 145.61 421.78 106.06 315.72 0 746.78 0 771.78 33.32 771.78 0 2377.87 0"/><path fill="white" d="M309.843,252.679,348.7,314.44,258.774,330.3l-38.857-61.76,27.006-36.478ZM1971.774,50v75h75V450l100-100V125h75V85.354L2257.135,50Zm-650,300V50h-100V350Zm350-300V350h100V237.5h50V350h100V50s-100,0-100,0V162.5h-50V50Zm-1050,0V350H721.784V216.676L821.779,350h100V50H821.779V183.308L721.784,50Zm750,300h250V162.5h-112.5v75h37.5V275h-75V125h150V50h-250Zm-400-112.5h125V275h-125v75h200V162.5h-125V125h125V50h-200ZM471.775,350l100,100V50H436.426l35.349,35.35Zm848.832,32h-22.666v68h22.666Zm266.332,17h17v-17h-56.666v17h17v51h22.667Zm-153,51h-22.667v-68h48.652l8.015,8.012V416.49l-8.015,8.014H1433.94Zm0-42.5h11.333V399H1433.94Zm93.984,42.5,8.015-8.015V382.005h-22.666v51h-11.334v-51h-22.666v59.984l8.015,8.015Zm-150.649-37.783L1354.609,382h-22.668v68h22.668V419.784L1377.275,450h22.665V382h-22.665ZM1985.441,424.5l11.333,25.5h-22.666l-11.333-25.5V450h-22.667V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.666-17h11.333V399h-11.333ZM1872.109,382h-22.667l-2.833,34-8.5-14.577-8.5,14.57-2.833-34h-22.667l5.667,68,22.664,0,5.667-9.715,5.666,9.715,22.669,0Zm-187,68,17-68h-22.666l-5.667,22.667L1668.11,382h-22.666l17,68Zm28.333,0h22.667V382h-22.667Zm34,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333Zm136,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333ZM939.105,424.5,950.438,450H927.772l-11.334-25.5V450H893.772V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399H916.438Zm328.665,17,11.333,25.5H1233.77l-11.334-25.5V450H1199.77V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399h-11.334ZM1075.1,433h-22.666V382h-22.667v68H1075.1Zm-408,17V433H644.441V399h22.666V382H621.774v68Zm351.331,0H961.771V382h56.667Zm-22.667-51H984.438v34h11.333Zm136,34H1109.1V382h-22.667v68h45.333ZM865.439,399h17V382H825.773v17h17v51h22.667ZM735.107,450H678.44V382h56.667Zm-34-17H712.44V399H701.107Zm90.667-20.783L769.108,382H746.44v68h22.668V419.784L791.774,450h22.665V382H791.774ZM1188.437,382H1143.1v68h45.333V433H1165.77v-8.5h22.667v-17H1165.77V399h22.667ZM232.748,209.527l27-36.476L220.892,111.3l-89.926,15.856,38.854,61.756Zm149.115-45.49-97.28,17.153-27.005,36.477L320.5,238.282l97.28-17.154ZM195.088,260.4l27-36.471L159.169,203.3l-97.28,17.153,35.919,57.092Z"/></svg>
-		<div class="launch-grid">
-			<div class="options-cell">
-				<ul id="profile-options" class="profile-options">
-					<li>
-						<div class="option-title">Profile</div>
-						<div class="option-input profile-loading-dock">
-							<button id="load-profile" class="profile-field profile-button-load"><svg class="text-icon"><use href="#icon-upload"></use></svg> Load</button>
-							<button id="save-profile" class="profile-field profile-button-save"><svg class="text-icon"><use href="#icon-download"></use></svg> Save</button>
-							<div id="profile-filename" class="profile-filename"></div>
-						</div>
-						<small class="explanation">Load or save settings and mappings</small>
-					</li>
-					<li>
-						<div class="option-title">Name</div>
-						<div class="option-input">
-							<input type="text" autocomplete="off" id="profile-name" name="name" class="profile-field" placeholder="e.g. Main controller">
-						</div>
-						<small class="explanation">Profile name</small>
-					</li>
-					<li>
-						<div class="option-title">Notes</div>
-						<div class="option-input">
-							<textarea id="profile-notes" name="notes" class="profile-field" placeholder="e.g. Generic profile for most games"></textarea>
-						</div>
-						<small class="explanation">Profile notes</small>
-					</li>
-					<li>
-						<div class="option-title">Layout</div>
-						<div class="option-input">
-							<select id="profile-layout" class="profile-field" name="layout"></select>
-						</div>
-						<small class="explanation">Button arrangement</small>
-					</li>
-					<li>
-						<div class="option-title">Paint</div>
-						<div class="option-input">
-							<select id="profile-paint" class="profile-field" name="paint">
-								<option value="arcade">Arcade</option>
-								<option value="auto" selected>Auto</option>
-								<option value="dolphin">Dolphin</option>
-								<option value="dualx">DualX</option>
-								<option value="leverless">Leverless</option>
-								<option value="none">None</option>
-								<option value="simple">Simple</option>
-								<option value="spin-dasher">Spin Dasher</option>
-								<option value="standard">Standard</option>
-								<option value="star-collector">Star Collector</option>
-								<option value="super">Super</option>
-							</select>
-						</div>
-						<small class="explanation">Coloring and styling</small>
-					</li>
-					<li>
-						<div class="option-title">Background</div>
-						<div class="option-input">
-							<input type="color" id="profile-background" class="profile-field profile-color" name="background" value="#222222">
-						</div>
-						<small class="explanation">Background color</small>
-					</li>
-					<li>
-						<div class="option-title">Stroke</div>
-						<div class="option-input">
-							<input type="color" id="profile-stroke-color" class="profile-field profile-color" name="stroke-color" value="#ffffff">
-						</div>
-						<small class="explanation">Default stroke color</small>
-					</li>
-					<li>
-						<div class="option-title">Fill</div>
-						<div class="option-input switch-container">
-							<input type="checkbox" id="profile-fill-use" class="switch" name="fill-use" checked><label for="profile-fill-use"></label>
-							<input type="color" id="profile-fill-color" class="profile-field profile-color" name="fill-color" value="#000000">
-						</div>
-						<small class="explanation">Fill color of unpressed buttons</small>
-					</li>
-					<li>
-						<div class="option-title">Dimensions</div>
-						<div class="option-input">
-							<input type="number" id="profile-width" class="aspect-ratio-input dont-update" name="width" title="Width" value="512" min="1" max="9999"> &#215;
-							<input type="number" id="profile-height" class="aspect-ratio-input dont-update" name="height" title="Height" value="256" min="1" max="9999"> <abbr title="pixels">px</abbr>
-						</div>
-						<small class="explanation">Size of the player window when launched</small>
-					</li>
-				</ul>
-			</div>
-			<div class="preview-cell">
-				<div id="preview-area" class="preview-area attention-frame">
-					<iframe
-						id="preview-iframe"
-						class="preview-iframe checkered"
-						title="Profile preview"
-						tabindex="-1"
-					></iframe>
+	<div class="launch-area-body">
+		<form id="config">
+			<!-- For some reason, when `enter` is pressed within a text field, it triggers a 'click' event on the first button in the form. This button only exists to intercept that nonsense and do nothing. -->
+			<button class="hidden" disabled>Do nothing</button>
+			<svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2377.87 570.71"><polygon fill="black" points="2377.87 0 2271.77 106.07 2271.77 175 2196.77 175 2196.77 370.71 1996.77 570.71 1996.77 475 621.78 475 621.78 570.71 421.78 370.71 421.78 315.77 403.12 319.06 404.44 321.15 395.98 401.44 227.78 431.1 181.84 358.08 66.82 378.36 0 272.16 8.46 191.87 70.4 180.95 69.08 178.85 77.54 98.56 245.74 68.91 291.68 141.93 406.7 121.65 421.78 145.61 421.78 106.06 315.72 0 746.78 0 771.78 33.32 771.78 0 2377.87 0"/><path fill="white" d="M309.843,252.679,348.7,314.44,258.774,330.3l-38.857-61.76,27.006-36.478ZM1971.774,50v75h75V450l100-100V125h75V85.354L2257.135,50Zm-650,300V50h-100V350Zm350-300V350h100V237.5h50V350h100V50s-100,0-100,0V162.5h-50V50Zm-1050,0V350H721.784V216.676L821.779,350h100V50H821.779V183.308L721.784,50Zm750,300h250V162.5h-112.5v75h37.5V275h-75V125h150V50h-250Zm-400-112.5h125V275h-125v75h200V162.5h-125V125h125V50h-200ZM471.775,350l100,100V50H436.426l35.349,35.35Zm848.832,32h-22.666v68h22.666Zm266.332,17h17v-17h-56.666v17h17v51h22.667Zm-153,51h-22.667v-68h48.652l8.015,8.012V416.49l-8.015,8.014H1433.94Zm0-42.5h11.333V399H1433.94Zm93.984,42.5,8.015-8.015V382.005h-22.666v51h-11.334v-51h-22.666v59.984l8.015,8.015Zm-150.649-37.783L1354.609,382h-22.668v68h22.668V419.784L1377.275,450h22.665V382h-22.665ZM1985.441,424.5l11.333,25.5h-22.666l-11.333-25.5V450h-22.667V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.666-17h11.333V399h-11.333ZM1872.109,382h-22.667l-2.833,34-8.5-14.577-8.5,14.57-2.833-34h-22.667l5.667,68,22.664,0,5.667-9.715,5.666,9.715,22.669,0Zm-187,68,17-68h-22.666l-5.667,22.667L1668.11,382h-22.666l17,68Zm28.333,0h22.667V382h-22.667Zm34,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333Zm136,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333ZM939.105,424.5,950.438,450H927.772l-11.334-25.5V450H893.772V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399H916.438Zm328.665,17,11.333,25.5H1233.77l-11.334-25.5V450H1199.77V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399h-11.334ZM1075.1,433h-22.666V382h-22.667v68H1075.1Zm-408,17V433H644.441V399h22.666V382H621.774v68Zm351.331,0H961.771V382h56.667Zm-22.667-51H984.438v34h11.333Zm136,34H1109.1V382h-22.667v68h45.333ZM865.439,399h17V382H825.773v17h17v51h22.667ZM735.107,450H678.44V382h56.667Zm-34-17H712.44V399H701.107Zm90.667-20.783L769.108,382H746.44v68h22.668V419.784L791.774,450h22.665V382H791.774ZM1188.437,382H1143.1v68h45.333V433H1165.77v-8.5h22.667v-17H1165.77V399h22.667ZM232.748,209.527l27-36.476L220.892,111.3l-89.926,15.856,38.854,61.756Zm149.115-45.49-97.28,17.153-27.005,36.477L320.5,238.282l97.28-17.154ZM195.088,260.4l27-36.471L159.169,203.3l-97.28,17.153,35.919,57.092Z"/></svg>
+			<div class="launch-grid">
+				<div class="options-cell">
+					<ul id="profile-options" class="profile-options">
+						<li>
+							<div class="option-title">Profile</div>
+							<div class="option-input profile-loading-dock">
+								<button id="load-profile" class="profile-field profile-button-load"><svg class="text-icon"><use href="#icon-upload"></use></svg> Load</button>
+								<button id="save-profile" class="profile-field profile-button-save"><svg class="text-icon"><use href="#icon-download"></use></svg> Save</button>
+								<div id="profile-filename" class="profile-filename"></div>
+							</div>
+							<small class="explanation">Load or save settings and mappings</small>
+						</li>
+						<li>
+							<div class="option-title">Name</div>
+							<div class="option-input">
+								<input type="text" autocomplete="off" id="profile-name" name="name" class="profile-field" placeholder="e.g. Main controller">
+							</div>
+							<small class="explanation">Profile name</small>
+						</li>
+						<li>
+							<div class="option-title">Notes</div>
+							<div class="option-input">
+								<textarea id="profile-notes" name="notes" class="profile-field" placeholder="e.g. Generic profile for most games"></textarea>
+							</div>
+							<small class="explanation">Profile notes</small>
+						</li>
+						<li>
+							<div class="option-title">Layout</div>
+							<div class="option-input">
+								<select id="profile-layout" class="profile-field" name="layout"></select>
+							</div>
+							<small class="explanation">Button arrangement</small>
+						</li>
+						<li>
+							<div class="option-title">Paint</div>
+							<div class="option-input">
+								<select id="profile-paint" class="profile-field" name="paint">
+									<option value="arcade">Arcade</option>
+									<option value="auto" selected>Auto</option>
+									<option value="dolphin">Dolphin</option>
+									<option value="dualx">DualX</option>
+									<option value="leverless">Leverless</option>
+									<option value="none">None</option>
+									<option value="simple">Simple</option>
+									<option value="spin-dasher">Spin Dasher</option>
+									<option value="standard">Standard</option>
+									<option value="star-collector">Star Collector</option>
+									<option value="super">Super</option>
+								</select>
+							</div>
+							<small class="explanation">Coloring and styling</small>
+						</li>
+						<li>
+							<div class="option-title">Background</div>
+							<div class="option-input">
+								<input type="color" id="profile-background" class="profile-field profile-color" name="background" value="#222222">
+							</div>
+							<small class="explanation">Background color</small>
+						</li>
+						<li>
+							<div class="option-title">Stroke</div>
+							<div class="option-input">
+								<input type="color" id="profile-stroke-color" class="profile-field profile-color" name="stroke-color" value="#ffffff">
+							</div>
+							<small class="explanation">Default stroke color</small>
+						</li>
+						<li>
+							<div class="option-title">Fill</div>
+							<div class="option-input switch-container">
+								<input type="checkbox" id="profile-fill-use" class="switch" name="fill-use" checked><label for="profile-fill-use"></label>
+								<input type="color" id="profile-fill-color" class="profile-field profile-color" name="fill-color" value="#000000">
+							</div>
+							<small class="explanation">Fill color of unpressed buttons</small>
+						</li>
+						<li>
+							<div class="option-title">Dimensions</div>
+							<div class="option-input">
+								<input type="number" id="profile-width" class="aspect-ratio-input dont-update" name="width" title="Width" value="512" min="1" max="9999"> &#215;
+								<input type="number" id="profile-height" class="aspect-ratio-input dont-update" name="height" title="Height" value="256" min="1" max="9999"> <abbr title="pixels">px</abbr>
+							</div>
+							<small class="explanation">Size of the player window when launched</small>
+						</li>
+					</ul>
 				</div>
-				<ul class="plain-list">
-					<li class="ls-item">
-						<label class="ls-label"><input type="checkbox" id="ls-show-preview" class="local-setting" checked><span class="checkbox-title">Show preview</span></label>
-						<small class="explanation">Whether to preview the current configurations. This setting may automatically change depending on other settings.</small>
-					</li>
-					<li class="ls-item">
-						<label class="ls-label"><input type="checkbox" id="ls-auto-preview" class="local-setting" checked><span class="checkbox-title">Automatically enable preview</span></label>
-						<small class="explanation">Whether to automatically enable the preview when deemed appropriate, such as when the current configurations are changed.</small>
-					</li>
-					<li class="ls-item">
-						<label class="ls-label"><input type="checkbox" id="ls-kill-preview" class="local-setting" checked><span class="checkbox-title">Automatically disable preview</span></label>
-						<small class="explanation">Whether to automatically disable the preview (saving memory) when deemed appropriate, such as when a player window is launched.</small>
-					</li>
-					<li class="ls-item">
-						<label class="ls-label"><input type="checkbox" id="ls-auto-close-exit" class="local-setting" checked><span class="checkbox-title">Automatically close player windows on exit</span></label>
-						<small class="explanation">Whether to automatically close all windows that were launched from this one when this window is closed.</small>
-					</li>
-					<li class="ls-item">
-						<label class="ls-label"><input type="checkbox" id="ls-auto-close-disconnect" class="local-setting"><span class="checkbox-title">Automatically close player windows on disconnect</span></label>
-						<small class="explanation">Whether to automatically close a player's window when the associated controller is disconnected.</small>
-					</li>
-					<li class="ls-item">
-						<label class="ls-label"><input type="checkbox" id="ls-map-paint" class="local-setting"><span class="checkbox-title">Apply paint when mapping</span></label>
-						<small class="explanation">Whether to apply the paint setting to the layout when in mapping mode.</small>
-					</li>
-					<li class="ls-item">
-						<label class="ls-label"><input type="checkbox" id="ls-map-auto-confirm" class="local-setting"><span class="checkbox-title">Automatically exit map area</span></label>
-						<small class="explanation">Whether to automatically confirm and exit the mapping area when the final input is given. Otherwise, you will be prompted for manual confirmation.</small>
-					</li>
-				</ul>
+				<div class="preview-cell">
+					<div id="preview-area" class="preview-area attention-frame">
+						<iframe
+							id="preview-iframe"
+							class="preview-iframe checkered"
+							title="Profile preview"
+							tabindex="-1"
+						></iframe>
+					</div>
+					<ul class="plain-list">
+						<li class="ls-item">
+							<label class="ls-label"><input type="checkbox" id="ls-show-preview" class="local-setting" checked><span class="checkbox-title">Show preview</span></label>
+							<small class="explanation">Whether to preview the current configurations. This setting may automatically change depending on other settings.</small>
+						</li>
+						<li class="ls-item">
+							<label class="ls-label"><input type="checkbox" id="ls-auto-preview" class="local-setting" checked><span class="checkbox-title">Automatically enable preview</span></label>
+							<small class="explanation">Whether to automatically enable the preview when deemed appropriate, such as when the current configurations are changed.</small>
+						</li>
+						<li class="ls-item">
+							<label class="ls-label"><input type="checkbox" id="ls-kill-preview" class="local-setting" checked><span class="checkbox-title">Automatically disable preview</span></label>
+							<small class="explanation">Whether to automatically disable the preview (saving memory) when deemed appropriate, such as when a player window is launched.</small>
+						</li>
+						<li class="ls-item">
+							<label class="ls-label"><input type="checkbox" id="ls-auto-close-exit" class="local-setting" checked><span class="checkbox-title">Automatically close player windows on exit</span></label>
+							<small class="explanation">Whether to automatically close all windows that were launched from this one when this window is closed.</small>
+						</li>
+						<li class="ls-item">
+							<label class="ls-label"><input type="checkbox" id="ls-auto-close-disconnect" class="local-setting"><span class="checkbox-title">Automatically close player windows on disconnect</span></label>
+							<small class="explanation">Whether to automatically close a player's window when the associated controller is disconnected.</small>
+						</li>
+						<li class="ls-item">
+							<label class="ls-label"><input type="checkbox" id="ls-map-paint" class="local-setting"><span class="checkbox-title">Apply paint when mapping</span></label>
+							<small class="explanation">Whether to apply the paint setting to the layout when in mapping mode.</small>
+						</li>
+						<li class="ls-item">
+							<label class="ls-label"><input type="checkbox" id="ls-map-auto-confirm" class="local-setting"><span class="checkbox-title">Automatically exit map area</span></label>
+							<small class="explanation">Whether to automatically confirm and exit the mapping area when the final input is given. Otherwise, you will be prompted for manual confirmation.</small>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="access-wrapper">
+				<div class="access-bar attention-frame">
+					<select id="player" class="player" name="player" title="Player port">
+						<option value="1" selected>Player 1</option>
+						<option value="2">Player 2</option>
+						<option value="3">Player 3</option>
+						<option value="4">Player 4</option>
+					</select>
+					<div id="access-gamepad" class="access-info">
+						<svg class="access-icon text-icon"><use id="access-gamepad-ref"></use></svg>
+					</div>
+					<button id="access-button-map" class="access-button" title="Map inputs for this layout" disabled>
+						<svg class="access-icon text-icon"><use href="#icon-map"></use></svg>
+					</button>
+					<button id="access-button-open" class="access-button" title="Launch/replace the player window" disabled>
+						<svg class="access-icon text-icon"><use href="#icon-launch"></use></svg>
+					</button>
+					<button id="access-button-focus" class="access-button" title="Focus the player window" disabled>
+						<svg class="access-icon text-icon"><use href="#icon-focus"></use></svg>
+					</button>
+					<button id="access-button-close" class="access-button" title="Close the player window (hold SHIFT to close all players)" disabled>
+						<svg class="access-icon text-icon"><use href="#icon-close"></use></svg>
+					</button>
+				</div>
+			</div>
+			<input type="hidden" id="profile-saved" name="saved" value="y">
+		</form>
+		<aside class="hidden">
+			<svg id="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="92.426 21.716 78.284 7.574 50 35.858 21.716 7.574 7.574 21.716 35.858 50 7.574 78.284 21.716 92.426 50 64.142 78.284 92.426 92.426 78.284 64.142 50 92.426 21.716"/></svg>
+			<svg id="icon-controller" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M99.03,57.992,90.784,35.337C86.438,23.4,76.894,18.979,68.248,22.125a19.921,19.921,0,0,1-6.814,1.2H38.566a19.921,19.921,0,0,1-6.814-1.2c-8.646-3.146-18.19,1.27-22.536,13.212L.97,57.992C-4.095,71.907,11.735,84.586,23.9,76.135a33.246,33.246,0,0,0,9.754-10.648,7.585,7.585,0,0,1,6.6-3.65h19.51a7.585,7.585,0,0,1,6.6,3.65,33.246,33.246,0,0,0,9.754,10.648C88.265,84.586,104.1,71.907,99.03,57.992Zm-55.8-13.661a2,2,0,0,1-2,2H34.487v6.747a2,2,0,0,1-2,2h-3.5a2,2,0,0,1-2-2V46.331H20.242a2,2,0,0,1-2-2v-3.5a2,2,0,0,1,2-2H26.99V32.086a2,2,0,0,1,2-2h3.5a2,2,0,0,1,2,2v6.747h6.747a2,2,0,0,1,2,2ZM69.262,28.7a4.628,4.628,0,1,1-4.628,4.628A4.628,4.628,0,0,1,69.262,28.7ZM60.005,47.21a4.628,4.628,0,1,1,4.629-4.628A4.628,4.628,0,0,1,60.005,47.21Zm9.257,9.256a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,69.262,56.466Zm9.256-9.256a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,78.518,47.21Z"/></svg>
+			<svg id="icon-controller-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M68.248,22.125a19.921,19.921,0,0,1-6.814,1.2H38.566a19.921,19.921,0,0,1-6.814-1.2c-8.646-3.146-18.19,1.27-22.536,13.212L.97,57.992C-2.784,68.306,4.942,77.931,14.143,78.786l57.5-57.5A16.337,16.337,0,0,0,68.248,22.125ZM43.234,44.331a2,2,0,0,1-2,2H34.487v6.747a2,2,0,0,1-2,2h-3.5a2,2,0,0,1-2-2V46.331H20.242a2,2,0,0,1-2-2v-3.5a2,2,0,0,1,2-2H26.99V32.086a2,2,0,0,1,2-2h3.5a2,2,0,0,1,2,2v6.747h6.747a2,2,0,0,1,2,2Zm55.8,13.661L90.784,35.337A23.161,23.161,0,0,0,82.876,24.2l-9,9c0,.044.013.086.013.131a4.628,4.628,0,0,1-4.628,4.628c-.045,0-.087-.012-.132-.013l-4.51,4.51c0,.044.014.086.014.131a4.629,4.629,0,0,1-4.629,4.628c-.045,0-.086-.012-.131-.013l-14.64,14.64H59.755a7.585,7.585,0,0,1,6.6,3.65,33.246,33.246,0,0,0,9.754,10.648C88.265,84.586,104.1,71.907,99.03,57.992ZM69.262,56.466a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,69.262,56.466Zm9.256-9.256a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,78.518,47.21ZM9.341,94.194,5.806,90.659h0L90.659,5.806h0l3.535,3.535h0Z"/></svg>
+			<svg id="icon-download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M71.915,7.7H28.085V0h43.83ZM6.178,56.17H27.972V15.394H71.8V56.17h22.02L50.009,100Z"/></svg>
+			<svg id="icon-focus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50.027,21.157A57.708,57.708,0,0,0,0,50.054a57.814,57.814,0,0,0,100,0A57.686,57.686,0,0,0,50.027,21.157ZM12.009,50.033a48.092,48.092,0,0,1,24.49-16.9,21.6,21.6,0,0,0,0,33.734A48.265,48.265,0,0,1,12.009,50.033Zm51.54,16.838a21.6,21.6,0,0,0,.021-33.726A48.072,48.072,0,0,1,88,50.044,48.053,48.053,0,0,1,63.549,66.871Z"/></svg>
+			<svg id="icon-launch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M27.543,58.227l2.1,2.1L17.262,79.579l-5.681,8.84,8.84-5.682L39.678,70.362l2.086,2.086A39.962,39.962,0,0,1,27.977,84.369c-4.31,2.113-8.239,2.686-12.384,4.063A29.971,29.971,0,0,0,7.361,92.64a30.162,30.162,0,0,0,4.206-8.233c1.379-4.144,1.952-8.073,4.065-12.383A40.126,40.126,0,0,1,27.543,58.227Zm-1.225-9.72A104.27,104.27,0,0,1,42.31,27.722l.619-3.5a3.22,3.22,0,0,0-4.269-3.689L21.017,25.982a4.24,4.24,0,0,0-2.39,1.918L0,60.037l25.305-6.275A8.02,8.02,0,0,1,26.318,48.507ZM51.493,73.681a7.876,7.876,0,0,1-5.255,1.012L39.963,100,72.1,81.373a4.243,4.243,0,0,0,1.918-2.39L79.462,61.34a3.22,3.22,0,0,0-3.689-4.269l-3.495.618A104.2,104.2,0,0,1,51.493,73.681ZM100,0C93.676,31.622,75.992,56.651,50.336,71.71a5.735,5.735,0,0,1-6.956-.878L41.646,69.1l5.68-3.651a18.737,18.737,0,0,0,5.438-5.438L62.62,44.673c1.752-2.727,2.182-5.21,1.209-6.991a3.982,3.982,0,0,0-3.64-2.024,9.26,9.26,0,0,0-4.862,1.722L39.992,47.236a18.753,18.753,0,0,0-5.439,5.438l-3.65,5.68L29.168,56.62a5.729,5.729,0,0,1-.878-6.956C43.349,24.008,68.378,6.324,100,0ZM68.137,31.863a7.143,7.143,0,1,0,0-10.1A7.144,7.144,0,0,0,68.137,31.863ZM46.09,63.524a16.533,16.533,0,0,0,4.751-4.752L60.7,43.437c2.127-3.31,1.606-5.494-.508-5.494a7.175,7.175,0,0,0-3.626,1.36L41.227,49.158a16.546,16.546,0,0,0-4.751,4.752L19.185,80.815Z"/></svg>
+			<svg id="icon-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M41.667,50A20.834,20.834,0,1,0,20.833,70.833,20.834,20.834,0,0,0,41.667,50ZM27.291,61.447l-2-5.2H16.14l-1.889,5.2h-4.9l8.917-22.894h4.889L32.32,61.447ZM20.652,43.894l3.157,8.5H17.561ZM79.167,29.167A20.833,20.833,0,1,0,100,50,20.834,20.834,0,0,0,79.167,29.167Zm10.112,28.68a6.1,6.1,0,0,1-1.985,2.358,6.536,6.536,0,0,1-3.1,1.086q-1.153.125-5.574.156H70.829V38.553h9.152a26.271,26.271,0,0,1,4.05.227,5.945,5.945,0,0,1,2.392.945,5.853,5.853,0,0,1,1.754,1.912,5.189,5.189,0,0,1,.7,2.678,5.415,5.415,0,0,1-3.216,4.966,6.018,6.018,0,0,1,3.216,2.077A5.5,5.5,0,0,1,90,54.809,6.815,6.815,0,0,1,89.279,57.847Zm-10.8-10.19H75.451V42.364h2.655q3.263,0,3.951.078a2.644,2.644,0,0,1,1.74.8,2.505,2.505,0,0,1,.586,1.725,2.427,2.427,0,0,1-.678,1.789,3.074,3.074,0,0,1-1.867.82Q81.184,47.658,78.479,47.657Zm6.248,5.186a2.984,2.984,0,0,1,.5,1.748,2.816,2.816,0,0,1-.648,1.945,2.875,2.875,0,0,1-1.677.914,21.116,21.116,0,0,1-3.172.139H75.451V51.468h3.732a15.725,15.725,0,0,1,4.1.327A2.834,2.834,0,0,1,84.727,52.843ZM77.289,13.835a3.786,3.786,0,1,1-4.962,5.72,34.21,34.21,0,0,0-32.409-6.8l4.06,5.862L21.406,20.478,31.081,0l4.35,6.281A41.781,41.781,0,0,1,77.289,13.835ZM22.711,86.165a3.786,3.786,0,0,1,4.962-5.72,34.21,34.21,0,0,0,32.409,6.8l-4.06-5.862,22.572-1.857L68.919,100l-4.35-6.281A41.781,41.781,0,0,1,22.711,86.165Z"/></svg>
+			<svg id="icon-upload" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M28.085,92.3h43.83V100H28.085ZM93.822,43.83H72.028V84.606H28.2V43.83H6.178L49.991,0Z"/></svg>
+		</aside>
+	</div>
+	<footer class="conclusion">
+		<div class="info-pillars">
+			<div class="info-credit">
+				<p class="conclusion-heading">Created by</p>
+				<svg class="lein-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 30.087"><path d="M18.875,30.044H0V0H9.307V20.693h9.568ZM34.963,8.225v2.814H47.085v7.533H34.963v2.987H47.345v8.485H25.613V0H47.3V8.225Zm29.12,21.819H54.732V0h9.351Zm35.917,0H90.778l-.086.043-9.653-13.9V30.044H71.731v-30L81.039,0l9.61,13.68V0H100Z"/></svg>
+			</div>
+			<div class="info-contact">
+				<p class="conclusion-heading">Contact</p>
+				<p class="contact-preface">If you've experienced a problem or need to get in contact with me, I can be reached on Discord.</p>
+				<p class="discord-id"><svg class="text-icon discord-id-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>leon7215</p>
+			</div>
+			<div class="info-social">
+				<p class="conclusion-heading">Find me elsewhere</p>
+				<div class="socials">
+					<a class="social-link" href="https://steamcommunity.com/profiles/76561198199550749" title="Lein on Steam">
+						<svg title="Steam" class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88.321014 88.472992">
+							<g transform="matrix(1.3333333,0,0,-1.3333333,-58.195271,-53.272644)">
+								<path d="m 76.709455,-39.954484 c -17.428501,0 -31.706251,-13.4385 -33.063001,-30.516751 l 17.7825,-7.35225 c 1.506751,1.0305 3.327001,1.63425 5.285251,1.63425 0.1755,0 0.35025,-0.0075 0.5235,-0.01575 l 7.908,11.46225 c 0,0.05475 0,0.108 0,0.162 0,6.899251 5.61225,12.512251 12.51225,12.512251 6.89925,0 12.511505,-5.613 12.511505,-12.512251 0,-6.89925 -5.612255,-12.513 -12.511505,-12.513 -0.09525,0 -0.18975,0 -0.28425,0.0075 l -11.2785,-8.0475 c 0.0075,-0.14625 0.01125,-0.2955 0.01125,-0.444 0,-5.1795 -4.21275,-9.3915 -9.3915,-9.3915 -4.545751,0 -8.346751,3.2445 -9.207751,7.54125 l -12.71775,5.2545 c 3.9375,-13.926 16.73175,-24.135755 31.920001,-24.135755 18.324,0 33.177755,14.854505 33.177755,33.176255 0,18.324751 -14.854505,33.178501 -33.177755,33.178501"/>
+								<path d="m 64.437205,-90.295985 -4.075501,1.68375 c 0.72225,-1.50375 1.97175,-2.763 3.630751,-3.4545 3.5865,-1.494 7.72125,0.20775 9.216,3.79725 0.72375,1.7355 0.72825,3.65175 0.0105,5.39175 -0.71625,1.74075 -2.06775,3.09825 -3.8055,3.82275 -1.72425,0.71775 -3.5715,0.6915 -5.1945,0.07875 l 4.20975,-1.74075 c 2.64525,-1.1025 3.89625,-4.14 2.79375,-6.78525 -1.10025,-2.646 -4.14,-3.897 -6.78525,-2.79375"/>
+								<path d="m 95.993455,-64.580735 c 0,4.596751 -3.7395,8.337001 -8.337,8.337001 -4.59675,0 -8.337,-3.74025 -8.337,-8.337001 0,-4.5975 3.74025,-8.33625 8.337,-8.33625 4.5975,0 8.337,3.7395 8.337,8.33625 m -14.586,0.01425 c 0,3.459001 2.80425,6.262501 6.26325,6.262501 3.459,0 6.26325,-2.8035 6.26325,-6.262501 0,-3.459 -2.80425,-6.2625 -6.26325,-6.2625 -3.459,0 -6.26325,2.80425 -6.26325,6.2625"/>
+							</g>
+						</svg>
+					</a>
+					<a class="social-link" href="https://www.youtube.com/@lein5300" title="Lein on YouTube">
+						<svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-70 -36 177 124">
+							<path d="M 0,0 V 52.338 L 46,26.168 Z M 102.322,68.806 C 100.298,76.428 94.334,82.43 86.762,84.467 73.037,88.169 18,88.169 18,88.169 c 0,0 -55.037,0 -68.762,-3.702 C -58.334,82.43 -64.298,76.428 -66.322,68.806 -70,54.992 -70,26.169 -70,26.169 c 0,0 0,-28.822 3.678,-42.637 2.024,-7.622 7.988,-13.624 15.56,-15.662 13.725,-3.701 68.762,-3.701 68.762,-3.701 0,0 55.037,0 68.762,3.701 7.572,2.038 13.536,8.04 15.56,15.662 C 106,-2.653 106,26.169 106,26.169 c 0,0 0,28.823 -3.678,42.637"/>
+						</svg>
+					</a>
+				</div>
 			</div>
 		</div>
-		<div class="access-wrapper">
-			<div class="access-bar attention-frame">
-				<select id="player" class="player" name="player" title="Player port">
-					<option value="1" selected>Player 1</option>
-					<option value="2">Player 2</option>
-					<option value="3">Player 3</option>
-					<option value="4">Player 4</option>
-				</select>
-				<div id="access-gamepad" class="access-info">
-					<svg class="access-icon text-icon"><use id="access-gamepad-ref"></use></svg>
-				</div>
-				<button id="access-button-map" class="access-button" title="Map inputs for this layout" disabled>
-					<svg class="access-icon text-icon"><use href="#icon-map"></use></svg>
-				</button>
-				<button id="access-button-open" class="access-button" title="Launch/replace the player window" disabled>
-					<svg class="access-icon text-icon"><use href="#icon-launch"></use></svg>
-				</button>
-				<button id="access-button-focus" class="access-button" title="Focus the player window" disabled>
-					<svg class="access-icon text-icon"><use href="#icon-focus"></use></svg>
-				</button>
-				<button id="access-button-close" class="access-button" title="Close the player window (hold SHIFT to close all players)" disabled>
-					<svg class="access-icon text-icon"><use href="#icon-close"></use></svg>
-				</button>
-			</div>
-		</div>
-		<input type="hidden" id="profile-saved" name="saved" value="y">
-	</form>
-	<aside class="hidden">
-		<svg id="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="92.426 21.716 78.284 7.574 50 35.858 21.716 7.574 7.574 21.716 35.858 50 7.574 78.284 21.716 92.426 50 64.142 78.284 92.426 92.426 78.284 64.142 50 92.426 21.716"/></svg>
-		<svg id="icon-controller" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M99.03,57.992,90.784,35.337C86.438,23.4,76.894,18.979,68.248,22.125a19.921,19.921,0,0,1-6.814,1.2H38.566a19.921,19.921,0,0,1-6.814-1.2c-8.646-3.146-18.19,1.27-22.536,13.212L.97,57.992C-4.095,71.907,11.735,84.586,23.9,76.135a33.246,33.246,0,0,0,9.754-10.648,7.585,7.585,0,0,1,6.6-3.65h19.51a7.585,7.585,0,0,1,6.6,3.65,33.246,33.246,0,0,0,9.754,10.648C88.265,84.586,104.1,71.907,99.03,57.992Zm-55.8-13.661a2,2,0,0,1-2,2H34.487v6.747a2,2,0,0,1-2,2h-3.5a2,2,0,0,1-2-2V46.331H20.242a2,2,0,0,1-2-2v-3.5a2,2,0,0,1,2-2H26.99V32.086a2,2,0,0,1,2-2h3.5a2,2,0,0,1,2,2v6.747h6.747a2,2,0,0,1,2,2ZM69.262,28.7a4.628,4.628,0,1,1-4.628,4.628A4.628,4.628,0,0,1,69.262,28.7ZM60.005,47.21a4.628,4.628,0,1,1,4.629-4.628A4.628,4.628,0,0,1,60.005,47.21Zm9.257,9.256a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,69.262,56.466Zm9.256-9.256a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,78.518,47.21Z"/></svg>
-		<svg id="icon-controller-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M68.248,22.125a19.921,19.921,0,0,1-6.814,1.2H38.566a19.921,19.921,0,0,1-6.814-1.2c-8.646-3.146-18.19,1.27-22.536,13.212L.97,57.992C-2.784,68.306,4.942,77.931,14.143,78.786l57.5-57.5A16.337,16.337,0,0,0,68.248,22.125ZM43.234,44.331a2,2,0,0,1-2,2H34.487v6.747a2,2,0,0,1-2,2h-3.5a2,2,0,0,1-2-2V46.331H20.242a2,2,0,0,1-2-2v-3.5a2,2,0,0,1,2-2H26.99V32.086a2,2,0,0,1,2-2h3.5a2,2,0,0,1,2,2v6.747h6.747a2,2,0,0,1,2,2Zm55.8,13.661L90.784,35.337A23.161,23.161,0,0,0,82.876,24.2l-9,9c0,.044.013.086.013.131a4.628,4.628,0,0,1-4.628,4.628c-.045,0-.087-.012-.132-.013l-4.51,4.51c0,.044.014.086.014.131a4.629,4.629,0,0,1-4.629,4.628c-.045,0-.086-.012-.131-.013l-14.64,14.64H59.755a7.585,7.585,0,0,1,6.6,3.65,33.246,33.246,0,0,0,9.754,10.648C88.265,84.586,104.1,71.907,99.03,57.992ZM69.262,56.466a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,69.262,56.466Zm9.256-9.256a4.628,4.628,0,1,1,4.628-4.628A4.628,4.628,0,0,1,78.518,47.21ZM9.341,94.194,5.806,90.659h0L90.659,5.806h0l3.535,3.535h0Z"/></svg>
-		<svg id="icon-download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M71.915,7.7H28.085V0h43.83ZM6.178,56.17H27.972V15.394H71.8V56.17h22.02L50.009,100Z"/></svg>
-		<svg id="icon-focus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50.027,21.157A57.708,57.708,0,0,0,0,50.054a57.814,57.814,0,0,0,100,0A57.686,57.686,0,0,0,50.027,21.157ZM12.009,50.033a48.092,48.092,0,0,1,24.49-16.9,21.6,21.6,0,0,0,0,33.734A48.265,48.265,0,0,1,12.009,50.033Zm51.54,16.838a21.6,21.6,0,0,0,.021-33.726A48.072,48.072,0,0,1,88,50.044,48.053,48.053,0,0,1,63.549,66.871Z"/></svg>
-		<svg id="icon-launch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M27.543,58.227l2.1,2.1L17.262,79.579l-5.681,8.84,8.84-5.682L39.678,70.362l2.086,2.086A39.962,39.962,0,0,1,27.977,84.369c-4.31,2.113-8.239,2.686-12.384,4.063A29.971,29.971,0,0,0,7.361,92.64a30.162,30.162,0,0,0,4.206-8.233c1.379-4.144,1.952-8.073,4.065-12.383A40.126,40.126,0,0,1,27.543,58.227Zm-1.225-9.72A104.27,104.27,0,0,1,42.31,27.722l.619-3.5a3.22,3.22,0,0,0-4.269-3.689L21.017,25.982a4.24,4.24,0,0,0-2.39,1.918L0,60.037l25.305-6.275A8.02,8.02,0,0,1,26.318,48.507ZM51.493,73.681a7.876,7.876,0,0,1-5.255,1.012L39.963,100,72.1,81.373a4.243,4.243,0,0,0,1.918-2.39L79.462,61.34a3.22,3.22,0,0,0-3.689-4.269l-3.495.618A104.2,104.2,0,0,1,51.493,73.681ZM100,0C93.676,31.622,75.992,56.651,50.336,71.71a5.735,5.735,0,0,1-6.956-.878L41.646,69.1l5.68-3.651a18.737,18.737,0,0,0,5.438-5.438L62.62,44.673c1.752-2.727,2.182-5.21,1.209-6.991a3.982,3.982,0,0,0-3.64-2.024,9.26,9.26,0,0,0-4.862,1.722L39.992,47.236a18.753,18.753,0,0,0-5.439,5.438l-3.65,5.68L29.168,56.62a5.729,5.729,0,0,1-.878-6.956C43.349,24.008,68.378,6.324,100,0ZM68.137,31.863a7.143,7.143,0,1,0,0-10.1A7.144,7.144,0,0,0,68.137,31.863ZM46.09,63.524a16.533,16.533,0,0,0,4.751-4.752L60.7,43.437c2.127-3.31,1.606-5.494-.508-5.494a7.175,7.175,0,0,0-3.626,1.36L41.227,49.158a16.546,16.546,0,0,0-4.751,4.752L19.185,80.815Z"/></svg>
-		<svg id="icon-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M41.667,50A20.834,20.834,0,1,0,20.833,70.833,20.834,20.834,0,0,0,41.667,50ZM27.291,61.447l-2-5.2H16.14l-1.889,5.2h-4.9l8.917-22.894h4.889L32.32,61.447ZM20.652,43.894l3.157,8.5H17.561ZM79.167,29.167A20.833,20.833,0,1,0,100,50,20.834,20.834,0,0,0,79.167,29.167Zm10.112,28.68a6.1,6.1,0,0,1-1.985,2.358,6.536,6.536,0,0,1-3.1,1.086q-1.153.125-5.574.156H70.829V38.553h9.152a26.271,26.271,0,0,1,4.05.227,5.945,5.945,0,0,1,2.392.945,5.853,5.853,0,0,1,1.754,1.912,5.189,5.189,0,0,1,.7,2.678,5.415,5.415,0,0,1-3.216,4.966,6.018,6.018,0,0,1,3.216,2.077A5.5,5.5,0,0,1,90,54.809,6.815,6.815,0,0,1,89.279,57.847Zm-10.8-10.19H75.451V42.364h2.655q3.263,0,3.951.078a2.644,2.644,0,0,1,1.74.8,2.505,2.505,0,0,1,.586,1.725,2.427,2.427,0,0,1-.678,1.789,3.074,3.074,0,0,1-1.867.82Q81.184,47.658,78.479,47.657Zm6.248,5.186a2.984,2.984,0,0,1,.5,1.748,2.816,2.816,0,0,1-.648,1.945,2.875,2.875,0,0,1-1.677.914,21.116,21.116,0,0,1-3.172.139H75.451V51.468h3.732a15.725,15.725,0,0,1,4.1.327A2.834,2.834,0,0,1,84.727,52.843ZM77.289,13.835a3.786,3.786,0,1,1-4.962,5.72,34.21,34.21,0,0,0-32.409-6.8l4.06,5.862L21.406,20.478,31.081,0l4.35,6.281A41.781,41.781,0,0,1,77.289,13.835ZM22.711,86.165a3.786,3.786,0,0,1,4.962-5.72,34.21,34.21,0,0,0,32.409,6.8l-4.06-5.862,22.572-1.857L68.919,100l-4.35-6.281A41.781,41.781,0,0,1,22.711,86.165Z"/></svg>
-		<svg id="icon-upload" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M28.085,92.3h43.83V100H28.085ZM93.822,43.83H72.028V84.606H28.2V43.83H6.178L49.991,0Z"/></svg>
-	</aside>
-	<footer>
-		<details>
-			<summary class="signature">Created by Leon Williams &bull; 2024</summary>
-			<div class="faux-heading">Log</div>
-			<ul>
+		<details id="logs">
+			<summary class="log-summary">Update Logs</summary>
+			<div class="faux-heading">Logs</div>
+			<small>(Dates are in <code>yyyy-mm-dd</code> format)</small>
+			<ul class="log-entries">
+				<li><time datetime="2024-11-06 16:16:57.452-0500">2024-11-06</time> Version 1.1.2
+					<ul>
+						<li>Fixed <code>fill-color</code> and <code>fill-use</code> not being saved in save data downloads</li>
+						<li>Fixed save data not being loaded correctly</li>
+						<li>UI changes</li>
+					</ul>
+				</li>
+				<li><time datetime="2024-08-07 19:39:00.000-0400">2024-08-07</time> Version 1.1.1
+					<ul>
+						<li>Minor changes</li>
+					</ul>
+				</li>
 				<li><time datetime="2024-08-06 16:32:10.779-0400">2024-08-06</time> Version 1.1
 					<ul>
 						<li>Added support for custom stroke color</li>
@@ -1362,7 +1508,6 @@
 		</tbody>
 	</table>
 </div>
-
 <script>
 
 /**
@@ -1927,7 +2072,7 @@ const QFIELDS = {
  *
  * @type {string}
  */
-const VERSION = '1.1.1'
+const VERSION = '1.1.2'
 
 /**
  * Applies a paint value to a targeted element
@@ -2293,7 +2438,16 @@ function loadProfile( event ) {
 	for ( const prop in profile ) {
 		const element = document.getElementById(prefix + prop)
 		if ( element ) {
-			element.value = profile[prop]
+			switch ( element.type ) {
+
+				case 'checkbox':
+					element.checked = profile[prop] === 'on'
+					break
+
+				default:
+					element.value = profile[prop]
+					break
+			}
 		}
 	}
 	if ( profile.inputs instanceof Object ) {
@@ -2373,6 +2527,11 @@ function mapperLoop() {
  */
 function offerProfileDownload() {
 	const data = Object.fromEntries(new FormData(document.getElementById('config')))
+
+	// Forcing the inclusion of properties that FormData excludes conditionally
+	data['fill-use'] = document.getElementById('profile-fill-use').checked ? 'on' : 'off'
+	data['fill-color'] = document.getElementById('profile-fill-color').value
+
 	delete data.player
 	delete data.saved
 	data.inputs = INPUTS.gamepads
@@ -2774,6 +2933,22 @@ function startGame( event ) {
 	}
 	GAME.inputMap = createInputMap(GAME.graphic, sanitizeInputs(INPUTS.getCurrent(gamepad.id, GAME.layout)))
 	gameLoop()
+}
+
+/**
+ * Creates an HTML element based on a particular time. This is useful for creating uniform timestamps for update logs.
+ * @param {?int} ms - Timestamp (in milliseconds) to pass to a Date() constructor. If forgone, the current time is used.
+ * @return {string} HTML `<time></time>` element
+ */
+function timeElement( ms ) {
+	time = ms == null ? new Date() : new Date(ms)
+	const tzOffset = time.getTimezoneOffset()
+	const tzOffsetAbs = Math.abs(tzOffset)
+	const tzHours = String(Math.floor(tzOffsetAbs/60)).padStart(2, 0)
+	const tzMinutes = String(tzOffsetAbs - (tzHours * 60)).padStart(2, 0)
+	const tz = (tzOffset >= 0 ? '-' : '+') + tzHours + tzMinutes
+	const date = `${time.getFullYear()}-${String(time.getMonth()+1).padStart(2, 0)}-${String(time.getDate()).padStart(2, 0)}`
+	return `<time datetime="${date} ${String(time.getHours()).padStart(2, 0)}:${String(time.getMinutes()).padStart(2, 0)}:${String(time.getSeconds()).padStart(2, 0)}.${String(time.getMilliseconds()).padStart(3, 0)}${tz}">${date}</time>`
 }
 
 /**
