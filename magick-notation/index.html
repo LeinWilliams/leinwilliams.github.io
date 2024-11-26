@@ -23,6 +23,7 @@
 				--color-magick: #c3a9f3;
 				--color-state: #6dd873;
 				--lane-width: 920px;
+				--main-menu-button-width: 40px;
 			}
 
 			* {
@@ -331,7 +332,7 @@
 					margin: 0;
 				}
 
-			.toc-area {
+			.hotkeys-area {
 				text-align: center;
 				margin: 20pt;
 			}
@@ -379,7 +380,7 @@
 				font-style: italic;
 			}
 
-			.toc-heading {
+			.main-menu-sub-heading {
 				text-align: center;
 				font-weight: bold;
 			}
@@ -480,8 +481,8 @@
 				height: 100%;
 				position: absolute;
 				top: 0;
-				right: -40px;
-				width: 40px;
+				right: calc(-1 * var(--main-menu-button-width));
+				width: var(--main-menu-button-width);
 				text-align: center;
 				display: flex;
 				align-items: center;
@@ -558,8 +559,16 @@
 
 			@media screen and ( max-width: 1024px ) {
 
-				#main-menu {
-					display: none;
+				body {
+					margin-left: var(--main-menu-button-width);
+				}
+
+				.main-menu {
+					height: 100vh;
+				}
+
+				.main-menu-toggle {
+					border-radius: 0;
 				}
 
 				.lane {
@@ -577,22 +586,30 @@
 				.site-info-pillar {
 					order: initial;
 				}
+
+				.main-menu-sub-area-hotkeys {
+					display: none;
+				}
 			}
 	</style>
 </head>
 <body>
 <nav id="main-menu" class="main-menu closed">
-	<p class="toc-heading">Table of Contents</p>
-	<ol id="toc" class="main-toc"></ol>
-	<p class="toc-heading">Navigation</p>
-	<div class="toc-area">
-		<div class="hotkeys">
-			<kbd class="hotkey-shift">Shift</kbd>
-			<span class="hotkey-plus">+</span>
-			<kbd class="hotkey-up">↑</kbd>
-			<kbd class="hotkey-left">←</kbd>
-			<kbd class="hotkey-down">↓</kbd>
-			<kbd class="hotkey-right">→</kbd>
+	<div class="main-menu-sub-area">
+		<p class="main-menu-sub-heading">Table of Contents</p>
+		<ol id="toc" class="main-toc"></ol>
+	</div>
+	<div class="main-menu-sub-area main-menu-sub-area-hotkeys">
+		<p class="main-menu-sub-heading">Navigation</p>
+		<div class="hotkeys-area">
+			<div class="hotkeys">
+				<kbd class="hotkey-shift">Shift</kbd>
+				<span class="hotkey-plus">+</span>
+				<kbd class="hotkey-up">↑</kbd>
+				<kbd class="hotkey-left">←</kbd>
+				<kbd class="hotkey-down">↓</kbd>
+				<kbd class="hotkey-right">→</kbd>
+			</div>
 		</div>
 	</div>
 	<a id="main-menu-toggle" class="main-menu-toggle"></a>
