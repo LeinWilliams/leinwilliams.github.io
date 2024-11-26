@@ -351,8 +351,8 @@
 				}
 
 				.chapter-index.current {
-					border-left-color: mediumpurple;
-					background-color: #342b47;
+					border-left-color: deeppink;
+					background-color: #4f1032;
 					color: white;
 				}
 
@@ -498,12 +498,13 @@
 				}
 
 				.main-menu-toggle:before {
-					content: '\1F780';
+					content: '\25C0';
 					display: inline-block;
+					font-size: 0.7em;
 				}
 
 					.main-menu.closed .main-menu-toggle:before {
-						content: '\1F782';
+						content: '\25B6';
 					}
 
 			.chapter-anchor {
@@ -603,16 +604,16 @@
 		<p class="main-menu-sub-heading">Navigation</p>
 		<div class="hotkeys-area">
 			<div class="hotkeys">
-				<kbd class="hotkey-shift">Shift</kbd>
-				<span class="hotkey-plus">+</span>
-				<kbd class="hotkey-up">↑</kbd>
-				<kbd class="hotkey-left">←</kbd>
-				<kbd class="hotkey-down">↓</kbd>
-				<kbd class="hotkey-right">→</kbd>
+				<kbd class="hotkey-shift" title="Shift">Shift</kbd>
+				<span class="hotkey-plus" title="Plus">+</span>
+				<kbd class="hotkey-up" title="Up arrow">↑</kbd>
+				<kbd class="hotkey-left" title="Left arrow">←</kbd>
+				<kbd class="hotkey-down" title="Down arrow">↓</kbd>
+				<kbd class="hotkey-right" title="Right arrow">→</kbd>
 			</div>
 		</div>
 	</div>
-	<a id="main-menu-toggle" class="main-menu-toggle"></a>
+	<a id="main-menu-toggle" class="main-menu-toggle" title="Toggle menu"></a>
 </nav>
 <main class="content">
 	<section id="intro" data-chapter="Intro" class="chapter backdrop-prologue">
