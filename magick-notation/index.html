@@ -10,7 +10,7 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 	<title>Magick Notation</title>
-	<style type="text/css">
+	<style>
 
 		/******************************\
 		 * RESET                      *
@@ -42,10 +42,6 @@
 				font-size: 20px;
 			}
 
-			article {
-				margin: auto;
-			}
-
 			code {
 				background: #333;
 				padding: 0.2em 0.4em;
@@ -60,12 +56,13 @@
 			}
 
 			h1 {
-				font-size: 4rem;
+				font-size: 3em;
 				text-align: center;
+				padding: 0 10pt;
 				text-shadow:
-					#000 0pt 2pt 1pt,
-					#444 0pt 3pt 1pt,
-					orange 0pt 4pt 1pt;
+					#000 0 0.03em 0.02em,
+					#444 0 0.05em 0.02em,
+					orange 0 0.06em 0;
 			}
 			h2 { font-size: 1.5em; }
 			h3 { font-size: 1.4em; }
@@ -180,14 +177,7 @@
 		 * LAYOUT                     *
 		\******************************/
 
-			.info-chart,
-			.content details,
-			.content p,
-			.content h1,
-			.content h3,
-			.content h4,
-			.content h5,
-			.content h6 {
+			.lane {
 				max-width: var(--lane-width);
 				margin-left: auto;
 				margin-right: auto;
@@ -195,13 +185,22 @@
 
 			.site-info {
 				display: flex;
+				width: 100%;
 				max-width: var(--lane-width);
 				margin: auto;
 			}
 
 			.site-info-pillar {
+				flex-basis: 0;
 				flex-grow: 1;
-				width: var(--lane-width);
+			}
+
+			.site-info-pillar-contact { order: 2; }
+			.site-info-pillar-social { order: 3; }
+			.site-info-pillar-projects { order: 1; }
+
+			.info-chart-wrapper {
+				overflow: auto;
 			}
 
 			.hotkeys {
@@ -234,6 +233,7 @@
 			iframe[src*="youtube.com"] {
 				margin: 2rem auto;
 				display: block;
+				max-width: 100%;
 			}
 
 			.chapter {
@@ -265,7 +265,6 @@
 				text-align: left;
 				font-size: 14pt;
 				text-align: left;
-				max-width: var(--lane-width);
 			}
 
 				.about-writeup p {
@@ -311,6 +310,7 @@
 				vertical-align: middle;
 				margin: auto;
 				background-color: rgb(0, 0, 0, 0.25);
+				min-width: 720px;
 			}
 
 				.info-chart th,
@@ -551,6 +551,33 @@
 				font-style: italic;
 				color: gray;
 			}
+
+		/******************************\
+		 * MEDIA                      *
+		\******************************/
+
+			@media screen and ( max-width: 1024px ) {
+
+				#main-menu {
+					display: none;
+				}
+
+				.lane {
+					padding: 0 10pt;
+				}
+
+				.site-info {
+					display: flex;
+					max-width: var(--lane-width);
+					margin: auto;
+					flex-direction: column;
+					gap: 30pt;
+				}
+
+				.site-info-pillar {
+					order: initial;
+				}
+			}
 	</style>
 </head>
 <body>
@@ -570,622 +597,651 @@
 	</div>
 	<a id="main-menu-toggle" class="main-menu-toggle"></a>
 </nav>
-<article class="content">
+<main class="content">
 	<section id="intro" data-chapter="Intro" class="chapter backdrop-prologue">
 		<h1>Magick Notation</h1>
-		<p>Magick notation is a notation method designed to quickly and easily communicate player actions in the Magicka games. It has no regard for whether you play on keyboard, controller, or use the default input mapping. It was created with the intent of being precise, succinct, and, <mark class="highlight-positive">easy to learn</mark>.</p>
-		<p>While it is versatile enough to convey complex actions, even a superficial understanding is enough to begin making use of Magick notation. For instance, instead of saying "<i class="cast">self</i> cast <span class="element">ice ice ice ice ice</span>", you could just say <code><span class="cast">S</span><span class="element">:iiiii<span class="element"></code> or even <code><span class="cast">S</span><span class="element">:5i<span class="cast"></code>.</p>
-		<p>Here's a quick <mark class="highlight-positive">25 second video</mark> showing that even complex actions can be expressed succinctly.</p>
-		<iframe id="demo-video" width="560" height="315" src="https://www.youtube.com/embed/c3sqVcZ-2J8?si=qau0qUhOhxxHXnuR" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-		<p>In just a few moments you'll gain much better understanding of how exactly this notation works.</p>
+		<div class="lane">
+			<p>Magick notation is a notation method designed to quickly and easily communicate player actions in the Magicka games. It has no regard for whether you play on keyboard, controller, or use the default input mapping. It was created with the intent of being precise, succinct, and, <mark class="highlight-positive">easy to learn</mark>.</p>
+			<p>While it is versatile enough to convey complex actions, even a superficial understanding is enough to begin making use of Magick notation. For instance, instead of saying "<i class="cast">self</i> cast <span class="element">ice ice ice ice ice</span>", you could just say <code><span class="cast">S</span><span class="element">:iiiii</span></code> or even <code><span class="cast">S</span><span class="element">:5i</span></code>.</p>
+			<p>Here's a quick <mark class="highlight-positive">25 second video</mark> showing that even complex actions can be expressed succinctly.</p>
+			<iframe id="demo-video" width="560" height="315" src="https://www.youtube.com/embed/c3sqVcZ-2J8?si=qau0qUhOhxxHXnuR" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+			<p>In just a few moments you'll gain much better understanding of how exactly this notation works.</p>
+		</div>
 	</section>
 	<section id="syntax" data-chapter="Syntax" class="chapter backdrop-fair">
 		<h2><a class="chapter-anchor" href="#syntax">Syntax</a></h2>
-		<p>The syntax is divided into <a href="https://www.youtube.com/watch?v=C7EFHt2IL4E&t=19s" target="reference">up to four</a> general parts: <span class="flag">flags</span>, <span class="state">state</span>, <span class="cast">cast</span>, and <span class="element">elements</span>. Here's a quick overview before going into each part in more depth.</p>
-		<p><img alt="Blackboard with Magick notation syntax written on it" class="blackboard" src="images/art/blackboard.png"></p>
-		<p><span class="important">All four parts are optional.</span> Sometimes you may only need to convey one or two things. You can use whichever parts you need at any given time and discard the rest.</p>
-		<p>I'll go one by one and break down how they can be used, but I'll be covering the parts in reverse order since that is probably the easiest way to <em>learn</em> the notation (as opposed to simply <em>reading</em> it).</p>
+		<div class="lane">
+			<p>The syntax is divided into <a href="https://www.youtube.com/watch?v=C7EFHt2IL4E&t=19s" target="reference">up to four</a> general parts: <span class="flag">flags</span>, <span class="state">state</span>, <span class="cast">cast</span>, and <span class="element">elements</span>. Here's a quick overview before going into each part in more depth.</p>
+			<p><img alt="Blackboard with Magick notation syntax written on it" class="blackboard" src="images/art/blackboard.png"></p>
+			<p><span class="important">All four parts are optional.</span> Sometimes you may only need to convey one or two things. You can use whichever parts you need at any given time and discard the rest.</p>
+			<p>I'll go one by one and break down how they can be used, but I'll be covering the parts in reverse order since that is probably the easiest way to <em>learn</em> the notation (as opposed to simply <em>reading</em> it).</p>
+		</div>
 	</section>
 	<section id="elements" data-chapter="Elements" class="chapter backdrop-beach">
 		<h2><a class="chapter-anchor" href="#elements">Elements</a></h2>
-		<p><img alt="Magick notation elements syntax" src="images/art/elements.png"></p>
-		<p>As you've probably guessed, this part denotes which elements are conjured. Every element is represented by a single character. To notate elements, start with a colon (<code class="element">:</code>) and follow it with the representative characters. (We'll get to those characters in a moment.)</p>
-		<p>The reason for using <code class="element">:</code> is to separate the elements from the rest of the notation. It also makes it clear that it is a notation. For example, look at this: <code class="element">feed</code>. You might be trying to notate "<i class="element">fire</i>, <i class="element">earth</i>, <i class="element">earth</i>, <i class="element">death</i>" or maybe you're just hungry, who knows! No wizard wants to be both hungry <em>and</em> confused; that's just bad form.</p>
-		<section>
-			<h3 id="primary-elements"><a class="subtle-link" href="#primary-elements">Primary Elements</a></h3>
-			<p>Primary elements are the ones that can be conjured directly. (i.e. No mixing required!)</p>
-			<table class="info-chart">
-				<colgroup>
-					<col class="col-icon"/>
-					<col class="col-name"/>
-					<col class="col-notation"/>
-				</colgroup>
-				<thead>
-					<tr>
-						<th>Icon</th>
-						<th>Name</th>
-						<th>Notation</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><img alt="Cold element" src="images/elements/cold.png"></td>
-						<td><i class="element">Cold</i></td>
-						<td><code class="element">c</code></td>
-					</tr>
-					<tr>
-						<td><img alt="Death element" src="images/elements/death.png"></td>
-						<td><i class="element">Death</i></td>
-						<td><code class="element">d</code></td>
-					</tr>
-					<tr>
-						<td><img alt="Earth element" src="images/elements/earth.png"></td>
-						<td><i class="element">Earth</i></td>
-						<td><code class="element">e</code></td>
-					</tr>
-					<tr>
-						<td><img alt="Fire element" src="images/elements/fire.png"></td>
-						<td><i class="element">Fire</i></td>
-						<td><code class="element">f</code></td>
-					</tr>
-					<tr>
-						<td><img alt="Life element" src="images/elements/life.png"></td>
-						<td><i class="element">Life</i></td>
-						<td><code class="element">l</code></td>
-					</tr>
-					<tr>
-						<td><img alt="Lightning element" src="images/elements/lightning.png"></td>
-						<td><i class="element">Lightning</i></td>
-						<td><code class="element">t</code></td>
-					</tr>
-					<tr>
-						<td><img alt="Shield element" src="images/elements/shield.png"></td>
-						<td><i class="element">Shield</i></td>
-						<td><code class="element">s</code></td>
-					</tr>
-					<tr>
-						<td><img alt="Water element" src="images/elements/water.png"></td>
-						<td><i class="element">Water</i></td>
-						<td><code class="element">w</code></td>
-					</tr>
-				</tbody>
-			</table>
-			<p>Simply put, each element goes by the first letter of its name, with the exception of <i class="element">lighting</i>. It goes by "t", which can be thought of as "thunder" instead.</p>
-		</section>
-		<section>
-			<h3 id="secondary-elements"><a class="subtle-link" href="#secondary-elements">Secondary Elements</a></h3>
-			<p>Secondary elements are formed by conjuring multiple primary elements.</p>
-			<table class="info-chart">
-				<colgroup>
-					<col class="col-icon"/>
-					<col class="col-name"/>
-					<col class="col-notation"/>
-					<col class="col-description"/>
-				</colgroup>
-				<thead>
-					<tr>
-						<th>Icon</th>
-						<th>Name</th>
-						<th>Notation</th>
-						<th>Description</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><img alt="Ice element" src="images/elements/ice.png"></td>
-						<td><i class="element">Ice</i></td>
-						<td><code class="element">i</code></td>
-						<td>Formed by conjuring <i class="element">water</i> (<code class="element">w</code>) and <i class="element">cold</i> (<code class="element">c</code>)</td>
-					</tr>
-					<tr>
-						<td><img alt="Poison element" src="images/elements/poison.png"></td>
-						<td><i class="element">Poison</i></td>
-						<td><code class="element">p</code></td>
-						<td>Formed by conjuring <i class="element">water</i> (<code class="element">w</code>) and <i class="element">death</i> (<code class="element">d</code>)</td>
-					</tr>
-					<tr>
-						<td><img alt="Steam element" src="images/elements/steam.png"></td>
-						<td><i class="element">Steam</i></td>
-						<td><code class="element">m</code></td>
-						<td>Formed by conjuring <i class="element">water</i> (<code class="element">w</code>) and <i class="element">fire</i> (<code class="element">f</code>)</td>
-					</tr>
-				</tbody>
-			</table>
-			<p>As before, each element goes by the first letter of its name, except for <i class="element">steam</i>, which goes by its last letter, "m". Fun fact: it's the only element that has an "m" in its name. <small class="disclaimer">(I am not responsible for what you choose to do with that information.)</small></p>
-			<p>Alternatively, secondary elements <em>can</em> be notated by the primary elements they are comprised of (e.g. <code class="element">:wcwdwf</code> instead of <code class="element">:ipm</code>).</p>
-		</section>
-		<section>
-			<h3 id="pseudo-elements"><a class="subtle-link" href="#pseudo-elements">Pseudo Elements</a></h3>
-			<p>These are not actual elements, but rather used in lieu of elements for communicative benefit.</p>
-			<table class="info-chart">
-				<colgroup>
-					<col class="col-icon"/>
-					<col class="col-name"/>
-					<col class="col-notation"/>
-					<col class="col-description"/>
-				</colgroup>
-				<thead>
-					<tr>
-						<th>Icon</th>
-						<th>Name</th>
-						<th>Notation</th>
-						<th>Description</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><img alt="Blank element" src="images/elements/blank.png"></td>
-						<td>Unspecified element</td>
-						<td><code class="element">x</code></td>
-						<td>This may be used in contexts where any element is permitted, or the exact element is unknown or doesn't matter. <span class="important">It's a wild card, basically.</span></td>
-					</tr>
-				</tbody>
-			</table>
-		</section>
-		<section>
-			<h3 id="element-operators"><a class="subtle-link" href="#element-operators">Element Operators</a></h3>
-			<p class="warning">This is the most advanced part of Magick notation. If this is your introduction to Magick notation, feel free to <a href="#cast">skip this part</a> for now. <em>(...Or don't!)</em></p>
-			<p>Element operators are just symbols used to make element notations a less monotonous. They can reduce repetitiveness and increase versatility and readability for those that are familiar with the syntax.</p>
-			<table class="info-chart">
-				<colgroup>
-					<col class="col-name"/>
-					<col class="col-syntax"/>
-					<col class="col-description"/>
-					<col class="col-example"/>
-				</colgroup>
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Syntax</th>
-						<th>Description</th>
-						<th>Example</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Group</td>
-						<td><code class="element">(</code>, <code class="element">)</code></td>
-						<td>Groups elements together, which can be useful for applying certain modifiers to multiple elements at once. It can also be used to merely improve readability. Groups can be within other groups.</td>
-						<td><code class="element">:(mpi)</code></td>
-					</tr>
-					<tr>
-						<td>Optional</td>
-						<td><code class="element">?</code></td>
-						<td>The preceding element (or group) is optional.</td>
-						<td><code class="element">:c?</code></td>
-					</tr>
-					<tr>
-						<td>Open repeat</td>
-						<td><code class="element">+</code></td>
-						<td>Input the preceding element (or group... you get the idea, right?). Afterwards, the element may be repeated zero or more times.</td>
-						<td><code class="element">:d+</code></td>
-					</tr>
-					<tr>
-						<td>Closed repeat</td>
-						<td><code class="element">[number]</code> or <code class="element">[range]</code></td>
-						<td>Input the following element as many times as specified. If a range is given (e.g. <code class="element">1-3</code>), input the element any number of times within that range.</td>
-						<td><code class="element">:2-3w</code></td>
-					</tr>
-					<tr>
-						<td>Or</td>
-						<td><code class="element">|</code></td>
-						<td>Choose to input one of the elements on either side of this operator. You can chain together any number of options.</td>
-						<td><code class="element">:i|e|t</code></td>
-					</tr>
-				</tbody>
-			</table>
-			<p>Sometimes even when it is technically unnecessary to group elements, it can be easier to read, so feel free to group elements if you think it helps the reader. It can also be used to convey things like simultaneous button presses, if you want to use it that way.</p>
-			<p>While not necessary, it is generally <em>recommended</em> that options (elements coupled with <code class="element">|</code>) be grouped if other elements are not part of the choice. Both <code class="element">:se|i</code> and <code class="element">:s(e|i)</code> mean the same thing, but the latter is a little easier to read than the former.</p>
-		</section>
+		<div class="lane">
+			<p><img alt="Magick notation elements syntax" src="images/art/elements.png"></p>
+			<p>As you've probably guessed, this part denotes which elements are conjured. Every element is represented by a single character. To notate elements, start with a colon (<code class="element">:</code>) and follow it with the representative characters. (We'll get to those characters in a moment.)</p>
+			<p>The reason for using <code class="element">:</code> is to separate the elements from the rest of the notation. It also makes it clear that it is a notation. For example, look at this: <code class="element">feed</code>. You might be trying to notate "<i class="element">fire</i>, <i class="element">earth</i>, <i class="element">earth</i>, <i class="element">death</i>" or maybe you're just hungry, who knows! No wizard wants to be both hungry <em>and</em> confused; that's just bad form.</p>
+			<section>
+				<h3 id="primary-elements"><a class="subtle-link" href="#primary-elements">Primary Elements</a></h3>
+				<p>Primary elements are the ones that can be conjured directly. (i.e. No mixing required!)</p>
+				<div class="info-chart-wrapper">
+					<table class="info-chart">
+						<colgroup>
+							<col class="col-icon">
+							<col class="col-name">
+							<col class="col-notation">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>Icon</th>
+								<th>Name</th>
+								<th>Notation</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><img alt="Cold element" src="images/elements/cold.png"></td>
+								<td><i class="element">Cold</i></td>
+								<td><code class="element">c</code></td>
+							</tr>
+							<tr>
+								<td><img alt="Death element" src="images/elements/death.png"></td>
+								<td><i class="element">Death</i></td>
+								<td><code class="element">d</code></td>
+							</tr>
+							<tr>
+								<td><img alt="Earth element" src="images/elements/earth.png"></td>
+								<td><i class="element">Earth</i></td>
+								<td><code class="element">e</code></td>
+							</tr>
+							<tr>
+								<td><img alt="Fire element" src="images/elements/fire.png"></td>
+								<td><i class="element">Fire</i></td>
+								<td><code class="element">f</code></td>
+							</tr>
+							<tr>
+								<td><img alt="Life element" src="images/elements/life.png"></td>
+								<td><i class="element">Life</i></td>
+								<td><code class="element">l</code></td>
+							</tr>
+							<tr>
+								<td><img alt="Lightning element" src="images/elements/lightning.png"></td>
+								<td><i class="element">Lightning</i></td>
+								<td><code class="element">t</code></td>
+							</tr>
+							<tr>
+								<td><img alt="Shield element" src="images/elements/shield.png"></td>
+								<td><i class="element">Shield</i></td>
+								<td><code class="element">s</code></td>
+							</tr>
+							<tr>
+								<td><img alt="Water element" src="images/elements/water.png"></td>
+								<td><i class="element">Water</i></td>
+								<td><code class="element">w</code></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>Simply put, each element goes by the first letter of its name, with the exception of <i class="element">lighting</i>. It goes by "t", which can be thought of as "thunder" instead.</p>
+			</section>
+			<section>
+				<h3 id="secondary-elements"><a class="subtle-link" href="#secondary-elements">Secondary Elements</a></h3>
+				<p>Secondary elements are formed by conjuring multiple primary elements.</p>
+				<div class="info-chart-wrapper">
+					<table class="info-chart">
+						<colgroup>
+							<col class="col-icon">
+							<col class="col-name">
+							<col class="col-notation">
+							<col class="col-description">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>Icon</th>
+								<th>Name</th>
+								<th>Notation</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><img alt="Ice element" src="images/elements/ice.png"></td>
+								<td><i class="element">Ice</i></td>
+								<td><code class="element">i</code></td>
+								<td>Formed by conjuring <i class="element">water</i> (<code class="element">w</code>) and <i class="element">cold</i> (<code class="element">c</code>)</td>
+							</tr>
+							<tr>
+								<td><img alt="Poison element" src="images/elements/poison.png"></td>
+								<td><i class="element">Poison</i></td>
+								<td><code class="element">p</code></td>
+								<td>Formed by conjuring <i class="element">water</i> (<code class="element">w</code>) and <i class="element">death</i> (<code class="element">d</code>)</td>
+							</tr>
+							<tr>
+								<td><img alt="Steam element" src="images/elements/steam.png"></td>
+								<td><i class="element">Steam</i></td>
+								<td><code class="element">m</code></td>
+								<td>Formed by conjuring <i class="element">water</i> (<code class="element">w</code>) and <i class="element">fire</i> (<code class="element">f</code>)</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>As before, each element goes by the first letter of its name, except for <i class="element">steam</i>, which goes by its last letter, "m". Fun fact: it's the only element that has an "m" in its name. <small class="disclaimer">(I am not responsible for what you choose to do with that information.)</small></p>
+				<p>Alternatively, secondary elements <em>can</em> be notated by the primary elements they are comprised of (e.g. <code class="element">:wcwdwf</code> instead of <code class="element">:ipm</code>).</p>
+			</section>
+			<section>
+				<h3 id="pseudo-elements"><a class="subtle-link" href="#pseudo-elements">Pseudo Elements</a></h3>
+				<p>These are not actual elements, but rather used in lieu of elements for communicative benefit.</p>
+				<div class="info-chart-wrapper">
+					<table class="info-chart">
+						<colgroup>
+							<col class="col-icon">
+							<col class="col-name">
+							<col class="col-notation">
+							<col class="col-description">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>Icon</th>
+								<th>Name</th>
+								<th>Notation</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><img alt="Blank element" src="images/elements/blank.png"></td>
+								<td>Unspecified element</td>
+								<td><code class="element">x</code></td>
+								<td>This may be used in contexts where any element is permitted, or the exact element is unknown or doesn't matter. <span class="important">It's a wild card, basically.</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+			<section>
+				<h3 id="element-operators"><a class="subtle-link" href="#element-operators">Element Operators</a></h3>
+				<p class="warning">This is the most advanced part of Magick notation. If this is your introduction to Magick notation, feel free to <a href="#cast">skip this part</a> for now. <em>(...Or don't!)</em></p>
+				<p>Element operators are just symbols used to make element notations a less monotonous. They can reduce repetitiveness and increase versatility and readability for those that are familiar with the syntax.</p>
+				<div class="info-chart-wrapper">
+					<table class="info-chart">
+						<colgroup>
+							<col class="col-name">
+							<col class="col-syntax">
+							<col class="col-description">
+							<col class="col-example">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Syntax</th>
+								<th>Description</th>
+								<th>Example</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Group</td>
+								<td><code class="element">(</code>, <code class="element">)</code></td>
+								<td>Groups elements together, which can be useful for applying certain modifiers to multiple elements at once. It can also be used to merely improve readability. Groups can be within other groups.</td>
+								<td><code class="element">:(mpi)</code></td>
+							</tr>
+							<tr>
+								<td>Optional</td>
+								<td><code class="element">?</code></td>
+								<td>The preceding element (or group) is optional.</td>
+								<td><code class="element">:c?</code></td>
+							</tr>
+							<tr>
+								<td>Open repeat</td>
+								<td><code class="element">+</code></td>
+								<td>Input the preceding element (or group... you get the idea, right?). Afterwards, the element may be repeated zero or more times.</td>
+								<td><code class="element">:d+</code></td>
+							</tr>
+							<tr>
+								<td>Closed repeat</td>
+								<td><code class="element">[number]</code> or <code class="element">[range]</code></td>
+								<td>Input the following element as many times as specified. If a range is given (e.g. <code class="element">1-3</code>), input the element any number of times within that range.</td>
+								<td><code class="element">:2-3w</code></td>
+							</tr>
+							<tr>
+								<td>Or</td>
+								<td><code class="element">|</code></td>
+								<td>Choose to input one of the elements on either side of this operator. You can chain together any number of options.</td>
+								<td><code class="element">:i|e|t</code></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>Sometimes even when it is technically unnecessary to group elements, it can be easier to read, so feel free to group elements if you think it helps the reader. It can also be used to convey things like simultaneous button presses, if you want to use it that way.</p>
+				<p>While not necessary, it is generally <em>recommended</em> that options (elements coupled with <code class="element">|</code>) be grouped if other elements are not part of the choice. Both <code class="element">:se|i</code> and <code class="element">:s(e|i)</code> mean the same thing, but the latter is a little easier to read than the former.</p>
+			</section>
+		</div>
 	</section>
 	<section id="cast" data-chapter="Cast" class="chapter backdrop-caves">
 		<h2><a class="chapter-anchor" href="#cast">Cast</a></h2>
-		<p><img alt="Magick notation cast syntax" src="images/art/cast.png"></p>
-		<p>If you've conjured some elements, naturally you're going to want to cast them, right? Like with elements, each cast type is represented by a single letter. It's pretty straight forward (pun intended). Cast notation precedes element notation.</p>
-		<table class="info-chart">
-			<colgroup>
-				<col class="col-image"/>
-				<col class="col-name"/>
-				<col class="col-notation"/>
-				<col class="col-description"/>
-			</colgroup>
-			<thead>
-				<tr>
-					<th>Image</th>
-					<th>Name</th>
-					<th>Notation</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><img alt="Area cast" src="images/casts/area.jpg"></td>
-					<td><i class="cast">Area</i></td>
-					<td><code class="cast">A</code></td>
-					<td>Cast elements as an <i class="cast">area</i> spell.</td>
-				</tr>
-				<tr>
-					<td><img alt="Forward cast" src="images/casts/forward.jpg"></td>
-					<td><i class="cast">Forward</i></td>
-					<td><code class="cast">F</code></td>
-					<td>Cast elements as a <i class="cast">forward</i> spell, such as with a beam or throw.</td>
-				</tr>
-				<tr>
-					<td><img alt="No cast" src="images/casts/no-cast.jpg"></td>
-					<td><i class="cast">No cast</i></td>
-					<td><code class="cast">X</code></td>
-					<td>Elements are conjured but not cast. This is the default. If a notation does not specify a cast type, regard it as having this one. <span class="important">Must not be used with other cast types.</span></td>
-				</tr>
-				<tr>
-					<td><img alt="Weapon cast" src="images/casts/weapon.jpg"></td>
-					<td><i class="cast">Weapon</i></td>
-					<td><code class="cast">W</code></td>
-					<td>Use weapon. If elements are conjured (<code><span class="cast">W</span><span class="element">:x</span></code>), the weapon will become enchanted. If no elements are conjured (<code><span class="cast">W</span><span class="element">:</span></code>), the weapon will be used for an attack.</td>
-				</tr>
-				<tr>
-					<td><img alt="Magick cast" src="images/casts/magick.jpg"></td>
-					<td><i class="cast">Magick</i></td>
-					<td><code class="cast">M</code></td>
-					<td>Cast elements as a Magick (e.g. <i class="magick">Haste</i>, <i class="magick">Teleport</i>, et al.). The <i class="flag">strict</i> (<code class="flag">!</code>) flag is automatically assumed and unnecessary to include.</td>
-				</tr>
-				<tr>
-					<td><img alt="Self cast" src="images/casts/self.jpg"></td>
-					<td><i class="cast">Self</i></td>
-					<td><code class="cast">S</code></td>
-					<td>Cast elements, applying them to one's self.</td>
-				</tr>
-			</tbody>
-		</table>
-		<p><span class="important">Multiple cast types may be specified.</span> Specifying multiple cast types denotes a choice deferred to the player. So, <code><span class="cast">AS</span><span class="element">:se</span></code> means you could either <i class="cast">area</i> (<code class="cast">A</code>) or <i class="cast">self</i> (<code class="cast">S</code>) cast <code class="element">:se</span></code>. When specifying multiple cast types, <span class="important">the order doesn't matter</span>.</p>
-		<p>You may have noticed that cast types are represented by uppercase letters while elements are represented by lowercase letters. This isn't strictly necessary to do, but it is recommended for the sake of readability. After all, this whole thing is about fast yet clear communication.</p>
-		<p class="note"><span class="highlight-positive">Tip:</span> If you want to refer to a cast type without elements, you could still use an empty element notation with it like this <code><span class="cast">A</span><span class="element">:</span></code>. It's a good way to let the reader know you are using a notation and aren't just saying a letter randomly.</p>
+		<div class="lane">
+			<p><img alt="Magick notation cast syntax" src="images/art/cast.png"></p>
+			<p>If you've conjured some elements, naturally you're going to want to cast them, right? Like with elements, each cast type is represented by a single letter. It's pretty straight forward (pun intended). Cast notation precedes element notation.</p>
+			<div class="info-chart-wrapper">
+				<table class="info-chart">
+					<colgroup>
+						<col class="col-image">
+						<col class="col-name">
+						<col class="col-notation">
+						<col class="col-description">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>Image</th>
+							<th>Name</th>
+							<th>Notation</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><img alt="Area cast" src="images/casts/area.jpg"></td>
+							<td><i class="cast">Area</i></td>
+							<td><code class="cast">A</code></td>
+							<td>Cast elements as an <i class="cast">area</i> spell.</td>
+						</tr>
+						<tr>
+							<td><img alt="Forward cast" src="images/casts/forward.jpg"></td>
+							<td><i class="cast">Forward</i></td>
+							<td><code class="cast">F</code></td>
+							<td>Cast elements as a <i class="cast">forward</i> spell, such as with a beam or throw.</td>
+						</tr>
+						<tr>
+							<td><img alt="No cast" src="images/casts/no-cast.jpg"></td>
+							<td><i class="cast">No cast</i></td>
+							<td><code class="cast">X</code></td>
+							<td>Elements are conjured but not cast. This is the default. If a notation does not specify a cast type, regard it as having this one. <span class="important">Must not be used with other cast types.</span></td>
+						</tr>
+						<tr>
+							<td><img alt="Weapon cast" src="images/casts/weapon.jpg"></td>
+							<td><i class="cast">Weapon</i></td>
+							<td><code class="cast">W</code></td>
+							<td>Use weapon. If elements are conjured (<code><span class="cast">W</span><span class="element">:x</span></code>), the weapon will become enchanted. If no elements are conjured (<code><span class="cast">W</span><span class="element">:</span></code>), the weapon will be used for an attack.</td>
+						</tr>
+						<tr>
+							<td><img alt="Magick cast" src="images/casts/magick.jpg"></td>
+							<td><i class="cast">Magick</i></td>
+							<td><code class="cast">M</code></td>
+							<td>Cast elements as a Magick (e.g. <i class="magick">Haste</i>, <i class="magick">Teleport</i>, et al.). The <i class="flag">strict</i> (<code class="flag">!</code>) flag is automatically assumed and unnecessary to include.</td>
+						</tr>
+						<tr>
+							<td><img alt="Self cast" src="images/casts/self.jpg"></td>
+							<td><i class="cast">Self</i></td>
+							<td><code class="cast">S</code></td>
+							<td>Cast elements, applying them to one's self.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p><span class="important">Multiple cast types may be specified.</span> Specifying multiple cast types denotes a choice deferred to the player. So, <code><span class="cast">AS</span><span class="element">:se</span></code> means you could either <i class="cast">area</i> (<code class="cast">A</code>) or <i class="cast">self</i> (<code class="cast">S</code>) cast <code class="element">:se</code>. When specifying multiple cast types, <span class="important">the order doesn't matter</span>.</p>
+			<p>You may have noticed that cast types are represented by uppercase letters while elements are represented by lowercase letters. This isn't strictly necessary to do, but it is recommended for the sake of readability. After all, this whole thing is about fast yet clear communication.</p>
+			<p class="note"><span class="highlight-positive">Tip:</span> If you want to refer to a cast type without elements, you could still use an empty element notation with it like this <code><span class="cast">A</span><span class="element">:</span></code>. It's a good way to let the reader know you are using a notation and aren't just saying a letter randomly.</p>
+		</div>
 	</section>
 	<section id="state" data-chapter="State" class="chapter backdrop-higherlands">
 		<h2><a class="chapter-anchor" href="#state">State</a></h2>
+		<div class="lane">
 		<p><img alt="Magick notation state syntax" src="images/art/state.png"></p>
 		<p>Your state refers to things such as status effects (but not only status effects). Sometimes your state is a determining factor for whether or not you should do something. You know, "Throw some <i class="element">water</i> on your<i class="cast">self</i>... but only if you're <i class="state">burning</i>." That sort of thing.</p>
 		<p>The state is defined within a pair of brackets (<code class="state">[</code>, <code class="state">]</code>). This makes it clear that they are states and not cast types. States can be denoted inclusively (meaning the state should be applied to the player before following the rest of the notation) or exclusively (meaning the state should <em>not</em> already be applied to the player).</p>
-		<table class="info-chart">
-			<caption class="caption-footnote"><small>* While context takes precedence, generally a player would not be considered to be in this state if they are influenced by a glitch that alters their speed, health, etc.</small></caption>
-			<colgroup>
-				<col class="col-image"/>
-				<col class="col-name"/>
-				<col class="col-notation"/>
-				<col class="col-notation"/>
-				<col class="col-description"/>
-			</colgroup>
-			<thead>
-				<tr>
-					<th>Image</th>
-					<th>Name</th>
-					<th>Notation (Include)</th>
-					<th>Notation (Exclude)</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><img alt="Burning state" src="images/states/burning.jpg"></td>
-					<td><i class="state">Burning</i></td>
-					<td><code class="state">B</code></td>
-					<td><code class="state">-B</code></td>
-					<td>The player does (not) have the <i class="state">burning</i> status effect.</td>
-				</tr>
-				<tr>
-					<td><img alt="Chilled state" src="images/states/chilled.jpg"></td>
-					<td><i class="state">Chilled</i></td>
-					<td><code class="state">C</code></td>
-					<td><code class="state">-C</code></td>
-					<td>The player does (not) have the <i class="state">chilled</i> status effect.</td>
-				</tr>
-				<tr>
-					<td><img alt="Neutral state" src="images/states/neutral.jpg"></td>
-					<td><i class="state">Dispelled</i></td>
-					<td><code class="state">D</code></td>
-					<td><code class="state">-D</code></td>
-					<td>The player is (not) in a <i class="state">dispelled</i> state. The player must be neutral in all regards, exactly as they would be if influenced by the <i class="magick">Dispel</i> Magick. <span class="important">Must not be used with other state types.</span> *</td>
-				</tr>
-				<tr>
-					<td><img alt="Frozen state" src="images/states/frozen.jpg"></td>
-					<td><i class="state">Frozen</i></td>
-					<td><code class="state">F</code></td>
-					<td><code class="state">-F</code></td>
-					<td>The player does (not) have the <i class="state">frozen</i> status effect.</td>
-				</tr>
-				<tr>
-					<td><img alt="Neutral state" src="images/states/neutral.jpg"></td>
-					<td><i class="state">Neutral</i></td>
-					<td><code class="state">N</code></td>
-					<td><code class="state">-N</code></td>
-					<td>The player is (not) in a <i class="state">neutral</i> state. Unlike the <i class="state">dispelled</i> state, this state refers only to a wizard's status effects. May be used with <code class="state">S</code>. *</td>
-				</tr>
-				<tr>
-					<td><img alt="Poisoned state" src="images/states/poisoned.jpg"></td>
-					<td><i class="state">Poisoned</i></td>
-					<td><code class="state">P</code></td>
-					<td><code class="state">-P</code></td>
-					<td>The player does (not) have the <i class="state">poisoned</i> status effect.</td>
-				</tr>
-				<tr>
-					<td><img alt="Shielded state" src="images/states/shielded.jpg"></td>
-					<td><i class="state">Shielded</i></td>
-					<td><code class="state">S</code></td>
-					<td><code class="state">-S</code></td>
-					<td>The player is (not) wearing a shield, ward, or armor.</td>
-				</tr>
-				<tr>
-					<td><img alt="Wet state" src="images/states/wet.jpg"></td>
-					<td><i class="state">Wet</i></td>
-					<td><code class="state">W</code></td>
-					<td><code class="state">-W</code></td>
-					<td>The player does (not) have the <i class="state">wet</i> status effect.</td>
-				</tr>
-			</tbody>
-		</table>
-		<p>Just like cast types, <span class="important">multiple states may be represented</span> (and as before, <span class="important">the order doesn't matter</span>). However, unlike cast types, multiple states do <em>not</em> denote a choice. They occur <em>simultaneously</em>.</p>
-		<p>Keep in mind that the negative sign (<code class="state ">-</code>) only applies to the one state immediately following it. So, <code class="state">[-CW]</code> means you are <strong>not</strong> <i class="state">chilled</i> but <strong>are</strong> <i class="state">wet</i>. To convey that you are neither <i class="state">chilled</i> nor <i class="state">wet</i>, use <code class="state">[-C-W]</code>. Here's a fun one you can do if you grow tired of being corporeal: <code><span class="state">[-SW]</span><span class="cast">X</span><span class="element">:t+</span></code>.</p>
-	</section>
-	<section id="flags" data-chapter="Flags" class="chapter backdrop-forest">
-		<h2><a class="chapter-anchor" href="#flags">Flags</a></h2>
-		<p><img alt="Magick notation flags syntax" src="images/art/flags.png"></p>
-		<p>Flags are just symbols that say something about how the rest of the notation should be regarded. There's not much to them.</p>
-		<table class="info-chart">
-			<colgroup>
-				<col class="col-image"/>
-				<col class="col-name"/>
-				<col class="col-symbol"/>
-				<col class="col-description"/>
-			</colgroup>
-			<thead>
-				<tr>
-					<th>Image</th>
-					<th>Name</th>
-					<th>Symbol</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><img alt="Loose flag illustration" src="images/flags/loose.png"></td>
-					<td><i class="flag">Loose</i></td>
-					<td><code class="flag">~</code></td>
-					<td>Denotes that elements may be conjured in <strong class="important">any order</strong>. You likely will never need to use this flag, as <span class="important">this is the default</span>, but it's available if it ever needs to be explicitly stated.</td>
-				</tr>
-				<tr>
-					<td><img alt="Strict flag illustration" src="images/flags/strict.png"></td>
-					<td><i class="flag">Strict</i></td>
-					<td><code class="flag">!</code></td>
-					<td>Denotes that elements should be conjured in the <strong class="important">exact order</strong> that they are notated. This flag is automatically assumed with the <i class="cast">Magick</i> (<code class="cast">M</code>) cast type.</td>
-				</tr>
-			</tbody>
-		</table>
-	</section>
-	<section id="examples" data-chapter="Examples" class="chapter backdrop-castle">
-		<h2><a class="chapter-anchor" href="#examples">Examples</a></h2>
-		<p>Let's conclude by going through a few examples, combining everything we've been over. Some of these examples can be found in <a href="#demo-video">the video</a> I showed in the beginning. Also, remember, many spells can be notated more than one way. If you thought of a way to notate a spell that wasn't exactly how I did it, you might be correct as well.</p>
-		<table class="info-chart">
-			<colgroup>
-				<col class="col-number"/>
-				<col class="col-english"/>
-				<col class="col-notation"/>
-				<col class="col-description"/>
-			</colgroup>
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>Plain English</th>
-					<th>Notation</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>1.</td>
-					<td>Attack with weapon</td>
-					<td><code><span class="cast">W</span><span class="element">:</span></code></td>
-					<td>If the weapon was already enchanted, this would trigger the effect.</td>
-				</tr>
-				<tr>
-					<td>2.</td>
-					<td>Conjure <span class="element">any element</span> but <span class="cast">do not</span> cast it</td>
-					<td><code><span class="cast">X</span><span class="element">:x</span></code></td>
-					<td>You could also notate it like this <code class="element">:x</code>.</td>
-				</tr>
-				<tr>
-					<td>3.</td>
-					<td>While <i class="state">wet</i>, <i class="cast">self</i> cast <i class="element">fire</i></td>
-					<td><code><span class="state">[W]</span><span class="cast">S</span><span class="element">:f</span></code></td>
-					<td>It's one way to dry off!</td>
-				</tr>
-				<tr>
-					<td>4.</td>
-					<td>While <i class="state">shielded</i>, <i class="cast">Magick</i> cast 4 <i class="element">death</i> and 1 <i class="element">lighting</i></td>
-					<td><code><span class="state">[S]</span><span class="cast">M</span><span class="element">:4dt</span></code></td>
-					<td>This is the Magick <i class="magick">Sacrifice</i> done from a <i class="state">shielded</i> state.</td>
-				</tr>
-				<tr>
-					<td>5.</td>
-					<td>Conjure anything or nothing at all</td>
-					<td><code class="element">:x?+</code></td>
-					<td><code class="element">x</code> means any element. <code class="element">?</code> means that element is optional. <code class="element">+</code> means to repeat <code class="element">x?</code> any number of times. This is basically how to say "do whatever you want" in Magick notation.</td>
-				</tr>
-				<tr>
-					<td>6.</td>
-					<td><i class="cast">Area</i>, <i class="cast">forward</i>, or <i class="cast">weapon</i> cast <i class="element">shield</i> and <i class="element">death</i> (or <i class="element">life</i>)</td>
-					<td><code><span class="cast">AFW</span><span class="element">:s(d|l)</code></td>
-					<td>These are the minimum requirements for creating any set of mines.</td>
-				</tr>
-				<tr>
-					<td>7.</td>
-					<td><i class="cast">Weapon</i> cast <i class="element">shield</i>, <i class="element">poison</i>, <i class="element">steam</i>, <i class="element">lightning</i>, and <i class="element">death</i></td>
-					<td><code><span class="flag">!</span><span class="cast">W</span><span class="element">:wwsdftd</span></code></td>
-					<td>The <i class="flag">strict</i> flag here is particularly for controller players, as this specific order is a fast way to achieve this spell on controller.</td>
-				</tr>
-				<tr>
-					<td>8.</td>
-					<td><i class="cast">Forward</i> cast <i class="element">life</i>, <i class="element">life</i>, <i class="element">water</i>, <i class="element">water</i>, <i class="element">shield</i></td>
-					<td><code><span class="cast">F</span><span class="element">:2(lw)s<span></code></td>
-					<td>The <code class="element">2</code>is placed before the group <code class="element">(lw)</code>, which means the entire group is input twice, making it equivalent to <code class="element">lwlw</code>.</td>
-				</tr>
-				<tr>
-					<td>9.</td>
-					<td>While <i class="state">wet</i> and <i class="state">shielded</i>, conjure <span class="element">at least 1</span> <i class="element">lightning</i> element</td>
-					<td><code><span class="state">[WS]</span><span class="element">:t+</span></code></td>
-					<td>Hopefully that shield was <code><span class="cast">S</span><span class="element">:s(3-4t)?</span></code>.</td>
-				</tr>
-				<tr>
-					<td>10.</td>
-					<td>While <i class="state">not wet</i> and <i class="state">shielded</i>, <i class="cast">weapon</i> cast 1-2 <i class="element">ice</i>, another <i class="element">ice</i> or <i class="element">cold</i> (or neither), <i class="element">death</i>, and <i class="element">lightning</i></td>
-					<td><code><span class="state">[-WS]</span><span class="cast">W</span><span class="element">:1-2i(i|c)?dt</span></code></td>
-					<td>This notation demonstrates the flexibility that can be used to include many variants of similar spells. There are 5 different possible variants that all adhere to the given specifications: <code class="element">:idt</code>, <code class="element">:icdt</code>, <code class="element">:iidt</code>, <code class="element">:iicdt</code>, and <code class="element">:iiidt</code>.
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<p>As you can see, some notations probably wouldn't be used in casual conversation, but not all notations are necessarily meant to be used that way. Some may be useful to write down and refer back to later.</p>
-		<h3 id="magicks"><a class="subtle-link" href="#magicks">Magicks</a></h3>
-		<p>Just for good measure, I'll include Magicks as well.</p>
-		<details class="magick-examples">
-			<summary>Magicka 2</summary>
+		<div class="info-chart-wrapper">
 			<table class="info-chart">
+				<caption class="caption-footnote"><small>* While context takes precedence, generally a player would not be considered to be in this state if they are influenced by a glitch that alters their speed, health, etc.</small></caption>
 				<colgroup>
-					<col class="col-name"/>
-					<col class="col-notation"/>
+					<col class="col-image">
+					<col class="col-name">
+					<col class="col-notation">
+					<col class="col-notation">
+					<col class="col-description">
 				</colgroup>
 				<thead>
 					<tr>
 						<th>Image</th>
 						<th>Name</th>
-						<th>Notation</th>
+						<th>Notation (Include)</th>
+						<th>Notation (Exclude)</th>
+						<th>Description</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td><img alt="Abuse-a-Scroll Magick" src="images/magicks/m2/abuse-a-scroll.jpg"></td>
-						<td><i class="magick">Abuse-a-Scroll</i></td>
-						<td><code><span class="cast">M</span><span class="element">:ftl</span></code></td>
+						<td><img alt="Burning state" src="images/states/burning.jpg"></td>
+						<td><i class="state">Burning</i></td>
+						<td><code class="state">B</code></td>
+						<td><code class="state">-B</code></td>
+						<td>The player does (not) have the <i class="state">burning</i> status effect.</td>
 					</tr>
 					<tr>
-						<td><img alt="Concussion Magick" src="images/magicks/m2/concussion.jpg"></td>
-						<td><i class="magick">Concussion</i></td>
-						<td><code><span class="cast">M</span><span class="element">:wsww</span></code></td>
+						<td><img alt="Chilled state" src="images/states/chilled.jpg"></td>
+						<td><i class="state">Chilled</i></td>
+						<td><code class="state">C</code></td>
+						<td><code class="state">-C</code></td>
+						<td>The player does (not) have the <i class="state">chilled</i> status effect.</td>
 					</tr>
 					<tr>
-						<td><img alt="Dispel Magick" src="images/magicks/m2/dispel.jpg"></td>
-						<td><i class="magick">Dispel</i></td>
-						<td><code><span class="cast">M</span><span class="element">:ds</span></code></td>
+						<td><img alt="Neutral state" src="images/states/neutral.jpg"></td>
+						<td><i class="state">Dispelled</i></td>
+						<td><code class="state">D</code></td>
+						<td><code class="state">-D</code></td>
+						<td>The player is (not) in a <i class="state">dispelled</i> state. The player must be neutral in all regards, exactly as they would be if influenced by the <i class="magick">Dispel</i> Magick. <span class="important">Must not be used with other state types.</span> *</td>
 					</tr>
 					<tr>
-						<td><img alt="Disruptor Magick" src="images/magicks/m2/disruptor.jpg"></td>
-						<td><i class="magick">Disruptor</i></td>
-						<td><code><span class="cast">M</span><span class="element">:des</span></code></td>
+						<td><img alt="Frozen state" src="images/states/frozen.jpg"></td>
+						<td><i class="state">Frozen</i></td>
+						<td><code class="state">F</code></td>
+						<td><code class="state">-F</code></td>
+						<td>The player does (not) have the <i class="state">frozen</i> status effect.</td>
 					</tr>
 					<tr>
-						<td><img alt="Dragon Strike Magick" src="images/magicks/m2/dragon-strike.jpg"></td>
-						<td><i class="magick">Dragon Strike</i></td>
-						<td><code><span class="cast">M</span><span class="element">:ffdff</span></code></td>
+						<td><img alt="Neutral state" src="images/states/neutral.jpg"></td>
+						<td><i class="state">Neutral</i></td>
+						<td><code class="state">N</code></td>
+						<td><code class="state">-N</code></td>
+						<td>The player is (not) in a <i class="state">neutral</i> state. Unlike the <i class="state">dispelled</i> state, this state refers only to a wizard's status effects. May be used with <code class="state">S</code>. *</td>
 					</tr>
 					<tr>
-						<td><img alt="Emergency Teleport Magick" src="images/magicks/m2/emergency-teleport.jpg"></td>
-						<td><i class="magick">Emergency Teleport</i></td>
-						<td><code><span class="cast">M</span><span class="element">:tdt</span></code></td>
+						<td><img alt="Poisoned state" src="images/states/poisoned.jpg"></td>
+						<td><i class="state">Poisoned</i></td>
+						<td><code class="state">P</code></td>
+						<td><code class="state">-P</code></td>
+						<td>The player does (not) have the <i class="state">poisoned</i> status effect.</td>
 					</tr>
 					<tr>
-						<td><img alt="Furious Fowl Magick" src="images/magicks/m2/furious-fowl.jpg"></td>
-						<td><i class="magick">Furious Fowl</i></td>
-						<td><code><span class="cast">M</span><span class="element">:dede</span></code></td>
+						<td><img alt="Shielded state" src="images/states/shielded.jpg"></td>
+						<td><i class="state">Shielded</i></td>
+						<td><code class="state">S</code></td>
+						<td><code class="state">-S</code></td>
+						<td>The player is (not) wearing a shield, ward, or armor.</td>
 					</tr>
 					<tr>
-						<td><img alt="Guardian Magick" src="images/magicks/m2/guardian.jpg"></td>
-						<td><i class="magick">Guardian</i></td>
-						<td><code><span class="cast">M</span><span class="element">:llts</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Haste Magick" src="images/magicks/m2/haste.jpg"></td>
-						<td><i class="magick">Haste</i></td>
-						<td><code><span class="cast">M</span><span class="element">:tdf</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Higherland Breeze Magick" src="images/magicks/m2/higherland-breeze.jpg"></td>
-						<td><i class="magick">Higherland Breeze</i></td>
-						<td><code><span class="cast">M</span><span class="element">:4i</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Ice Tornado Magick" src="images/magicks/m2/ice-tornado.jpg"></td>
-						<td><i class="magick">Ice Tornado</i></td>
-						<td><code><span class="cast">M</span><span class="element">:iiecc</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Push Magick" src="images/magicks/m2/push.jpg"></td>
-						<td><i class="magick">Push</i></td>
-						<td><code><span class="cast">M</span><span class="element">:ws</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Revive Magick" src="images/magicks/m2/revive.jpg"></td>
-						<td><i class="magick">Revive</i></td>
-						<td><code><span class="cast">M</span><span class="element">:lt</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Sacrifice Magick" src="images/magicks/m2/sacrifice.jpg"></td>
-						<td><i class="magick">Sacrifice</i></td>
-						<td><code><span class="cast">M</span><span class="element">:4dt</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Spike Quake Magick" src="images/magicks/m2/spike-quake.jpg"></td>
-						<td><i class="magick">Spike Quake</i></td>
-						<td><code><span class="cast">M</span><span class="element">:ddedd</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Summon Living Dead People Magick" src="images/magicks/m2/summon-living-dead-people.jpg"></td>
-						<td><i class="magick">Summon Living Dead People</i></td>
-						<td><code><span class="cast">M</span><span class="element">:iedc</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Teleport Magick" src="images/magicks/m2/teleport.jpg"></td>
-						<td><i class="magick">Teleport</i></td>
-						<td><code><span class="cast">M</span><span class="element">:tdd</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Thunderbolt Magick" src="images/magicks/m2/thunderbolt.jpg"></td>
-						<td><i class="magick">Thunderbolt</i></td>
-						<td><code><span class="cast">M</span><span class="element">:mtdt</span></code></td>
-					</tr>
-					<tr>
-						<td><img alt="Thunderhead Magick" src="images/magicks/m2/thunderhead.jpg"></td>
-						<td><i class="magick">Thunderhead</i></td>
-						<td><code><span class="cast">M</span><span class="element">:ffdtt</span></code></td>
+						<td><img alt="Wet state" src="images/states/wet.jpg"></td>
+						<td><i class="state">Wet</i></td>
+						<td><code class="state">W</code></td>
+						<td><code class="state">-W</code></td>
+						<td>The player does (not) have the <i class="state">wet</i> status effect.</td>
 					</tr>
 				</tbody>
 			</table>
-		</details>
-	</section>
-</article>
-<footer class="site-footer checkered">
-	<article class="about-writeup">
-		<header class="about-writeup-header">
-			<h2 class="about-writeup-heading">Thanks</h2>
-			<time class="about-writeup-time" datetime="2024-11-24 11:06:57.840-0500">November 24, 2024</time>
-		</header>
-		<p>Magick notation is something I developed while learning how to play Magicka 2. When a useful spell came to my attention, I'd write it down. My notes became cluttered from repeatedly writing out names of elements and cast types, which prompted me to use a shorthand.</p>
-		<p>One common method of Magicka shorthand that already existed was simply to list out the default keyboard bindings for elements&mdash;a method I found to be flawed and limited. Not everyone plays on keyboard or with default key bindings. If you're willing to learn it regardless, cast types still need to be conveyed. It's also unintuitive to read. "Q" meaning "water" or "R" meaning "cold" makes little sense apart from the fact that those elements are mapped to those keys by default, and conveying small spell variations requires rewriting the entire spell.</p>
-		<p>The initial idea for my own shorthand system came from algebraic notation (chess), and further inspiration from things such as regular expression (text search patterns) and programming soon followed. From there, it was a matter of finding the perfect balance between versatility and simplicity. Magick notation has been my attempt at that, so I thank you for taking the time to entertain it.</p>
-		<svg class="lein-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 30.087"><path d="M18.875,30.044H0V0H9.307V20.693h9.568ZM34.963,8.225v2.814H47.085v7.533H34.963v2.987H47.345v8.485H25.613V0H47.3V8.225Zm29.12,21.819H54.732V0h9.351Zm35.917,0H90.778l-.086.043-9.653-13.9V30.044H71.731v-30L81.039,0l9.61,13.68V0H100Z"/></svg>
-	</article>
-	<div class="site-info">
-		<div class="site-info-pillar">
-			<h3 class="site-info-heading">Other projects</h3>
-			<a class="project-link" title="Insight" href="https://leinwilliams.github.io/insight/">
-				<svg class="project-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2377.87 570.71"><path d="M309.843,252.679,348.7,314.44,258.774,330.3l-38.857-61.76,27.006-36.478ZM1971.774,50v75h75V450l100-100V125h75V85.354L2257.135,50Zm-650,300V50h-100V350Zm350-300V350h100V237.5h50V350h100V50s-100,0-100,0V162.5h-50V50Zm-1050,0V350H721.784V216.676L821.779,350h100V50H821.779V183.308L721.784,50Zm750,300h250V162.5h-112.5v75h37.5V275h-75V125h150V50h-250Zm-400-112.5h125V275h-125v75h200V162.5h-125V125h125V50h-200ZM471.775,350l100,100V50H436.426l35.349,35.35Zm848.832,32h-22.666v68h22.666Zm266.332,17h17v-17h-56.666v17h17v51h22.667Zm-153,51h-22.667v-68h48.652l8.015,8.012V416.49l-8.015,8.014H1433.94Zm0-42.5h11.333V399H1433.94Zm93.984,42.5,8.015-8.015V382.005h-22.666v51h-11.334v-51h-22.666v59.984l8.015,8.015Zm-150.649-37.783L1354.609,382h-22.668v68h22.668V419.784L1377.275,450h22.665V382h-22.665ZM1985.441,424.5l11.333,25.5h-22.666l-11.333-25.5V450h-22.667V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.666-17h11.333V399h-11.333ZM1872.109,382h-22.667l-2.833,34-8.5-14.577-8.5,14.57-2.833-34h-22.667l5.667,68,22.664,0,5.667-9.715,5.666,9.715,22.669,0Zm-187,68,17-68h-22.666l-5.667,22.667L1668.11,382h-22.666l17,68Zm28.333,0h22.667V382h-22.667Zm34,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333Zm136,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333ZM939.105,424.5,950.438,450H927.772l-11.334-25.5V450H893.772V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399H916.438Zm328.665,17,11.333,25.5H1233.77l-11.334-25.5V450H1199.77V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399h-11.334ZM1075.1,433h-22.666V382h-22.667v68H1075.1Zm-408,17V433H644.441V399h22.666V382H621.774v68Zm351.331,0H961.771V382h56.667Zm-22.667-51H984.438v34h11.333Zm136,34H1109.1V382h-22.667v68h45.333ZM865.439,399h17V382H825.773v17h17v51h22.667ZM735.107,450H678.44V382h56.667Zm-34-17H712.44V399H701.107Zm90.667-20.783L769.108,382H746.44v68h22.668V419.784L791.774,450h22.665V382H791.774ZM1188.437,382H1143.1v68h45.333V433H1165.77v-8.5h22.667v-17H1165.77V399h22.667ZM232.748,209.527l27-36.476L220.892,111.3l-89.926,15.856,38.854,61.756Zm149.115-45.49-97.28,17.153-27.005,36.477L320.5,238.282l97.28-17.154ZM195.088,260.4l27-36.471L159.169,203.3l-97.28,17.153,35.919,57.092Z"></path></svg>
-			</a>
 		</div>
-		<div class="site-info-pillar">
+		<p>Just like cast types, <span class="important">multiple states may be represented</span> (and as before, <span class="important">the order doesn't matter</span>). However, unlike cast types, multiple states do <em>not</em> denote a choice. They occur <em>simultaneously</em>.</p>
+		<p>Keep in mind that the negative sign (<code class="state ">-</code>) only applies to the one state immediately following it. So, <code class="state">[-CW]</code> means you are <strong>not</strong> <i class="state">chilled</i> but <strong>are</strong> <i class="state">wet</i>. To convey that you are neither <i class="state">chilled</i> nor <i class="state">wet</i>, use <code class="state">[-C-W]</code>. Here's a fun one you can do if you grow tired of being corporeal: <code><span class="state">[-SW]</span><span class="cast">X</span><span class="element">:t+</span></code>.</p>
+		</div>
+	</section>
+	<section id="flags" data-chapter="Flags" class="chapter backdrop-forest">
+		<h2><a class="chapter-anchor" href="#flags">Flags</a></h2>
+		<div class="lane">
+			<p><img alt="Magick notation flags syntax" src="images/art/flags.png"></p>
+			<p>Flags are just symbols that say something about how the rest of the notation should be regarded. There's not much to them.</p>
+			<div class="info-chart-wrapper">
+				<table class="info-chart">
+					<colgroup>
+						<col class="col-image">
+						<col class="col-name">
+						<col class="col-symbol">
+						<col class="col-description">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>Image</th>
+							<th>Name</th>
+							<th>Symbol</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><img alt="Loose flag illustration" src="images/flags/loose.png"></td>
+							<td><i class="flag">Loose</i></td>
+							<td><code class="flag">~</code></td>
+							<td>Denotes that elements may be conjured in <strong class="important">any order</strong>. You likely will never need to use this flag, as <span class="important">this is the default</span>, but it's available if it ever needs to be explicitly stated.</td>
+						</tr>
+						<tr>
+							<td><img alt="Strict flag illustration" src="images/flags/strict.png"></td>
+							<td><i class="flag">Strict</i></td>
+							<td><code class="flag">!</code></td>
+							<td>Denotes that elements should be conjured in the <strong class="important">exact order</strong> that they are notated. This flag is automatically assumed with the <i class="cast">Magick</i> (<code class="cast">M</code>) cast type.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+	<section id="examples" data-chapter="Examples" class="chapter backdrop-castle">
+		<h2><a class="chapter-anchor" href="#examples">Examples</a></h2>
+		<div class="lane">
+			<p>Let's conclude by going through a few examples, combining everything we've been over. Some of these examples can be found in <a href="#demo-video">the video</a> I showed in the beginning. Also, remember, many spells can be notated more than one way. If you thought of a way to notate a spell that wasn't exactly how I did it, you might be correct as well.</p>
+			<div class="info-chart-wrapper">
+				<table class="info-chart">
+					<colgroup>
+						<col class="col-number">
+						<col class="col-english">
+						<col class="col-notation">
+						<col class="col-description">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Plain English</th>
+							<th>Notation</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1.</td>
+							<td>Attack with weapon</td>
+							<td><code><span class="cast">W</span><span class="element">:</span></code></td>
+							<td>If the weapon was already enchanted, this would trigger the effect.</td>
+						</tr>
+						<tr>
+							<td>2.</td>
+							<td>Conjure <span class="element">any element</span> but <span class="cast">do not</span> cast it</td>
+							<td><code><span class="cast">X</span><span class="element">:x</span></code></td>
+							<td>You could also notate it like this <code class="element">:x</code>.</td>
+						</tr>
+						<tr>
+							<td>3.</td>
+							<td>While <i class="state">wet</i>, <i class="cast">self</i> cast <i class="element">fire</i></td>
+							<td><code><span class="state">[W]</span><span class="cast">S</span><span class="element">:f</span></code></td>
+							<td>It's one way to dry off!</td>
+						</tr>
+						<tr>
+							<td>4.</td>
+							<td>While <i class="state">shielded</i>, <i class="cast">Magick</i> cast 4 <i class="element">death</i> and 1 <i class="element">lighting</i></td>
+							<td><code><span class="state">[S]</span><span class="cast">M</span><span class="element">:4dt</span></code></td>
+							<td>This is the Magick <i class="magick">Sacrifice</i> done from a <i class="state">shielded</i> state.</td>
+						</tr>
+						<tr>
+							<td>5.</td>
+							<td>Conjure anything or nothing at all</td>
+							<td><code class="element">:x?+</code></td>
+							<td><code class="element">x</code> means any element. <code class="element">?</code> means that element is optional. <code class="element">+</code> means to repeat <code class="element">x?</code> any number of times. This is basically how to say "do whatever you want" in Magick notation.</td>
+						</tr>
+						<tr>
+							<td>6.</td>
+							<td><i class="cast">Area</i>, <i class="cast">forward</i>, or <i class="cast">weapon</i> cast <i class="element">shield</i> and <i class="element">death</i> (or <i class="element">life</i>)</td>
+							<td><code><span class="cast">AFW</span><span class="element">:s(d|l)</span></code></td>
+							<td>These are the minimum requirements for creating any set of mines.</td>
+						</tr>
+						<tr>
+							<td>7.</td>
+							<td><i class="cast">Weapon</i> cast <i class="element">shield</i>, <i class="element">poison</i>, <i class="element">steam</i>, <i class="element">lightning</i>, and <i class="element">death</i></td>
+							<td><code><span class="flag">!</span><span class="cast">W</span><span class="element">:wwsdftd</span></code></td>
+							<td>The <i class="flag">strict</i> flag here is particularly for controller players, as this specific order is a fast way to achieve this spell on controller.</td>
+						</tr>
+						<tr>
+							<td>8.</td>
+							<td><i class="cast">Forward</i> cast <i class="element">life</i>, <i class="element">life</i>, <i class="element">water</i>, <i class="element">water</i>, <i class="element">shield</i></td>
+							<td><code><span class="cast">F</span><span class="element">:2(lw)s</span></code></td>
+							<td>The <code class="element">2</code>is placed before the group <code class="element">(lw)</code>, which means the entire group is input twice, making it equivalent to <code class="element">lwlw</code>.</td>
+						</tr>
+						<tr>
+							<td>9.</td>
+							<td>While <i class="state">wet</i> and <i class="state">shielded</i>, conjure <span class="element">at least 1</span> <i class="element">lightning</i> element</td>
+							<td><code><span class="state">[WS]</span><span class="element">:t+</span></code></td>
+							<td>Hopefully that shield was <code><span class="cast">S</span><span class="element">:s(3-4t)?</span></code>.</td>
+						</tr>
+						<tr>
+							<td>10.</td>
+							<td>While <i class="state">not wet</i> and <i class="state">shielded</i>, <i class="cast">weapon</i> cast 1-2 <i class="element">ice</i>, another <i class="element">ice</i> or <i class="element">cold</i> (or neither), <i class="element">death</i>, and <i class="element">lightning</i></td>
+							<td><code><span class="state">[-WS]</span><span class="cast">W</span><span class="element">:1-2i(i|c)?dt</span></code></td>
+							<td>This notation demonstrates the flexibility that can be used to include many variants of similar spells. There are 5 different possible variants that all adhere to the given specifications: <code class="element">:idt</code>, <code class="element">:icdt</code>, <code class="element">:iidt</code>, <code class="element">:iicdt</code>, and <code class="element">:iiidt</code>.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>As you can see, some notations probably wouldn't be used in casual conversation, but not all notations are necessarily meant to be used that way. Some may be useful to write down and refer back to later.</p>
+			<h3 id="magicks"><a class="subtle-link" href="#magicks">Magicks</a></h3>
+			<p>Just for good measure, I'll include Magicks as well.</p>
+			<details class="magick-examples">
+				<summary>Magicka 2</summary>
+				<div class="info-chart-wrapper">
+					<table class="info-chart">
+						<colgroup>
+							<col class="col-image">
+							<col class="col-name">
+							<col class="col-notation">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>Image</th>
+								<th>Name</th>
+								<th>Notation</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><img alt="Abuse-a-Scroll Magick" src="images/magicks/m2/abuse-a-scroll.jpg"></td>
+								<td><i class="magick">Abuse-a-Scroll</i></td>
+								<td><code><span class="cast">M</span><span class="element">:ftl</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Concussion Magick" src="images/magicks/m2/concussion.jpg"></td>
+								<td><i class="magick">Concussion</i></td>
+								<td><code><span class="cast">M</span><span class="element">:wsww</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Dispel Magick" src="images/magicks/m2/dispel.jpg"></td>
+								<td><i class="magick">Dispel</i></td>
+								<td><code><span class="cast">M</span><span class="element">:ds</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Disruptor Magick" src="images/magicks/m2/disruptor.jpg"></td>
+								<td><i class="magick">Disruptor</i></td>
+								<td><code><span class="cast">M</span><span class="element">:des</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Dragon Strike Magick" src="images/magicks/m2/dragon-strike.jpg"></td>
+								<td><i class="magick">Dragon Strike</i></td>
+								<td><code><span class="cast">M</span><span class="element">:ffdff</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Emergency Teleport Magick" src="images/magicks/m2/emergency-teleport.jpg"></td>
+								<td><i class="magick">Emergency Teleport</i></td>
+								<td><code><span class="cast">M</span><span class="element">:tdt</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Furious Fowl Magick" src="images/magicks/m2/furious-fowl.jpg"></td>
+								<td><i class="magick">Furious Fowl</i></td>
+								<td><code><span class="cast">M</span><span class="element">:dede</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Guardian Magick" src="images/magicks/m2/guardian.jpg"></td>
+								<td><i class="magick">Guardian</i></td>
+								<td><code><span class="cast">M</span><span class="element">:llts</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Haste Magick" src="images/magicks/m2/haste.jpg"></td>
+								<td><i class="magick">Haste</i></td>
+								<td><code><span class="cast">M</span><span class="element">:tdf</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Higherland Breeze Magick" src="images/magicks/m2/higherland-breeze.jpg"></td>
+								<td><i class="magick">Higherland Breeze</i></td>
+								<td><code><span class="cast">M</span><span class="element">:4i</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Ice Tornado Magick" src="images/magicks/m2/ice-tornado.jpg"></td>
+								<td><i class="magick">Ice Tornado</i></td>
+								<td><code><span class="cast">M</span><span class="element">:iiecc</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Push Magick" src="images/magicks/m2/push.jpg"></td>
+								<td><i class="magick">Push</i></td>
+								<td><code><span class="cast">M</span><span class="element">:ws</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Revive Magick" src="images/magicks/m2/revive.jpg"></td>
+								<td><i class="magick">Revive</i></td>
+								<td><code><span class="cast">M</span><span class="element">:lt</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Sacrifice Magick" src="images/magicks/m2/sacrifice.jpg"></td>
+								<td><i class="magick">Sacrifice</i></td>
+								<td><code><span class="cast">M</span><span class="element">:4dt</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Spike Quake Magick" src="images/magicks/m2/spike-quake.jpg"></td>
+								<td><i class="magick">Spike Quake</i></td>
+								<td><code><span class="cast">M</span><span class="element">:ddedd</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Summon Living Dead People Magick" src="images/magicks/m2/summon-living-dead-people.jpg"></td>
+								<td><i class="magick">Summon Living Dead People</i></td>
+								<td><code><span class="cast">M</span><span class="element">:iedc</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Teleport Magick" src="images/magicks/m2/teleport.jpg"></td>
+								<td><i class="magick">Teleport</i></td>
+								<td><code><span class="cast">M</span><span class="element">:tdd</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Thunderbolt Magick" src="images/magicks/m2/thunderbolt.jpg"></td>
+								<td><i class="magick">Thunderbolt</i></td>
+								<td><code><span class="cast">M</span><span class="element">:mtdt</span></code></td>
+							</tr>
+							<tr>
+								<td><img alt="Thunderhead Magick" src="images/magicks/m2/thunderhead.jpg"></td>
+								<td><i class="magick">Thunderhead</i></td>
+								<td><code><span class="cast">M</span><span class="element">:ffdtt</span></code></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+		</div>
+	</section>
+</main>
+<footer class="site-footer checkered">
+	<div class="lane">
+		<article class="about-writeup">
+			<div class="about-writeup-header">
+				<h2 class="about-writeup-heading">Thanks</h2>
+				<time class="about-writeup-time" datetime="2024-11-24 11:06:57.840-0500">November 24, 2024</time>
+			</div>
+			<p>Magick notation is something I developed while learning how to play Magicka 2. When a useful spell came to my attention, I'd write it down. My notes became cluttered from repeatedly writing out names of elements and cast types, which prompted me to use a shorthand.</p>
+			<p>One common method of Magicka shorthand that already existed was simply to list out the default keyboard bindings for elements&mdash;a method I found to be flawed and limited. Not everyone plays on keyboard or with default key bindings. If you're willing to learn it regardless, cast types still need to be conveyed. It's also unintuitive to read. "Q" meaning "water" or "R" meaning "cold" makes little sense apart from the fact that those elements are mapped to those keys by default, and conveying small spell variations requires rewriting the entire spell.</p>
+			<p>The initial idea for my own shorthand system came from algebraic notation (chess), and further inspiration from things such as regular expression (text search patterns) and programming soon followed. From there, it was a matter of finding the perfect balance between versatility and simplicity. Magick notation has been my attempt at that, so I thank you for taking the time to entertain it.</p>
+			<svg class="lein-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 30.087"><path d="M18.875,30.044H0V0H9.307V20.693h9.568ZM34.963,8.225v2.814H47.085v7.533H34.963v2.987H47.345v8.485H25.613V0H47.3V8.225Zm29.12,21.819H54.732V0h9.351Zm35.917,0H90.778l-.086.043-9.653-13.9V30.044H71.731v-30L81.039,0l9.61,13.68V0H100Z"/></svg>
+		</article>
+	</div>
+	<div class="site-info">
+		<div class="site-info-pillar site-info-pillar-contact">
 			<h3 class="site-info-heading">Contact</h3>
 			<div class="discord-id" title="Discord contact info"><svg class="text-icon discord-id-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>leon7215</div>
 		</div>
-		<div class="site-info-pillar">
+		<div class="site-info-pillar site-info-pillar-social">
 			<h3 class="site-info-heading">Find me elsewhere</h3>
 			<a class="social-link" href="https://steamcommunity.com/profiles/76561198199550749" title="Lein on Steam">
-				<svg title="Steam" class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88.321014 88.472992">
+				<svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88.321014 88.472992">
 					<g transform="matrix(1.3333333,0,0,-1.3333333,-58.195271,-53.272644)">
 						<path d="m 76.709455,-39.954484 c -17.428501,0 -31.706251,-13.4385 -33.063001,-30.516751 l 17.7825,-7.35225 c 1.506751,1.0305 3.327001,1.63425 5.285251,1.63425 0.1755,0 0.35025,-0.0075 0.5235,-0.01575 l 7.908,11.46225 c 0,0.05475 0,0.108 0,0.162 0,6.899251 5.61225,12.512251 12.51225,12.512251 6.89925,0 12.511505,-5.613 12.511505,-12.512251 0,-6.89925 -5.612255,-12.513 -12.511505,-12.513 -0.09525,0 -0.18975,0 -0.28425,0.0075 l -11.2785,-8.0475 c 0.0075,-0.14625 0.01125,-0.2955 0.01125,-0.444 0,-5.1795 -4.21275,-9.3915 -9.3915,-9.3915 -4.545751,0 -8.346751,3.2445 -9.207751,7.54125 l -12.71775,5.2545 c 3.9375,-13.926 16.73175,-24.135755 31.920001,-24.135755 18.324,0 33.177755,14.854505 33.177755,33.176255 0,18.324751 -14.854505,33.178501 -33.177755,33.178501"/>
 						<path d="m 64.437205,-90.295985 -4.075501,1.68375 c 0.72225,-1.50375 1.97175,-2.763 3.630751,-3.4545 3.5865,-1.494 7.72125,0.20775 9.216,3.79725 0.72375,1.7355 0.72825,3.65175 0.0105,5.39175 -0.71625,1.74075 -2.06775,3.09825 -3.8055,3.82275 -1.72425,0.71775 -3.5715,0.6915 -5.1945,0.07875 l 4.20975,-1.74075 c 2.64525,-1.1025 3.89625,-4.14 2.79375,-6.78525 -1.10025,-2.646 -4.14,-3.897 -6.78525,-2.79375"/>
@@ -1197,6 +1253,12 @@
 				<svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="-70 -36 177 124">
 					<path d="M 0,0 V 52.338 L 46,26.168 Z M 102.322,68.806 C 100.298,76.428 94.334,82.43 86.762,84.467 73.037,88.169 18,88.169 18,88.169 c 0,0 -55.037,0 -68.762,-3.702 C -58.334,82.43 -64.298,76.428 -66.322,68.806 -70,54.992 -70,26.169 -70,26.169 c 0,0 0,-28.822 3.678,-42.637 2.024,-7.622 7.988,-13.624 15.56,-15.662 13.725,-3.701 68.762,-3.701 68.762,-3.701 0,0 55.037,0 68.762,3.701 7.572,2.038 13.536,8.04 15.56,15.662 C 106,-2.653 106,26.169 106,26.169 c 0,0 0,28.823 -3.678,42.637"/>
 				</svg>
+			</a>
+		</div>
+		<div class="site-info-pillar site-info-pillar-projects">
+			<h3 class="site-info-heading">Other projects</h3>
+			<a class="project-link" title="Insight" href="https://leinwilliams.github.io/insight/">
+				<svg class="project-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2377.87 570.71"><path d="M309.843,252.679,348.7,314.44,258.774,330.3l-38.857-61.76,27.006-36.478ZM1971.774,50v75h75V450l100-100V125h75V85.354L2257.135,50Zm-650,300V50h-100V350Zm350-300V350h100V237.5h50V350h100V50s-100,0-100,0V162.5h-50V50Zm-1050,0V350H721.784V216.676L821.779,350h100V50H821.779V183.308L721.784,50Zm750,300h250V162.5h-112.5v75h37.5V275h-75V125h150V50h-250Zm-400-112.5h125V275h-125v75h200V162.5h-125V125h125V50h-200ZM471.775,350l100,100V50H436.426l35.349,35.35Zm848.832,32h-22.666v68h22.666Zm266.332,17h17v-17h-56.666v17h17v51h22.667Zm-153,51h-22.667v-68h48.652l8.015,8.012V416.49l-8.015,8.014H1433.94Zm0-42.5h11.333V399H1433.94Zm93.984,42.5,8.015-8.015V382.005h-22.666v51h-11.334v-51h-22.666v59.984l8.015,8.015Zm-150.649-37.783L1354.609,382h-22.668v68h22.668V419.784L1377.275,450h22.665V382h-22.665ZM1985.441,424.5l11.333,25.5h-22.666l-11.333-25.5V450h-22.667V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.666-17h11.333V399h-11.333ZM1872.109,382h-22.667l-2.833,34-8.5-14.577-8.5,14.57-2.833-34h-22.667l5.667,68,22.664,0,5.667-9.715,5.666,9.715,22.669,0Zm-187,68,17-68h-22.666l-5.667,22.667L1668.11,382h-22.666l17,68Zm28.333,0h22.667V382h-22.667Zm34,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333Zm136,0h45.333V433h-22.667v-8.5h22.667v-17h-22.667V399h22.667V382h-45.333ZM939.105,424.5,950.438,450H927.772l-11.334-25.5V450H893.772V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399H916.438Zm328.665,17,11.333,25.5H1233.77l-11.334-25.5V450H1199.77V382h48.651l8.015,8.013V416.49l-8.015,8.014Zm-22.667-17h11.334V399h-11.334ZM1075.1,433h-22.666V382h-22.667v68H1075.1Zm-408,17V433H644.441V399h22.666V382H621.774v68Zm351.331,0H961.771V382h56.667Zm-22.667-51H984.438v34h11.333Zm136,34H1109.1V382h-22.667v68h45.333ZM865.439,399h17V382H825.773v17h17v51h22.667ZM735.107,450H678.44V382h56.667Zm-34-17H712.44V399H701.107Zm90.667-20.783L769.108,382H746.44v68h22.668V419.784L791.774,450h22.665V382H791.774ZM1188.437,382H1143.1v68h45.333V433H1165.77v-8.5h22.667v-17H1165.77V399h22.667ZM232.748,209.527l27-36.476L220.892,111.3l-89.926,15.856,38.854,61.756Zm149.115-45.49-97.28,17.153-27.005,36.477L320.5,238.282l97.28-17.154ZM195.088,260.4l27-36.471L159.169,203.3l-97.28,17.153,35.919,57.092Z"/></svg>
 			</a>
 		</div>
 	</div>
