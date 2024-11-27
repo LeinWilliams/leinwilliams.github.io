@@ -306,6 +306,12 @@
 					transform: translate(calc(-100% - 1px), -50%);
 				}
 
+			
+			.main-menu-sub-areas {
+				max-height: 100%;
+				overflow: auto;
+			}
+
 			.info-chart {
 				border-collapse: collapse;
 				vertical-align: middle;
@@ -554,6 +560,8 @@
 				color: gray;
 			}
 
+
+
 		/******************************\
 		 * MEDIA                      *
 		\******************************/
@@ -605,20 +613,22 @@
 </head>
 <body>
 <nav id="main-menu" class="main-menu closed">
-	<div class="main-menu-sub-area">
-		<p class="main-menu-sub-heading">Table of Contents</p>
-		<ol id="toc" class="main-toc"></ol>
-	</div>
-	<div class="main-menu-sub-area main-menu-sub-area-hotkeys">
-		<p class="main-menu-sub-heading">Navigation</p>
-		<div class="hotkeys-area">
-			<div class="hotkeys">
-				<kbd class="hotkey-shift" title="Shift">Shift</kbd>
-				<span class="hotkey-plus" title="Plus">+</span>
-				<kbd class="hotkey-up" title="Up arrow">↑</kbd>
-				<kbd class="hotkey-left" title="Left arrow">←</kbd>
-				<kbd class="hotkey-down" title="Down arrow">↓</kbd>
-				<kbd class="hotkey-right" title="Right arrow">→</kbd>
+	<div class="main-menu-sub-areas">
+		<div class="main-menu-sub-area">
+			<p class="main-menu-sub-heading">Table of Contents</p>
+			<ol id="toc" class="main-toc"></ol>
+		</div>
+		<div class="main-menu-sub-area main-menu-sub-area-hotkeys">
+			<p class="main-menu-sub-heading">Navigation</p>
+			<div class="hotkeys-area">
+				<div class="hotkeys">
+					<kbd class="hotkey-shift" title="Shift">Shift</kbd>
+					<span class="hotkey-plus" title="Plus">+</span>
+					<kbd class="hotkey-up" title="Up arrow">↑</kbd>
+					<kbd class="hotkey-left" title="Left arrow">←</kbd>
+					<kbd class="hotkey-down" title="Down arrow">↓</kbd>
+					<kbd class="hotkey-right" title="Right arrow">→</kbd>
+				</div>
 			</div>
 		</div>
 	</div>
