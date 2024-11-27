@@ -1,3 +1,6 @@
+<!-- #FIX
+	- See if you can incorporate some kind of menu drag thing where mobile users can swipe the menu opened/closed
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -590,6 +593,15 @@
 
 				.main-menu-sub-area-hotkeys {
 					display: none;
+				}
+			}
+
+
+			@media screen and ( max-width: 512px ) {
+
+				.about-writeup-header {
+					align-items: flex-start;
+					flex-direction: column;
 				}
 			}
 	</style>
@@ -1412,6 +1424,15 @@ window.addEventListener('keydown', navigateMenu)
 window.addEventListener('scroll', markCurrentChapter, { passive: true })
 window.addEventListener('load', markCurrentChapter)
 createToc(chapters.elements, chapters.anchors)
+
+
+
+document.getElementById('main-menu').addEventListener('touchmove', event => {
+	console.log('touchmove', event)
+})
+document.getElementById('main-menu').addEventListener('touchcancel', event => {
+	console.log('touchcancel', event)
+})
 </script>
 </body>
 </html>
