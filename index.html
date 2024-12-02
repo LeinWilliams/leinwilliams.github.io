@@ -1,9 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="Leon Williams">
+	<meta name="description" content="Projects created by Lein">
+	<link rel="icon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/179019500">
+	<title>Lein's Projects</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			background-color: #101010;
+			color: #ddd;
+			font-family: "Mona Sans", system-ui;
+			font-optical-sizing: auto;
+			font-weight: 500;
+			font-style: normal;
+			font-variation-settings: "wdth" 100;
+			word-spacing: 0.05em;
+			font-size: 20px;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		.checkered {
+			--checker-color-1: hsl(0deg 0% 10%);
+			--checker-color-2: hsl(0deg 0% 13%);
+			--checker-size: 50pt;
+			background-color: var(--checker-color-2);
+			background-image:
+				linear-gradient(
+					45deg,
+					var(--checker-color-1) 25%,
+					transparent 25%,
+					transparent 75%,
+					var(--checker-color-1) 75%,
+					var(--checker-color-1) 0
+				),
+				linear-gradient(
+					45deg,
+					var(--checker-color-1) 25%,
+					transparent 25%,
+					transparent 75%,
+					var(--checker-color-1) 75%,
+					var(--checker-color-1) 0
+				);
+			background-repeat: repeat, repeat;
+			background-position: 0px 0, calc(var(--checker-size) / 2) calc(var(--checker-size) / 2);
+			transform-origin: 0 0 0;
+			background-origin: padding-box, padding-box;
+			background-clip: border-box, border-box;
+			background-size:
+				var(--checker-size) var(--checker-size),
+				var(--checker-size) var(--checker-size);
+		}
+
+		.project-link {
+			display: grid;
+			grid-template-areas: 'thumbnail project';
+			justify-content: start;
+			gap: 20pt;
+			background-color: #333;
+			color: #ccc;
+			text-decoration: none;
+			overflow: hidden;
+			border-radius: 3pt;
+			margin: 20pt auto;
+			padding: 10pt;
+			max-width: 800pt;
+			transition: background-color 0.2s;
+			border: 1px solid black;
+			box-shadow:
+				3pt 3pt 3pt 0 rgb(0 0 0 / 50%),
+				inset 1px 1px 0 rgb(255 255 255 / 10%);
+			text-shadow: 1pt 1pt 1pt rgb(0 0 0 / 50%);
+		}
+
+			.project-link:hover {
+				background-color: #444;
+			}
+
+		.projects {
+			margin: 20pt;
+		}
+
+		.project {
+			grid-area: project;
+		}
+
+		.project-thumbnail {
+			grid-area: thumbnail;
+			max-width: 200px;
+			max-height: 200px;
+			height: 200px;
+			width: 200px;
+			background-color: gray;
+			box-shadow: rgb(0 0 0 / 50%) 2pt 2pt 2pt 0;
+			border-radius: 4pt;
+		}
+	</style>
 </head>
-<body>
-	<a href="https://github.com/LeinWilliams/leinwilliams.github.io">Home page</a>
-<script>(()=>{window.location.href="https://github.com/LeinWilliams/leinwilliams.github.io"})()</script>
+<body class="checkered">
+	<h1>Lein's Projects</h1>
+	<div class="projects">
+		<a class="project-link" href="https://leinwilliams.github.io/insight/">
+			<img class="project-thumbnail" alt="Insight thumbnail" src="_/thumbnails/insight.jpg">
+			<article class="project">
+				<h2 class="project-heading">Insight</h2>
+				<div class="project-description">
+					<p>Display controller inputs</p>
+				</div>
+			</article>
+		</a>
+		<a class="project-link" href="https://leinwilliams.github.io/magick-notation/">
+			<img class="project-thumbnail" alt="Magick Notation thumbnail" src="_/thumbnails/magick-notation.jpg">
+			<article class="project">
+				<h2 class="project-heading">Magick Notation</h2>
+				<div class="project-description">
+					<p>Documentation for a notation system used for succinctly conveying player actions in the Magicka games</p>
+				</div>
+			</article>
+		</a>
+	</div>
 </body>
 </html>
